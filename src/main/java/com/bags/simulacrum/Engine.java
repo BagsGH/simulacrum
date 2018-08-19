@@ -8,16 +8,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 @Component
 public class Engine {
 
     @Autowired
-    private WeaponModder weaponModder;
+    private WeaponModifier weaponModifier;
 
     public void start() {
-        weaponModder = new WeaponModder();
+        weaponModifier = new WeaponModifier();
         Weapon ignisWraith = setupIgnis();
         Weapon ignisWraithModded = setupIgnis();
 
@@ -57,7 +56,7 @@ public class Engine {
         ignisWraithModded.addMod(heavyCalibr);
         ignisWraithModded.addMod(guidedOrdinace);
 
-        modWeapon(ignisWraithModded, ignisWraith);
+        ignisWraithModded = modWeapon(ignisWraithModded, ignisWraith);
 
         System.out.println("===Modded weapons===");
         System.out.println(ignisWraithModded);
@@ -94,14 +93,17 @@ public class Engine {
         return ignisWraith;
     }
 
-    private void modWeapon(Weapon weaponToMod, Weapon originalWeapon) {
+    private Weapon modWeapon(Weapon weaponToMod, Weapon originalWeapon) {
         List<Mod> weaponMods = weaponToMod.getMods();
         System.out.println(weaponMods);
 
-        weaponModder.calculateCriticalChance(weaponToMod, weaponMods);
-        weaponModder.calculateCriticalDamage(weaponToMod, weaponMods);
-        weaponModder.calculateFireRate(weaponToMod, weaponMods);
-        weaponToMod.setAccuracy(weaponModder.calculateAccuracy(weaponToMod.getAccuracy(), weaponMods));
+        return weaponModifier.modifyWeapon(weaponToMod);
+
+//
+//        weaponModifier.calculateCriticalChance(weaponToMod, weaponMods);
+//        weaponModifier.calculateCriticalDamage(weaponToMod, weaponMods);
+//        weaponModifier.calculateFireRate(weaponToMod, weaponMods);
+//        weaponToMod.setAccuracy(weaponModifier.calculateAccuracy(weaponToMod.getAccuracy(), weaponMods));
     }
 
 

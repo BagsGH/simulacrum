@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Data
@@ -21,7 +22,7 @@ public class Weapon {
     private double statusChance;
     private double headshotMultiplier;
     private double accuracyMultiplier;
-    private ArrayList<Mod> mods;
+    private List<Mod> mods;
 
     private int maxAmmo;
     private int masteryRank;
