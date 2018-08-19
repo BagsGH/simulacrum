@@ -16,11 +16,12 @@ public class WeaponModifier {
         weaponMods = weaponToMod.getMods();
         Weapon modifiedWeapon = copyWeaponToMod();
 
+        modifiedWeapon.setFireRate(calculateModdedFireRate());
         modifiedWeapon.setAccuracy(calculateModdedAccuracy());
+        modifiedWeapon.setReloadTime(calculateModdedReloadTime());
         modifiedWeapon.setCriticalChance(calculateModdedCriticalChance());
         modifiedWeapon.setCriticalDamage(calculateModdedCriticalDamage());
-        modifiedWeapon.setFireRate(calculateModdedFireRate());
-        modifiedWeapon.setReloadTime(calculateModdedReloadTime());
+        modifiedWeapon.setStatusChance(calculateModdedStatusChance());
 
         return modifiedWeapon;
     }
@@ -30,14 +31,19 @@ public class WeaponModifier {
                 weaponToMod.getRangeLimit(), weaponToMod.getNoiseLevel(), weaponToMod.getMaxAmmo(),weaponToMod.getDisposition(), weaponToMod.getMods());
     }
 
+    private double calculateModdedFireRate() {
+        double fireRateIncrease =  weaponMods.stream().filter(mod -> mod.getFireRateIncrease() != 0).mapToDouble(Mod::getFireRateIncrease).sum();
+        return weaponToMod.getFireRate() * (1 + fireRateIncrease);
+    }
+
     private double calculateModdedAccuracy() {
         double accuracyIncrease = weaponMods.stream().filter(mod -> mod.getAccuracyIncrease() != 0.0).mapToDouble(Mod::getAccuracyIncrease).sum();
         return weaponToMod.getAccuracy() + accuracyIncrease;
     }
 
-    private double calculateModdedFireRate() {
-        double fireRateIncrease =  weaponMods.stream().filter(mod -> mod.getFireRateIncrease() != 0).mapToDouble(Mod::getFireRateIncrease).sum();
-        return weaponToMod.getFireRate() * (1 + fireRateIncrease);
+    private double calculateModdedReloadTime() {
+        double reloadSpeedIncrease = weaponMods.stream().filter(mod -> mod.getReloadTimeIncrease() != 0.0).mapToDouble(Mod::getReloadTimeIncrease).sum();
+        return weaponToMod.getReloadTime() / ( 1 + reloadSpeedIncrease);
     }
 
     private double calculateModdedCriticalDamage() {
@@ -50,8 +56,8 @@ public class WeaponModifier {
         return weaponToMod.getCriticalChance() * ( 1 + criticalChanceIncrease);
     }
 
-    private double calculateModdedReloadTime() {
-        double reloadSpeedIncrease = weaponMods.stream().filter(mod -> mod.getReloadTimeIncrease() != 0.0).mapToDouble(Mod::getReloadTimeIncrease).sum();
-        return weaponToMod.getReloadTime() / ( 1 + reloadSpeedIncrease);
+    private double calculateModdedStatusChance() {
+        double statusChanceIncrease = weaponMods.stream().filter(mod -> mod.getStatusChanceIncrease() != 0).mapToDouble(Mod::getStatusChanceIncrease).sum();
+        return weaponToMod.getStatusChance() * ( 1 + statusChanceIncrease );
     }
 }

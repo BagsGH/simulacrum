@@ -220,4 +220,32 @@ public class WeaponModifierTest {
 
         assertEquals(1.393, actualWeaponModified.getReloadTime(), .001);
     }
+
+    @Test
+    public void itCanCorrectlyCalculatePositiveStatusChance()
+    {
+        Mod fakeStatusChanceMod = new Mod();
+        fakeStatusChanceMod.setStatusChanceIncrease(0.40);
+        fakeWeapon.setStatusChance(0.29);
+        fakeWeapon.setMods(Collections.singletonList(fakeStatusChanceMod));
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(.406, actualWeaponModified.getStatusChance(), .001);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculateComplexStatusChance()
+    {
+        Mod fakeStatusChanceMod = new Mod();
+        fakeStatusChanceMod.setStatusChanceIncrease(0.60);
+        Mod fakeStatusChanceMod2 = new Mod();
+        fakeStatusChanceMod2.setStatusChanceIncrease(0.60);
+        fakeWeapon.setStatusChance(0.29);
+        fakeWeapon.setMods(Arrays.asList(fakeStatusChanceMod, fakeStatusChanceMod));
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(.638, actualWeaponModified.getStatusChance(), .001);
+    }
 }
