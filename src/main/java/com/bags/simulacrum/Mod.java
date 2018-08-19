@@ -19,9 +19,10 @@ public class Mod {
     private double maxAmmoIncrease;
     private double reloadTimeIncrease;
     private double criticalChanceIncrease;
-    private double criticalMultiplierIncrease;
+    private double criticalDamageIncrease;
     private double statusChanceIncrease;
     private double headshotMultiplierIncrease;
+    private double damageIncrease;
     private Map<String, Weapon.DamageType> damage;
 
     public enum Polarity {

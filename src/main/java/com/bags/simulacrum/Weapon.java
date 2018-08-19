@@ -1,5 +1,6 @@
 package com.bags.simulacrum;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class Weapon {
     private double reloadTime;
     private Map<DamageType,Double> damage;
     private double criticalChance;
-    private double criticalMultiplier;
+    private double criticalDamage;
     private double statusChance;
     private double headshotMultiplier;
     private double accuracyMultiplier;
@@ -30,6 +31,11 @@ public class Weapon {
     private NoiseLevel noiseLevel;
     private double rangeLimit;
     private Disposition disposition;
+
+    public void addMod(Mod mod)
+    {
+        mods.add(mod);
+    }
 
     public enum AmmoType {
         RIFLE,
