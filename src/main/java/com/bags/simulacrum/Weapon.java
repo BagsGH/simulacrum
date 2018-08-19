@@ -2,30 +2,43 @@ package com.bags.simulacrum;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 @Data
 public class Weapon {
 
     private String name;
+    private TriggerType triggerType;
+    private double effectiveFireRate;
+    private double fireRate;
+    private double effectiveAccuracy;
+    private double accuracy;
+    private int effectiveMagazineSize;
+    private int magazineSize;
+    private double effectiveReloadTime;
+    private double reloadTime;
+    private Map<DamageType,Double> effectiveDamage;
+    private Map<DamageType,Double> damage;
+    private double effectiveCriticalChance;
+    private double criticalChance;
+    private double effectiveCriticalMultiplier;
+    private double criticalMultiplier;
+    private double effectiveStatusChance;
+    private double statusChance;
+    private double effectiveHeadshotMultiplier;
+    private double headshotMultiplier;
+    private double accuracyMultiplier;
+    private ArrayList<Mod> mods;
+
+    private int maxAmmo;
     private int masteryRank;
     private Slot slot;
     private WeaponType type;
-    private TriggerType triggerType;
     private AmmoType ammoType;
-    private double rangeLimit;
     private NoiseLevel noiseLevel;
-    private double fireRate;
-    private double accuracy;
-    private int magazineSize;
-    private int maxAmmo;
-    private double reloadTime;
+    private double rangeLimit;
     private Disposition disposition;
-    private Map<String,Double> damage;
-    private double criticalChance;
-    private double criticalMultiplier;
-    private double statusChance;
-    private double headshotMultiplier;
 
     public enum AmmoType {
         RIFLE,
