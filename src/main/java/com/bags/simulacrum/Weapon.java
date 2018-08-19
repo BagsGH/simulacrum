@@ -10,23 +10,14 @@ public class Weapon {
 
     private String name;
     private TriggerType triggerType;
-    private double effectiveFireRate;
     private double fireRate;
-    private double effectiveAccuracy;
     private double accuracy;
-    private int effectiveMagazineSize;
     private int magazineSize;
-    private double effectiveReloadTime;
     private double reloadTime;
-    private Map<DamageType,Double> effectiveDamage;
     private Map<DamageType,Double> damage;
-    private double effectiveCriticalChance;
     private double criticalChance;
-    private double effectiveCriticalMultiplier;
     private double criticalMultiplier;
-    private double effectiveStatusChance;
     private double statusChance;
-    private double effectiveHeadshotMultiplier;
     private double headshotMultiplier;
     private double accuracyMultiplier;
     private ArrayList<Mod> mods;
