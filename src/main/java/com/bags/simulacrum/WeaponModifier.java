@@ -8,12 +8,12 @@ import java.util.List;
 public class WeaponModifier {
 
     private List<Mod> weaponMods;
-    private Weapon weaponToMod;
+    private Weapon originalWeapon;
 
     public Weapon modifyWeapon(Weapon weapon)
     {
-        weaponToMod = weapon;
-        weaponMods = weaponToMod.getMods();
+        originalWeapon = weapon;
+        weaponMods = originalWeapon.getMods();
         Weapon modifiedWeapon = copyWeaponToMod();
 
         modifiedWeapon.setFireRate(calculateModdedFireRate());
@@ -21,6 +21,7 @@ public class WeaponModifier {
         modifiedWeapon.setMagazineSize(calculateModdedMagazineSize());
         modifiedWeapon.setMaxAmmo(calculateModdedMaxAmmo());
         modifiedWeapon.setReloadTime(calculateModdedReloadTime());
+        modifiedWeapon.setChargeTime(calculateModdedChargeTime());
         modifiedWeapon.setCriticalChance(calculateModdedCriticalChance());
         modifiedWeapon.setCriticalDamage(calculateModdedCriticalDamage());
         modifiedWeapon.setStatusChance(calculateModdedStatusChance());
@@ -29,47 +30,58 @@ public class WeaponModifier {
     }
 
     private Weapon copyWeaponToMod() {
-        return new Weapon(weaponToMod.getName(), weaponToMod.getMasteryRank(), weaponToMod.getSlot(), weaponToMod.getType(), weaponToMod.getAmmoType(),
-                weaponToMod.getRangeLimit(), weaponToMod.getNoiseLevel(), weaponToMod.getMaxAmmo(),weaponToMod.getDisposition(), weaponToMod.getMods());
+        return new Weapon(originalWeapon.getName(), originalWeapon.getMasteryRank(), originalWeapon.getSlot(), originalWeapon.getType(), originalWeapon.getTriggerType(), originalWeapon.getAmmoType(),
+                originalWeapon.getRangeLimit(), originalWeapon.getNoiseLevel(), originalWeapon.getMaxAmmo(), originalWeapon.getDisposition(), originalWeapon.getMods());
     }
 
     private double calculateModdedFireRate() {
         double fireRateIncrease =  weaponMods.stream().filter(mod -> mod.getFireRateIncrease() != 0).mapToDouble(Mod::getFireRateIncrease).sum();
-        return weaponToMod.getFireRate() * (1 + fireRateIncrease);
+        return originalWeapon.getFireRate() * (1 + fireRateIncrease);
     }
 
     private double calculateModdedAccuracy() {
         double accuracyIncrease = weaponMods.stream().filter(mod -> mod.getAccuracyIncrease() != 0.0).mapToDouble(Mod::getAccuracyIncrease).sum();
-        return weaponToMod.getAccuracy() + accuracyIncrease;
+        return originalWeapon.getAccuracy() + accuracyIncrease;
     }
 
     private int calculateModdedMagazineSize() {
         double magazineSizeIncrease = weaponMods.stream().filter(mod -> mod.getMagazineSizeIncrease() != 0.0).mapToDouble(Mod::getMagazineSizeIncrease).sum();
-        return (int) Math.round((double) weaponToMod.getMagazineSize() * (1 + magazineSizeIncrease));
+        return (int) Math.round((double) originalWeapon.getMagazineSize() * (1 + magazineSizeIncrease));
     }
 
     private int calculateModdedMaxAmmo() {
         double maxAmmoSizeIncrease = weaponMods.stream().filter(mod -> mod.getMaxAmmoIncrease() != 0.0).mapToDouble(Mod::getMaxAmmoIncrease).sum();
-        return (int) Math.round((double) weaponToMod.getMaxAmmo() * (1 + maxAmmoSizeIncrease));
+        return (int) Math.round((double) originalWeapon.getMaxAmmo() * (1 + maxAmmoSizeIncrease));
     }
 
     private double calculateModdedReloadTime() {
         double reloadSpeedIncrease = weaponMods.stream().filter(mod -> mod.getReloadTimeIncrease() != 0.0).mapToDouble(Mod::getReloadTimeIncrease).sum();
-        return weaponToMod.getReloadTime() / ( 1 + reloadSpeedIncrease);
+        return originalWeapon.getReloadTime() / ( 1 + reloadSpeedIncrease);
+    }
+
+    private double calculateModdedChargeTime() {
+        double chargeTimeIncrease = weaponMods.stream().filter(mod -> mod.getFireRateIncrease() != 0.0).mapToDouble(Mod::getFireRateIncrease).sum();
+        System.out.println("ChargeTimeInc:" + chargeTimeIncrease);
+        return originalWeapon.getChargeTime() / (1 + chargeTimeIncrease * bowFireRateBonusMultiplier(chargeTimeIncrease));
+    }
+
+    private double bowFireRateBonusMultiplier(double chargeTimeIncrease) {
+        System.out.println("Multiplier:" + (chargeTimeIncrease > 0 && originalWeapon.getType().equals(Weapon.WeaponType.BOW) ? 2.0 : 1.0));
+        return chargeTimeIncrease > 0 && originalWeapon.getType().equals(Weapon.WeaponType.BOW) ? 2.0 : 1.0;
     }
 
     private double calculateModdedCriticalDamage() {
         double criticalDamageIncrease = weaponMods.stream().filter(mod -> mod.getCriticalDamageIncrease() != 0).mapToDouble(Mod::getCriticalDamageIncrease).sum();
-        return weaponToMod.getCriticalDamage() * (1 + criticalDamageIncrease);
+        return originalWeapon.getCriticalDamage() * (1 + criticalDamageIncrease);
     }
 
     private double calculateModdedCriticalChance() {
         double criticalChanceIncrease = weaponMods.stream().filter(mod -> mod.getCriticalChanceIncrease() != 0).mapToDouble(Mod::getCriticalChanceIncrease).sum();
-        return weaponToMod.getCriticalChance() * ( 1 + criticalChanceIncrease);
+        return originalWeapon.getCriticalChance() * ( 1 + criticalChanceIncrease);
     }
 
     private double calculateModdedStatusChance() {
         double statusChanceIncrease = weaponMods.stream().filter(mod -> mod.getStatusChanceIncrease() != 0).mapToDouble(Mod::getStatusChanceIncrease).sum();
-        return weaponToMod.getStatusChance() * ( 1 + statusChanceIncrease );
+        return originalWeapon.getStatusChance() * ( 1 + statusChanceIncrease );
     }
 }

@@ -22,6 +22,7 @@ public class Weapon {
     private double statusChance;
     private double headshotMultiplier;
     private double accuracyMultiplier;
+    private double chargeTime;
     private List<Mod> mods;
 
     private int maxAmmo;
@@ -38,11 +39,12 @@ public class Weapon {
 
     }
 
-    public Weapon(String name, int masteryRank, Slot slot, WeaponType weaponType, AmmoType ammoType, double rangeLimit, NoiseLevel noiseLevel, int maxAmmo, Disposition disposition, List<Mod> mods) {
+    public Weapon(String name, int masteryRank, Slot slot, WeaponType weaponType, TriggerType triggerType, AmmoType ammoType, double rangeLimit, NoiseLevel noiseLevel, int maxAmmo, Disposition disposition, List<Mod> mods) {
         this.name = name;
         this.masteryRank = masteryRank;
         this.slot = slot;
         this.type = weaponType;
+        this.triggerType = triggerType;
         this.ammoType = ammoType;
         this.rangeLimit = rangeLimit;
         this.noiseLevel = noiseLevel;
@@ -86,7 +88,8 @@ public class Weapon {
         SNIPER,
         PISTOL,
         SHOTGUN,
-        MELEE
+        MELEE,
+        BOW
     }
 
     public enum TriggerType {

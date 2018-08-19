@@ -33,7 +33,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCopiesTheFluffDataFromOriginalWeaponToModifiedWeapon()
+    public void itCopiesTheStaticDataFromOriginalWeaponToModifiedWeapon()
     {
         fakeWeapon.setName("someWeaponName");
         fakeWeapon.setMasteryRank(57);
@@ -45,6 +45,7 @@ public class WeaponModifierTest {
         fakeWeapon.setMaxAmmo(1234);
         fakeWeapon.setDisposition(Weapon.Disposition.STRONG);
         fakeWeapon.setMods(new ArrayList<>());
+        fakeWeapon.setTriggerType(Weapon.TriggerType.HELD);
 
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
@@ -128,6 +129,86 @@ public class WeaponModifierTest {
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
         assertEquals(12.32, actualWeaponModified.getFireRate(), .001);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculatePositiveChargeTimeForBows()
+    {
+        fakeMod.setFireRateIncrease(0.90);
+        fakeWeapon.setChargeTime(0.5);
+        fakeWeapon.setMods(Collections.singletonList(fakeMod));
+        fakeWeapon.setType(Weapon.WeaponType.BOW);
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(0.179, actualWeaponModified.getChargeTime(), .01);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculatePositiveChargeTime()
+    {
+        fakeMod.setFireRateIncrease(0.90);
+        fakeWeapon.setChargeTime(2.0);
+        fakeWeapon.setMods(Collections.singletonList(fakeMod));
+        fakeWeapon.setType(Weapon.WeaponType.RIFLE);
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(1.053, actualWeaponModified.getChargeTime(), .01);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculateNegativeChargeTimeForBows()
+    {
+        fakeMod.setFireRateIncrease(-0.36);
+        fakeWeapon.setChargeTime(0.50);
+        fakeWeapon.setMods(Collections.singletonList(fakeMod));
+        fakeWeapon.setType(Weapon.WeaponType.BOW);
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(0.781, actualWeaponModified.getChargeTime(), .01);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculateNegativeChargeTime()
+    {
+        fakeMod.setFireRateIncrease(-0.36);
+        fakeWeapon.setChargeTime(2.0);
+        fakeWeapon.setMods(Collections.singletonList(fakeMod));
+        fakeWeapon.setType(Weapon.WeaponType.RIFLE);
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(3.125, actualWeaponModified.getChargeTime(), .01);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculateComplexChargeTimeForBows()
+    {
+        fakeMod.setFireRateIncrease(-0.36);
+        anotherFakeMod.setFireRateIncrease(0.90);
+        fakeWeapon.setChargeTime(1.20);
+        fakeWeapon.setMods(Arrays.asList(fakeMod, anotherFakeMod));
+        fakeWeapon.setType(Weapon.WeaponType.BOW);
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(0.492, actualWeaponModified.getChargeTime(), .01);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculateComplexCharge()
+    {
+        fakeMod.setFireRateIncrease(-0.36);
+        anotherFakeMod.setFireRateIncrease(0.90);
+        fakeWeapon.setChargeTime(2.0);
+        fakeWeapon.setMods(Arrays.asList(fakeMod, anotherFakeMod));
+        fakeWeapon.setType(Weapon.WeaponType.RIFLE);
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(1.299, actualWeaponModified.getChargeTime(), .01);
     }
 
     @Test
