@@ -19,6 +19,7 @@ public class WeaponModifier {
         modifiedWeapon.setFireRate(calculateModdedFireRate());
         modifiedWeapon.setAccuracy(calculateModdedAccuracy());
         modifiedWeapon.setMagazineSize(calculateModdedMagazineSize());
+        modifiedWeapon.setMaxAmmo(calculateModdedMaxAmmo());
         modifiedWeapon.setReloadTime(calculateModdedReloadTime());
         modifiedWeapon.setCriticalChance(calculateModdedCriticalChance());
         modifiedWeapon.setCriticalDamage(calculateModdedCriticalDamage());
@@ -45,6 +46,11 @@ public class WeaponModifier {
     private int calculateModdedMagazineSize() {
         double magazineSizeIncrease = weaponMods.stream().filter(mod -> mod.getMagazineSizeIncrease() != 0.0).mapToDouble(Mod::getMagazineSizeIncrease).sum();
         return (int) Math.round((double) weaponToMod.getMagazineSize() * (1 + magazineSizeIncrease));
+    }
+
+    private int calculateModdedMaxAmmo() {
+        double maxAmmoSizeIncrease = weaponMods.stream().filter(mod -> mod.getMaxAmmoIncrease() != 0.0).mapToDouble(Mod::getMaxAmmoIncrease).sum();
+        return (int) Math.round((double) weaponToMod.getMaxAmmo() * (1 + maxAmmoSizeIncrease));
     }
 
     private double calculateModdedReloadTime() {

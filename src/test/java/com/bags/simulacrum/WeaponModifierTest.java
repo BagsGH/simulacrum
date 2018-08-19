@@ -279,7 +279,6 @@ public class WeaponModifierTest {
         assertEquals(180, actualWeaponModified.getMagazineSize());
     }
 
-
     @Test
     public void itCanCorrectlyCalculateComplexMagazineSize()
     {
@@ -291,6 +290,18 @@ public class WeaponModifierTest {
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
         assertEquals(312, actualWeaponModified.getMagazineSize());
+    }
+
+    @Test
+    public void itCanCorrectlyCalculatePositiveMaxAmmo()
+    {
+        fakeMod.setMaxAmmoIncrease(0.30);
+        fakeWeapon.setMaxAmmo(800);
+        fakeWeapon.setMods(Collections.singletonList(fakeMod));
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(1040, actualWeaponModified.getMaxAmmo());
     }
 
 }
