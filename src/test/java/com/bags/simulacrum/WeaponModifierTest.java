@@ -19,11 +19,17 @@ public class WeaponModifierTest {
 
     private Weapon fakeWeapon;
 
+    private Mod fakeMod;
+    private Mod anotherFakeMod;
+
     @Before
     public void setup(){
         MockitoAnnotations.initMocks(this);
         subject = new WeaponModifier();
         fakeWeapon = new Weapon();
+
+        fakeMod = new Mod();
+        anotherFakeMod = new Mod();
     }
 
     @Test
@@ -248,4 +254,43 @@ public class WeaponModifierTest {
 
         assertEquals(.638, actualWeaponModified.getStatusChance(), .001);
     }
+
+    @Test
+    public void itCanCorrectlyCalculatePositiveMagazineSize()
+    {
+        fakeMod.setMagazineSizeIncrease(0.66);
+        fakeWeapon.setMagazineSize(200);
+        fakeWeapon.setMods(Collections.singletonList(fakeMod));
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(332, actualWeaponModified.getMagazineSize());
+    }
+
+    @Test
+    public void itCanCorrectlyCalculateNegativeMagazineSize()
+    {
+        fakeMod.setMagazineSizeIncrease(-0.10);
+        fakeWeapon.setMagazineSize(200);
+        fakeWeapon.setMods(Collections.singletonList(fakeMod));
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(180, actualWeaponModified.getMagazineSize());
+    }
+
+
+    @Test
+    public void itCanCorrectlyCalculateComplexMagazineSize()
+    {
+        fakeMod.setMagazineSizeIncrease(-0.10);
+        anotherFakeMod.setMagazineSizeIncrease(0.66);
+        fakeWeapon.setMagazineSize(200);
+        fakeWeapon.setMods(Arrays.asList(fakeMod, anotherFakeMod));
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(312, actualWeaponModified.getMagazineSize());
+    }
+
 }
