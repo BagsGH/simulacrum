@@ -16,7 +16,7 @@ public class Weapon {
     private double accuracy;
     private int magazineSize;
     private double reloadTime;
-    private Map<DamageType,Double> damage;
+    private Map<DamageType, Double> damage;
     private double criticalChance;
     private double criticalDamage;
     private double statusChance;
@@ -33,8 +33,25 @@ public class Weapon {
     private double rangeLimit;
     private Disposition disposition;
 
-    public void addMod(Mod mod)
+    public Weapon()
     {
+
+    }
+
+    public Weapon(String name, int masteryRank, Slot slot, WeaponType weaponType, AmmoType ammoType, double rangeLimit, NoiseLevel noiseLevel, int maxAmmo, Disposition disposition, List<Mod> mods) {
+        this.name = name;
+        this.masteryRank = masteryRank;
+        this.slot = slot;
+        this.type = weaponType;
+        this.ammoType = ammoType;
+        this.rangeLimit = rangeLimit;
+        this.noiseLevel = noiseLevel;
+        this.maxAmmo = maxAmmo;
+        this.disposition = disposition;
+        this.mods = mods;
+    }
+
+    public void addMod(Mod mod) {
         mods.add(mod);
     }
 

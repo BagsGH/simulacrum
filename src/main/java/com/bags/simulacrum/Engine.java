@@ -18,45 +18,44 @@ public class Engine {
     public void start() {
         weaponModifier = new WeaponModifier();
         Weapon ignisWraith = setupIgnis();
-        Weapon ignisWraithModded = setupIgnis();
 
         System.out.println("===Original weapons===");
         System.out.println(ignisWraith);
-        System.out.println(ignisWraithModded);
 
         //critdmg
         Mod vital = new Mod();
         vital.setCriticalDamageIncrease(1.20);
         Mod hammer = new Mod();
         hammer.setCriticalDamageIncrease(.15);
-        ignisWraithModded.addMod(vital);
-        ignisWraithModded.addMod(hammer);
+        ignisWraith.addMod(vital);
+        ignisWraith.addMod(hammer);
 
         //critchance
         Mod pointStrike = new Mod();
         pointStrike.setCriticalChanceIncrease(1.50);
         Mod criticalDelay = new Mod();
         criticalDelay.setCriticalChanceIncrease(0.08);
-        ignisWraithModded.addMod(pointStrike);
-        ignisWraithModded.addMod(criticalDelay);
+        ignisWraith.addMod(pointStrike);
+        ignisWraith.addMod(criticalDelay);
 
         //attackspeed
         Mod vileAccel = new Mod();
         vileAccel.setFireRateIncrease(0.90);
         Mod vilePrecision = new Mod();
         vilePrecision.setFireRateIncrease(-0.36);
-        ignisWraithModded.addMod(vileAccel);
-        ignisWraithModded.addMod(vilePrecision);
+        ignisWraith.addMod(vileAccel);
+        ignisWraith.addMod(vilePrecision);
 
         //acc
         Mod guidedOrdinace = new Mod();
         guidedOrdinace.setAccuracyIncrease(0.30);
         Mod heavyCalibr = new Mod();
         heavyCalibr.setAccuracyIncrease(-0.55);
-        ignisWraithModded.addMod(heavyCalibr);
-        ignisWraithModded.addMod(guidedOrdinace);
+        ignisWraith.addMod(heavyCalibr);
+        ignisWraith.addMod(guidedOrdinace);
 
-        ignisWraithModded = modWeapon(ignisWraithModded, ignisWraith);
+
+        Weapon ignisWraithModded = weaponModifier.modifyWeapon(ignisWraith);
 
         System.out.println("===Modded weapons===");
         System.out.println(ignisWraithModded);
@@ -92,19 +91,5 @@ public class Engine {
         ignisWraith.setMods(new ArrayList<>());
         return ignisWraith;
     }
-
-    private Weapon modWeapon(Weapon weaponToMod, Weapon originalWeapon) {
-        List<Mod> weaponMods = weaponToMod.getMods();
-        System.out.println(weaponMods);
-
-        return weaponModifier.modifyWeapon(weaponToMod);
-
-//
-//        weaponModifier.calculateCriticalChance(weaponToMod, weaponMods);
-//        weaponModifier.calculateCriticalDamage(weaponToMod, weaponMods);
-//        weaponModifier.calculateFireRate(weaponToMod, weaponMods);
-//        weaponToMod.setAccuracy(weaponModifier.calculateAccuracy(weaponToMod.getAccuracy(), weaponMods));
-    }
-
 
 }

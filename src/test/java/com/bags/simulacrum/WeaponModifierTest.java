@@ -5,8 +5,10 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -22,6 +24,25 @@ public class WeaponModifierTest {
         MockitoAnnotations.initMocks(this);
         subject = new WeaponModifier();
         fakeWeapon = new Weapon();
+    }
+
+    @Test
+    public void itCopiesTheFluffDataFromOriginalWeaponToModifiedWeapon()
+    {
+        fakeWeapon.setName("someWeaponName");
+        fakeWeapon.setMasteryRank(57);
+        fakeWeapon.setSlot(Weapon.Slot.PRIMARY);
+        fakeWeapon.setType(Weapon.WeaponType.RIFLE);
+        fakeWeapon.setAmmoType(Weapon.AmmoType.RIFLE);
+        fakeWeapon.setRangeLimit(2375.0);
+        fakeWeapon.setNoiseLevel(Weapon.NoiseLevel.SILENT);
+        fakeWeapon.setMaxAmmo(1234);
+        fakeWeapon.setDisposition(Weapon.Disposition.STRONG);
+        fakeWeapon.setMods(new ArrayList<>());
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(fakeWeapon, actualWeaponModified);
     }
 
     @Test
@@ -132,6 +153,19 @@ public class WeaponModifierTest {
     }
 
     @Test
+    public void itCanCorrectlyCalculatePositiveCriticalChance()
+    {
+        Mod fakeCriticalChanceMod = new Mod();
+        fakeCriticalChanceMod.setCriticalChanceIncrease(1.50);
+        fakeWeapon.setCriticalChance(0.17);
+        fakeWeapon.setMods(Collections.singletonList(fakeCriticalChanceMod));
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(.425, actualWeaponModified.getCriticalChance(), .001);
+    }
+
+    @Test
     public void itCanCorrectlyCalculateComplexCriticalChance()
     {
         Mod fakeCriticalChanceMod = new Mod();
@@ -144,5 +178,46 @@ public class WeaponModifierTest {
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
         assertEquals(.438, actualWeaponModified.getCriticalChance(), .001);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculatePositiveReloadTime()
+    {
+        Mod fakeReloadTimeMod = new Mod();
+        fakeReloadTimeMod.setReloadTimeIncrease(0.30);
+        fakeWeapon.setReloadTime(1.70);
+        fakeWeapon.setMods(Collections.singletonList(fakeReloadTimeMod));
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(1.308, actualWeaponModified.getReloadTime(), .001);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculateNegativeReloadTime()
+    {
+        Mod fakeReloadTimeMod = new Mod();
+        fakeReloadTimeMod.setReloadTimeIncrease(-0.33);
+        fakeWeapon.setReloadTime(1.70);
+        fakeWeapon.setMods(Collections.singletonList(fakeReloadTimeMod));
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(2.537, actualWeaponModified.getReloadTime(), .001);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculateComplexReloadTime()
+    {
+        Mod fakeReloadTimeMod = new Mod();
+        fakeReloadTimeMod.setReloadTimeIncrease(-0.33);
+        Mod fakeReloadTimeMod2 = new Mod();
+        fakeReloadTimeMod2.setReloadTimeIncrease(0.55);
+        fakeWeapon.setReloadTime(1.70);
+        fakeWeapon.setMods(Arrays.asList(fakeReloadTimeMod, fakeReloadTimeMod2));
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(1.393, actualWeaponModified.getReloadTime(), .001);
     }
 }
