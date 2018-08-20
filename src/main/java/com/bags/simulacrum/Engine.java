@@ -5,9 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class Engine {
@@ -22,37 +20,24 @@ public class Engine {
         System.out.println("===Original weapons===");
         System.out.println(ignisWraith);
 
-        //critdmg
-        Mod vital = new Mod();
-        vital.setCriticalDamageIncrease(1.20);
-        Mod hammer = new Mod();
-        hammer.setCriticalDamageIncrease(.15);
-        ignisWraith.addMod(vital);
-        ignisWraith.addMod(hammer);
+        Mod vitalSense = new Mod();
+        vitalSense.setName("Vital Sense");
+        vitalSense.setCriticalDamageIncrease(1.20);
+        ignisWraith.addMod(vitalSense);
 
-        //critchance
         Mod pointStrike = new Mod();
+        pointStrike.setName("Point Strike");
         pointStrike.setCriticalChanceIncrease(1.50);
-        Mod criticalDelay = new Mod();
-        criticalDelay.setCriticalChanceIncrease(0.08);
         ignisWraith.addMod(pointStrike);
-        ignisWraith.addMod(criticalDelay);
 
-        //attackspeed
         Mod vileAccel = new Mod();
         vileAccel.setFireRateIncrease(0.90);
-        Mod vilePrecision = new Mod();
-        vilePrecision.setFireRateIncrease(-0.36);
+        vileAccel.setAccuracyIncrease(-0.50);
         ignisWraith.addMod(vileAccel);
-        ignisWraith.addMod(vilePrecision);
 
-        //acc
-        Mod guidedOrdinace = new Mod();
-        guidedOrdinace.setAccuracyIncrease(0.30);
-        Mod heavyCalibr = new Mod();
-        heavyCalibr.setAccuracyIncrease(-0.55);
-        ignisWraith.addMod(heavyCalibr);
-        ignisWraith.addMod(guidedOrdinace);
+        Mod malignantForce = new Mod();
+        malignantForce.setName("Malignant Force");
+        ignisWraith.addMod(malignantForce);
 
 
         Weapon ignisWraithModded = weaponModifier.modifyWeapon(ignisWraith);
@@ -72,9 +57,13 @@ public class Engine {
         ignisWraith.setMagazineSize(200);
         ignisWraith.setMaxAmmo(800);
         ignisWraith.setAccuracyMultiplier(0.0);
-        Map<Weapon.DamageType, Double> ignisDamageTypes = new HashMap<>();
-        ignisDamageTypes.put(Weapon.DamageType.HEAT, 35.0);
-        ignisWraith.setDamage(ignisDamageTypes);
+        List<Damage> ignisDamageTypes = new ArrayList<>();
+        Damage heat = new Damage();
+        heat.setValue(35);
+        heat.setType(Damage.DamageType.HEAT);
+        ignisDamageTypes.add(heat);
+
+        ignisWraith.setDamageTypes(ignisDamageTypes);
         ignisWraith.setReloadTime(1.7);
         ignisWraith.setStatusChance(.29);
 

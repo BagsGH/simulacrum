@@ -1,11 +1,8 @@
 package com.bags.simulacrum;
 
-import lombok.Builder;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Data
 public class Weapon {
@@ -16,7 +13,7 @@ public class Weapon {
     private double accuracy;
     private int magazineSize;
     private double reloadTime;
-    private Map<DamageType, Double> damage;
+    private List<Damage> damageTypes;
     private double criticalChance;
     private double criticalDamage;
     private double statusChance;
@@ -34,8 +31,7 @@ public class Weapon {
     private double rangeLimit;
     private Disposition disposition;
 
-    public Weapon()
-    {
+    public Weapon() {
 
     }
 
@@ -98,24 +94,6 @@ public class Weapon {
         DUPLEXAUTO,
         AUTOSPOOL,
         AUTO
-    }
-
-    public enum DamageType {
-        PUNCTURE,
-        IMPACT,
-        SLASH,
-        ELECTRICITY,
-        COLD,
-        HEAT,
-        TOXIN,
-        TRUE,
-        VOID,
-        BLAST,
-        CORROSIVE,
-        GAS,
-        MAGNETIC,
-        RADIATION,
-        VIRAL
     }
 
 }

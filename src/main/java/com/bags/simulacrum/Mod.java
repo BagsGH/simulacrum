@@ -2,7 +2,7 @@ package com.bags.simulacrum;
 
 import lombok.Data;
 
-import java.util.Map;
+import java.util.List;
 
 @Data
 public class Mod {
@@ -23,7 +23,7 @@ public class Mod {
     private double statusChanceIncrease;
     private double headshotMultiplierIncrease;
     private double damageIncrease;
-    private Map<String, Weapon.DamageType> damage;
+    private List<Damage> damageTypes;
 
     public enum Polarity {
         DASH,

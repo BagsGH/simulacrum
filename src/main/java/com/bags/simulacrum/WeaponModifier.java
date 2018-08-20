@@ -1,12 +1,8 @@
 package com.bags.simulacrum;
 
-import org.decimal4j.truncate.DecimalRounding;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.stereotype.Component;
 
-import org.decimal4j.*;
-
-import java.text.DecimalFormat;
 import java.util.List;
 
 @Component
@@ -69,13 +65,11 @@ public class WeaponModifier {
     }
 
     /**
-     *  If the weapon type is a bow, it gets a 2.0 multiplier to the individual mod's positive fire rate bonus. If it's a negative fire rate bonus mod the multiplier is just 1.0.
-     *  Other charge weapons are not affected and always have a multiplier of 1.0.
+     * If the weapon type is a bow, it gets a 2.0 multiplier to the individual mod's positive fire rate bonus. If it's a negative fire rate bonus mod the multiplier is just 1.0.
+     * Other charge weapons are not affected and always have a multiplier of 1.0.
      *
-     * @param fireRateIncrease
-     *  The individual mod's raw increase or decrease to fire rate.
-     * @return
-     *  A multiplier to use when calculating an individual mod's affect on the fire rate.
+     * @param fireRateIncrease The individual mod's raw increase or decrease to fire rate.
+     * @return A multiplier to use when calculating an individual mod's affect on the fire rate.
      */
     private double weaponTypeFireRateBonusMultiplier(double fireRateIncrease) {
         return fireRateIncrease > 0 && originalWeapon.getType().equals(Weapon.WeaponType.BOW) ? 2.0 : 1.0;
