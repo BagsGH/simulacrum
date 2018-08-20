@@ -27,6 +27,7 @@ public class WeaponModifierTest {
         MockitoAnnotations.initMocks(this);
         subject = new WeaponModifier();
         fakeWeapon = new Weapon();
+        fakeWeapon.setType(Weapon.WeaponType.RIFLE);
 
         fakeMod = new Mod();
         anotherFakeMod = new Mod();

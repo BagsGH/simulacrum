@@ -60,14 +60,20 @@ public class WeaponModifier {
     }
 
     private double calculateModdedChargeTime() {
-        double chargeTimeIncrease = weaponMods.stream().filter(mod -> mod.getFireRateIncrease() != 0.0).mapToDouble(Mod::getFireRateIncrease).sum();
-        System.out.println("ChargeTimeInc:" + chargeTimeIncrease);
-        return originalWeapon.getChargeTime() / (1 + chargeTimeIncrease * bowFireRateBonusMultiplier(chargeTimeIncrease));
+        double chargeTimeIncrease = 0.0;
+
+        for(Mod mod : weaponMods)
+        {
+            if(mod.getFireRateIncrease() != 0)
+            {
+                chargeTimeIncrease += mod.getFireRateIncrease() * bowFireRateBonusMultiplier(mod.getFireRateIncrease());
+            }
+        }
+        return originalWeapon.getChargeTime() / (1 + chargeTimeIncrease);
     }
 
-    private double bowFireRateBonusMultiplier(double chargeTimeIncrease) {
-        System.out.println("Multiplier:" + (chargeTimeIncrease > 0 && originalWeapon.getType().equals(Weapon.WeaponType.BOW) ? 2.0 : 1.0));
-        return chargeTimeIncrease > 0 && originalWeapon.getType().equals(Weapon.WeaponType.BOW) ? 2.0 : 1.0;
+    private double bowFireRateBonusMultiplier(double getFireRateIncrease) {
+        return getFireRateIncrease > 0 && originalWeapon.getType().equals(Weapon.WeaponType.BOW) ? 2.0 : 1.0;
     }
 
     private double calculateModdedCriticalDamage() {
