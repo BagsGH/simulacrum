@@ -101,7 +101,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
-        assertEquals(15.20, actualWeaponModified.getFireRate(), .01);
+        assertEquals(15.200, actualWeaponModified.getFireRate(), .001);
     }
 
     @Test
@@ -114,7 +114,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
-        assertEquals(5.12, actualWeaponModified.getFireRate(), .01);
+        assertEquals(5.120, actualWeaponModified.getFireRate(), .001);
     }
 
     @Test
@@ -129,7 +129,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
-        assertEquals(12.32, actualWeaponModified.getFireRate(), .001);
+        assertEquals(12.320, actualWeaponModified.getFireRate(), .001);
     }
 
     @Test
@@ -142,7 +142,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
-        assertEquals(0.179, actualWeaponModified.getChargeTime(), .01);
+        assertEquals(0.179, actualWeaponModified.getChargeTime(), .001);
     }
 
     @Test
@@ -155,7 +155,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
-        assertEquals(1.053, actualWeaponModified.getChargeTime(), .01);
+        assertEquals(1.053, actualWeaponModified.getChargeTime(), .001);
     }
 
     @Test
@@ -168,7 +168,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
-        assertEquals(0.781, actualWeaponModified.getChargeTime(), .01);
+        assertEquals(0.781, actualWeaponModified.getChargeTime(), .001);
     }
 
     @Test
@@ -181,7 +181,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
-        assertEquals(3.125, actualWeaponModified.getChargeTime(), .01);
+        assertEquals(3.125, actualWeaponModified.getChargeTime(), .001);
     }
 
     @Test
@@ -195,7 +195,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
-        assertEquals(0.492, actualWeaponModified.getChargeTime(), .01);
+        assertEquals(0.492, actualWeaponModified.getChargeTime(), .001);
     }
 
     @Test
@@ -209,7 +209,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
-        assertEquals(1.299, actualWeaponModified.getChargeTime(), .01);
+        assertEquals(1.299, actualWeaponModified.getChargeTime(), .001);
     }
 
     @Test
@@ -265,7 +265,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
-        assertEquals(.438, actualWeaponModified.getCriticalChance(), .001);
+        assertEquals(.439, actualWeaponModified.getCriticalChance(), .001);
     }
 
     @Test

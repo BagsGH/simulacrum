@@ -1,7 +1,12 @@
 package com.bags.simulacrum;
 
+import org.decimal4j.truncate.DecimalRounding;
+import org.decimal4j.util.DoubleRounder;
 import org.springframework.stereotype.Component;
 
+import org.decimal4j.*;
+
+import java.text.DecimalFormat;
 import java.util.List;
 
 @Component
@@ -35,7 +40,7 @@ public class WeaponModifier {
 
     private double calculateModdedFireRate() {
         double fireRateIncrease = weaponMods.stream().filter(mod -> mod.getFireRateIncrease() != 0).mapToDouble(Mod::getFireRateIncrease).sum();
-        return originalWeapon.getFireRate() * (1 + fireRateIncrease);
+        return DoubleRounder.round(originalWeapon.getFireRate() * (1 + fireRateIncrease), 3);
     }
 
     private double calculateModdedAccuracy() {
@@ -55,39 +60,39 @@ public class WeaponModifier {
 
     private double calculateModdedReloadTime() {
         double reloadSpeedIncrease = weaponMods.stream().filter(mod -> mod.getReloadTimeIncrease() != 0.0).mapToDouble(Mod::getReloadTimeIncrease).sum();
-        return originalWeapon.getReloadTime() / (1 + reloadSpeedIncrease);
+        return DoubleRounder.round(originalWeapon.getReloadTime() / (1 + reloadSpeedIncrease), 3);
     }
 
     private double calculateModdedChargeTime() {
-        double chargeTimeIncrease = weaponMods.stream().filter(mod -> mod.getFireRateIncrease() != 0).mapToDouble(mod -> mod.getFireRateIncrease() * bowFireRateBonusMultiplier(mod.getFireRateIncrease())).sum();
-        return originalWeapon.getChargeTime() / (1 + chargeTimeIncrease);
+        double chargeTimeIncrease = weaponMods.stream().filter(mod -> mod.getFireRateIncrease() != 0).mapToDouble(mod -> mod.getFireRateIncrease() * weaponTypeFireRateBonusMultiplier(mod.getFireRateIncrease())).sum();
+        return DoubleRounder.round(originalWeapon.getChargeTime() / (1 + chargeTimeIncrease), 3);
     }
 
     /**
      *  If the weapon type is a bow, it gets a 2.0 multiplier to the individual mod's positive fire rate bonus. If it's a negative fire rate bonus mod the multiplier is just 1.0.
      *  Other charge weapons are not affected and always have a multiplier of 1.0.
      *
-     * @param getFireRateIncrease
+     * @param fireRateIncrease
      *  The individual mod's raw increase or decrease to fire rate.
      * @return
      *  A multiplier to use when calculating an individual mod's affect on the fire rate.
      */
-    private double bowFireRateBonusMultiplier(double getFireRateIncrease) {
-        return getFireRateIncrease > 0 && originalWeapon.getType().equals(Weapon.WeaponType.BOW) ? 2.0 : 1.0;
+    private double weaponTypeFireRateBonusMultiplier(double fireRateIncrease) {
+        return fireRateIncrease > 0 && originalWeapon.getType().equals(Weapon.WeaponType.BOW) ? 2.0 : 1.0;
     }
 
     private double calculateModdedCriticalDamage() {
         double criticalDamageIncrease = weaponMods.stream().filter(mod -> mod.getCriticalDamageIncrease() != 0).mapToDouble(Mod::getCriticalDamageIncrease).sum();
-        return originalWeapon.getCriticalDamage() * (1 + criticalDamageIncrease);
+        return DoubleRounder.round(originalWeapon.getCriticalDamage() * (1 + criticalDamageIncrease), 3);
     }
 
     private double calculateModdedCriticalChance() {
         double criticalChanceIncrease = weaponMods.stream().filter(mod -> mod.getCriticalChanceIncrease() != 0).mapToDouble(Mod::getCriticalChanceIncrease).sum();
-        return originalWeapon.getCriticalChance() * (1 + criticalChanceIncrease);
+        return DoubleRounder.round(originalWeapon.getCriticalChance() * (1 + criticalChanceIncrease), 3);
     }
 
     private double calculateModdedStatusChance() {
         double statusChanceIncrease = weaponMods.stream().filter(mod -> mod.getStatusChanceIncrease() != 0).mapToDouble(Mod::getStatusChanceIncrease).sum();
-        return originalWeapon.getStatusChance() * (1 + statusChanceIncrease);
+        return DoubleRounder.round(originalWeapon.getStatusChance() * (1 + statusChanceIncrease), 3);
     }
 }

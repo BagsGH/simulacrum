@@ -32,6 +32,7 @@ dependencies {
     compile('org.apache.kafka:kafka-streams')
     compile('org.springframework.kafka:spring-kafka')
     compile('org.springframework.session:spring-session-core')
+    compile group: 'org.decimal4j', name: 'decimal4j', version: '1.0.3'
     runtime('mysql:mysql-connector-java')
     compileOnly('org.projectlombok:lombok')
     testCompile('org.springframework.boot:spring-boot-starter-test')
