@@ -8,9 +8,8 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class WeaponModifierTest {
 
@@ -23,19 +22,19 @@ public class WeaponModifierTest {
     private Mod anotherFakeMod;
 
     @Before
-    public void setup(){
+    public void setup() {
         MockitoAnnotations.initMocks(this);
         subject = new WeaponModifier();
         fakeWeapon = new Weapon();
         fakeWeapon.setType(Weapon.WeaponType.RIFLE);
+        fakeWeapon.setDamageTypes(new ArrayList<>());
 
         fakeMod = new Mod();
         anotherFakeMod = new Mod();
     }
 
     @Test
-    public void itCopiesTheStaticDataFromOriginalWeaponToModifiedWeapon()
-    {
+    public void itCopiesTheStaticDataFromOriginalWeaponToModifiedWeapon() {
         fakeWeapon.setName("someWeaponName");
         fakeWeapon.setMasteryRank(57);
         fakeWeapon.setSlot(Weapon.Slot.PRIMARY);
@@ -54,7 +53,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculatePositiveAccuracy(){
+    public void itCanCorrectlyCalculatePositiveAccuracy() {
         Mod fakeMod = new Mod();
         fakeMod.setAccuracyIncrease(0.3);
         fakeWeapon.setAccuracy(1.00);
@@ -66,7 +65,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculateNegativeAccuracy(){
+    public void itCanCorrectlyCalculateNegativeAccuracy() {
         Mod fakeMod = new Mod();
         fakeMod.setAccuracyIncrease(-0.3);
         fakeWeapon.setAccuracy(1.00);
@@ -78,7 +77,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculateComplexAccuracy(){
+    public void itCanCorrectlyCalculateComplexAccuracy() {
         Mod fakeMod = new Mod();
         fakeMod.setAccuracyIncrease(0.3);
         Mod fakeMod2 = new Mod();
@@ -92,8 +91,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculatePositiveFireRate()
-    {
+    public void itCanCorrectlyCalculatePositiveFireRate() {
         Mod fakeFireRateMod = new Mod();
         fakeFireRateMod.setFireRateIncrease(0.90);
         fakeWeapon.setFireRate(8.0);
@@ -105,8 +103,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculateNegativeFireRate()
-    {
+    public void itCanCorrectlyCalculateNegativeFireRate() {
         Mod fakeFireRateMod = new Mod();
         fakeFireRateMod.setFireRateIncrease(-0.36);
         fakeWeapon.setFireRate(8.0);
@@ -118,8 +115,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculateComplexFireRate()
-    {
+    public void itCanCorrectlyCalculateComplexFireRate() {
         Mod fakeFireRateMod = new Mod();
         fakeFireRateMod.setFireRateIncrease(-0.36);
         Mod fakeFireRateMod2 = new Mod();
@@ -133,8 +129,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculatePositiveChargeTimeForBows()
-    {
+    public void itCanCorrectlyCalculatePositiveChargeTimeForBows() {
         fakeMod.setFireRateIncrease(0.90);
         fakeWeapon.setChargeTime(0.5);
         fakeWeapon.setMods(Collections.singletonList(fakeMod));
@@ -146,8 +141,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculatePositiveChargeTime()
-    {
+    public void itCanCorrectlyCalculatePositiveChargeTime() {
         fakeMod.setFireRateIncrease(0.90);
         fakeWeapon.setChargeTime(2.0);
         fakeWeapon.setMods(Collections.singletonList(fakeMod));
@@ -159,8 +153,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculateNegativeChargeTimeForBows()
-    {
+    public void itCanCorrectlyCalculateNegativeChargeTimeForBows() {
         fakeMod.setFireRateIncrease(-0.36);
         fakeWeapon.setChargeTime(0.50);
         fakeWeapon.setMods(Collections.singletonList(fakeMod));
@@ -172,8 +165,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculateNegativeChargeTime()
-    {
+    public void itCanCorrectlyCalculateNegativeChargeTime() {
         fakeMod.setFireRateIncrease(-0.36);
         fakeWeapon.setChargeTime(2.0);
         fakeWeapon.setMods(Collections.singletonList(fakeMod));
@@ -185,8 +177,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculateComplexChargeTimeForBows()
-    {
+    public void itCanCorrectlyCalculateComplexChargeTimeForBows() {
         fakeMod.setFireRateIncrease(-0.36);
         anotherFakeMod.setFireRateIncrease(0.90);
         fakeWeapon.setChargeTime(1.20);
@@ -199,8 +190,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculateComplexCharge()
-    {
+    public void itCanCorrectlyCalculateComplexCharge() {
         fakeMod.setFireRateIncrease(-0.36);
         anotherFakeMod.setFireRateIncrease(0.90);
         fakeWeapon.setChargeTime(2.0);
@@ -213,8 +203,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculatePositiveCriticalDamage()
-    {
+    public void itCanCorrectlyCalculatePositiveCriticalDamage() {
         Mod fakeCriticalDamageMod = new Mod();
         fakeCriticalDamageMod.setCriticalDamageIncrease(1.20);
         fakeWeapon.setCriticalDamage(2.5);
@@ -226,8 +215,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculateComplexCriticalDamage()
-    {
+    public void itCanCorrectlyCalculateComplexCriticalDamage() {
         Mod fakeCriticalDamageMod = new Mod();
         fakeCriticalDamageMod.setCriticalDamageIncrease(1.20);
         Mod fakeCriticalDamageMod2 = new Mod();
@@ -241,8 +229,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculatePositiveCriticalChance()
-    {
+    public void itCanCorrectlyCalculatePositiveCriticalChance() {
         Mod fakeCriticalChanceMod = new Mod();
         fakeCriticalChanceMod.setCriticalChanceIncrease(1.50);
         fakeWeapon.setCriticalChance(0.17);
@@ -254,8 +241,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculateComplexCriticalChance()
-    {
+    public void itCanCorrectlyCalculateComplexCriticalChance() {
         Mod fakeCriticalChanceMod = new Mod();
         fakeCriticalChanceMod.setCriticalChanceIncrease(1.50);
         Mod fakeCriticalChanceMod2 = new Mod();
@@ -269,8 +255,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculatePositiveReloadTime()
-    {
+    public void itCanCorrectlyCalculatePositiveReloadTime() {
         Mod fakeReloadTimeMod = new Mod();
         fakeReloadTimeMod.setReloadTimeIncrease(0.30);
         fakeWeapon.setReloadTime(1.70);
@@ -282,8 +267,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculateNegativeReloadTime()
-    {
+    public void itCanCorrectlyCalculateNegativeReloadTime() {
         Mod fakeReloadTimeMod = new Mod();
         fakeReloadTimeMod.setReloadTimeIncrease(-0.33);
         fakeWeapon.setReloadTime(1.70);
@@ -295,8 +279,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculateComplexReloadTime()
-    {
+    public void itCanCorrectlyCalculateComplexReloadTime() {
         Mod fakeReloadTimeMod = new Mod();
         fakeReloadTimeMod.setReloadTimeIncrease(-0.33);
         Mod fakeReloadTimeMod2 = new Mod();
@@ -310,8 +293,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculatePositiveStatusChance()
-    {
+    public void itCanCorrectlyCalculatePositiveStatusChance() {
         Mod fakeStatusChanceMod = new Mod();
         fakeStatusChanceMod.setStatusChanceIncrease(0.40);
         fakeWeapon.setStatusChance(0.29);
@@ -323,8 +305,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculateComplexStatusChance()
-    {
+    public void itCanCorrectlyCalculateComplexStatusChance() {
         Mod fakeStatusChanceMod = new Mod();
         fakeStatusChanceMod.setStatusChanceIncrease(0.60);
         Mod fakeStatusChanceMod2 = new Mod();
@@ -338,11 +319,10 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculatePositiveMagazineSize()
-    {
+    public void itCanCorrectlyCalculatePositiveMagazineSize() {
         fakeMod.setMagazineSizeIncrease(0.66);
         fakeWeapon.setMagazineSize(200);
-        fakeWeapon.setMods(Collections.singletonList(fakeMod));
+        fakeWeapon.addMod(fakeMod);
 
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
@@ -350,11 +330,10 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculateNegativeMagazineSize()
-    {
+    public void itCanCorrectlyCalculateNegativeMagazineSize() {
         fakeMod.setMagazineSizeIncrease(-0.10);
         fakeWeapon.setMagazineSize(200);
-        fakeWeapon.setMods(Collections.singletonList(fakeMod));
+        fakeWeapon.addMod(fakeMod);
 
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
@@ -362,8 +341,7 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculateComplexMagazineSize()
-    {
+    public void itCanCorrectlyCalculateComplexMagazineSize() {
         fakeMod.setMagazineSizeIncrease(-0.10);
         anotherFakeMod.setMagazineSizeIncrease(0.66);
         fakeWeapon.setMagazineSize(200);
@@ -375,15 +353,30 @@ public class WeaponModifierTest {
     }
 
     @Test
-    public void itCanCorrectlyCalculatePositiveMaxAmmo()
-    {
+    public void itCanCorrectlyCalculatePositiveMaxAmmo() {
         fakeMod.setMaxAmmoIncrease(0.30);
         fakeWeapon.setMaxAmmo(800);
-        fakeWeapon.setMods(Collections.singletonList(fakeMod));
+        fakeWeapon.addMod(fakeMod);
 
         Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
 
         assertEquals(1040, actualWeaponModified.getMaxAmmo());
+    }
+
+    @Test
+    public void itCanCorrectlyCombineOneElementalModWithWeaponBaseElement() {
+        Damage toxic = new Damage(Damage.DamageType.TOXIN);
+        toxic.setModElementalDamageRatio(0.60);
+        fakeMod.setDamageType(toxic);
+
+        Damage heat = new Damage(Damage.DamageType.HEAT);
+        heat.setDamageValue(35.0);
+        fakeWeapon.setDamageTypes(Collections.singletonList(heat));
+        fakeWeapon.addMod(fakeMod);
+
+        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+
+        assertEquals(Damage.DamageType.GAS, actualWeaponModified.getDamageTypes().get(0).getType());
     }
 
 }

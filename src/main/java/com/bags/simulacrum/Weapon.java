@@ -2,6 +2,7 @@ package com.bags.simulacrum;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -50,6 +51,9 @@ public class Weapon {
     }
 
     public void addMod(Mod mod) {
+        if (mods == null) {
+            mods = new ArrayList<>();
+        }
         mods.add(mod);
     }
 

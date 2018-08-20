@@ -3,6 +3,7 @@ package com.bags.simulacrum;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -25,8 +26,47 @@ public class WeaponModifier {
         modifiedWeapon.setCriticalChance(calculateModdedCriticalChance());
         modifiedWeapon.setCriticalDamage(calculateModdedCriticalDamage());
         modifiedWeapon.setStatusChance(calculateModdedStatusChance());
+        modifiedWeapon.setDamageTypes(calculateModdedDamageTypes());
 
         return modifiedWeapon;
+    }
+
+    private List<Damage> calculateModdedDamageTypes() {
+        List<Damage> elementalDamageFromMods = new ArrayList<>();
+        List<Damage> elementalDamageOnWeapon = new ArrayList<>();
+
+        for (Mod mod : originalWeapon.getMods()) {
+            if (mod.getDamageType() != null) {
+                elementalDamageFromMods.add(mod.getDamageType());
+            }
+        }
+
+        for (Damage damageType : originalWeapon.getDamageTypes()) {
+            if (Damage.isElemental(damageType)) {
+                elementalDamageOnWeapon.add(damageType);
+            }
+        }
+
+        return combineElementalDamageTypes(elementalDamageFromMods, elementalDamageOnWeapon);
+    }
+
+    private List<Damage> combineElementalDamageTypes(List<Damage> elementalDamageFromMods, List<Damage> elementalDamageOnWeapon) {
+        List<Damage> combinedDamageTypes = new ArrayList<>();
+        if (elementalDamageFromMods.size() >= 2) {
+            for (int i = 0; i < elementalDamageFromMods.size(); i++) {
+                combinedDamageTypes.add(combineTwoElementalDamageTypes(elementalDamageFromMods.get(i), elementalDamageFromMods.get(i + 1)));
+            }
+        } else if (elementalDamageFromMods.size() == 1 && elementalDamageOnWeapon.size() > 0) {
+            combinedDamageTypes.add(combineTwoElementalDamageTypes(elementalDamageFromMods.get(0), elementalDamageOnWeapon.get(0)));
+        }
+        return combinedDamageTypes;
+    }
+
+    private Damage combineTwoElementalDamageTypes(Damage damage, Damage damage1) {
+        if (damage.getType().equals(Damage.DamageType.TOXIN) && damage1.getType().equals(Damage.DamageType.HEAT)) {
+            return new Damage(Damage.DamageType.GAS);
+        }
+        return null;
     }
 
     private Weapon copyWeaponToMod() {

@@ -2,8 +2,6 @@ package com.bags.simulacrum;
 
 import lombok.Data;
 
-import java.util.List;
-
 @Data
 public class Mod {
 
@@ -23,7 +21,8 @@ public class Mod {
     private double statusChanceIncrease;
     private double headshotMultiplierIncrease;
     private double damageIncrease;
-    private List<Damage> damageTypes;
+    private Damage damageType;
+    private int index;
 
     public enum Polarity {
         DASH,

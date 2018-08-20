@@ -6,8 +6,16 @@ import lombok.Data;
 public class Damage {
 
     private DamageType type;
-    private double value;
+    private double damageValue;
+    private double modElementalDamageRatio;
 
+    public Damage() {
+
+    }
+
+    public Damage(DamageType type) {
+        this.type = type;
+    }
 
     public enum DamageType {
         PUNCTURE,
@@ -25,6 +33,11 @@ public class Damage {
         MAGNETIC,
         RADIATION,
         VIRAL
+    }
+
+    public static boolean isElemental(Damage damage) {
+        return damage.getType().equals(DamageType.ELECTRICITY) || damage.getType().equals(DamageType.COLD) || damage.getType().equals(DamageType.HEAT) || damage.getType().equals(DamageType.TOXIN) || damage.getType().equals(DamageType.BLAST) ||
+                damage.getType().equals(DamageType.CORROSIVE) || damage.getType().equals(DamageType.GAS) || damage.getType().equals(DamageType.MAGNETIC) || damage.getType().equals(DamageType.RADIATION) || damage.getType().equals(DamageType.VIRAL);
     }
 
 }
