@@ -1,5 +1,6 @@
-package com.bags.simulacrum;
+package com.bags.simulacrum.Weapon;
 
+import com.bags.simulacrum.Damage.Damage;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.stereotype.Component;
 

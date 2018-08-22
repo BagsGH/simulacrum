@@ -1,4 +1,4 @@
-package com.bags.simulacrum;
+package com.bags.simulacrum.Damage;
 
 import lombok.Data;
 

@@ -1,6 +1,10 @@
 package com.bags.simulacrum;
 
 
+import com.bags.simulacrum.Damage.Damage;
+import com.bags.simulacrum.Weapon.Mod;
+import com.bags.simulacrum.Weapon.Weapon;
+import com.bags.simulacrum.Weapon.WeaponModifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

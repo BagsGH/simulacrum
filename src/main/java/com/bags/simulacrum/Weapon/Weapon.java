@@ -1,5 +1,6 @@
-package com.bags.simulacrum;
+package com.bags.simulacrum.Weapon;
 
+import com.bags.simulacrum.Damage.Damage;
 import lombok.Data;
 
 import java.util.ArrayList;

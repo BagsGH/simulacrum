@@ -1,5 +1,9 @@
 package com.bags.simulacrum;
 
+import com.bags.simulacrum.Damage.Damage;
+import com.bags.simulacrum.Weapon.Mod;
+import com.bags.simulacrum.Weapon.Weapon;
+import com.bags.simulacrum.Weapon.WeaponModifier;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
