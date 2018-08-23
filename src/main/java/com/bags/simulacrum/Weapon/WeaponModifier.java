@@ -23,11 +23,7 @@ public class WeaponModifier {
         List<Damage> moddedElementalDamage = calculateElementalDamageAddedByMods(moddedBaseDamage);
         List<Damage> orderedDamageTypes = orderDamageTypes(moddedBaseDamage, moddedElementalDamage);
         List<Damage> combinedElementalDamageTypes = combineDamageTypes(orderedDamageTypes);
-
-        modifiedWeapon.setDamageTypes(orderedDamageTypes);
-
-//        modifiedWeapon.setDamageTypes(moddedBaseDamage);
-
+        modifiedWeapon.setDamageTypes(combinedElementalDamageTypes);
 
         modifiedWeapon.setFireRate(calculateModdedFireRate());
         modifiedWeapon.setAccuracy(calculateModdedAccuracy());
@@ -38,7 +34,6 @@ public class WeaponModifier {
         modifiedWeapon.setCriticalChance(calculateModdedCriticalChance());
         modifiedWeapon.setCriticalDamage(calculateModdedCriticalDamage());
         modifiedWeapon.setStatusChance(calculateModdedStatusChance());
-        //modifiedWeapon.setDamageTypes(calculateModdedDamageTypes());
 
         return modifiedWeapon;
     }
@@ -50,10 +45,11 @@ public class WeaponModifier {
             if (orderedElementalDamageTypes.size() >= 2) {
                 Damage d1 = orderedElementalDamageTypes.get(i);
                 Damage d2 = orderedElementalDamageTypes.get(i + 1);
-                Damage combinedDamageType = mapper.combineElements(d1, d2);
+                Damage.DamageType combinedDamageType = mapper.combineElements(d1.getType(), d2.getType());
                 if (combinedDamageType != null) {
-                    combinedDamageType.setDamageValue(d1.getDamageValue() + d2.getDamageValue());
-                    combinedElementalDamages.add(combinedDamageType);
+                    Damage CombinedDamage = new Damage(combinedDamageType);
+                    CombinedDamage.setDamageValue(d1.getDamageValue() + d2.getDamageValue());
+                    combinedElementalDamages.add(CombinedDamage);
                     i++;
                 } else {
                     combinedElementalDamages.add(d1);
