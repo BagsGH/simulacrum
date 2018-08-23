@@ -443,10 +443,14 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
-        Damage actualAddedToxinDamage = actualWeaponModified.getDamageTypes().get(1);
+        Damage actualAddedToxinDamage = actualWeaponModified.getDamageTypes().get(0);
+        Damage originalImpactDamage = actualWeaponModified.getDamageTypes().get(1);
 
+
+        assertEquals(35.0, originalImpactDamage.getDamageValue(), .001);
         assertEquals(31.5, actualAddedToxinDamage.getDamageValue(), .001);
         assertEquals(Damage.DamageType.TOXIN, actualAddedToxinDamage.getType());
+        assertEquals(Damage.DamageType.IMPACT, originalImpactDamage.getType());
     }
 
     @Test
@@ -467,6 +471,27 @@ public class WeaponModifierTest {
 
         assertEquals(66.5, actualAddedDamage.getDamageValue(), .001);
         assertEquals(Damage.DamageType.HEAT, actualAddedDamage.getType());
+    }
+
+    @Test
+    public void itCanCorrectlyCombineElements() {
+        Damage baseWeaponHeatDamage = new Damage(Damage.DamageType.HEAT);
+        baseWeaponHeatDamage.setDamageValue(35.00);
+        fakeWeapon.setDamageTypes(Collections.singletonList(baseWeaponHeatDamage));
+
+        Damage toxinModDamage = new Damage(Damage.DamageType.TOXIN);
+        toxinModDamage.setModElementalDamageRatio(0.90);
+        fakeMod.setDamage(toxinModDamage);
+
+        fakeWeapon.setMods(Arrays.asList(fakeMod));
+
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
+
+        Damage actualGasDamage = actualWeaponModified.getDamageTypes().get(0);
+
+
+        assertEquals(66.5, actualGasDamage.getDamageValue(), .001);
+        assertEquals(Damage.DamageType.GAS, actualGasDamage.getType());
     }
 
 }

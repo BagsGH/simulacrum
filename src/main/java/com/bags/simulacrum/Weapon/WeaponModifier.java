@@ -1,6 +1,7 @@
 package com.bags.simulacrum.Weapon;
 
 import com.bags.simulacrum.Damage.Damage;
+import com.bags.simulacrum.Damage.ElementalDamageMapper;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.stereotype.Component;
 
@@ -20,9 +21,10 @@ public class WeaponModifier {
 
         List<Damage> moddedBaseDamage = calculateModdedDamageValues();
         List<Damage> moddedElementalDamage = calculateElementalDamageAddedByMods(moddedBaseDamage);
-        List<Damage> orderedElementalDamageTypes = orderDamageTypes(moddedBaseDamage, moddedElementalDamage);
+        List<Damage> orderedDamageTypes = orderDamageTypes(moddedBaseDamage, moddedElementalDamage);
+        List<Damage> combinedElementalDamageTypes = combineDamageTypes(orderedDamageTypes);
 
-        modifiedWeapon.setDamageTypes(orderedElementalDamageTypes);
+        modifiedWeapon.setDamageTypes(orderedDamageTypes);
 
 //        modifiedWeapon.setDamageTypes(moddedBaseDamage);
 
@@ -41,6 +43,27 @@ public class WeaponModifier {
         return modifiedWeapon;
     }
 
+    private List<Damage> combineDamageTypes(List<Damage> orderedElementalDamageTypes) {
+        ElementalDamageMapper mapper = new ElementalDamageMapper();
+        List<Damage> combinedElementalDamages = new ArrayList<>();
+        for (int i = 0; i < orderedElementalDamageTypes.size() - 1; i++) {
+            if (orderedElementalDamageTypes.size() >= 2) {
+                Damage d1 = orderedElementalDamageTypes.get(i);
+                Damage d2 = orderedElementalDamageTypes.get(i + 1);
+                Damage combinedDamageType = mapper.combineElements(d1, d2);
+                if (combinedDamageType != null) {
+                    combinedDamageType.setDamageValue(d1.getDamageValue() + d2.getDamageValue());
+                    combinedElementalDamages.add(combinedDamageType);
+                    i++;
+                } else {
+                    combinedElementalDamages.add(d1);
+                }
+            }
+        }
+
+        return combinedElementalDamages;
+    }
+
     private List<Damage> orderDamageTypes(List<Damage> moddedBaseDamage, List<Damage> moddedElementalDamage) {
         List<Damage> mergedList = new ArrayList<>();
         mergedList.addAll(moddedElementalDamage);
@@ -57,6 +80,8 @@ public class WeaponModifier {
                 if (!thereIsAModThatIsTheSameType) {
                     mergedList.add(baseDamage);
                 }
+            } else {
+                mergedList.add(baseDamage);
             }
         }
 
