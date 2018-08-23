@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class ElementalDamageCombiner {
+public class ElementalDamageMapper {
 
     private static final Map<Pair<Damage, Damage>, Damage> damageCombinationMap;
 
