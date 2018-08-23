@@ -17,6 +17,12 @@ public class Damage {
         this.type = type;
     }
 
+    public Damage(Damage damage) {
+        this.type = damage.getType();
+        this.damageValue = damage.getDamageValue();
+        this.modElementalDamageRatio = damage.getModElementalDamageRatio();
+    }
+
     public enum DamageType {
         PUNCTURE,
         IMPACT,

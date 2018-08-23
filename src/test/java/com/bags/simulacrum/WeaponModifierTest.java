@@ -51,7 +51,7 @@ public class WeaponModifierTest {
         fakeWeapon.setMods(new ArrayList<>());
         fakeWeapon.setTriggerType(Weapon.TriggerType.HELD);
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(fakeWeapon, actualWeaponModified);
     }
@@ -63,7 +63,7 @@ public class WeaponModifierTest {
         fakeWeapon.setAccuracy(1.00);
         fakeWeapon.setMods(Collections.singletonList(fakeMod));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(1.30, actualWeaponModified.getAccuracy(), .001);
     }
@@ -75,7 +75,7 @@ public class WeaponModifierTest {
         fakeWeapon.setAccuracy(1.00);
         fakeWeapon.setMods(Collections.singletonList(fakeMod));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(0.70, actualWeaponModified.getAccuracy(), .001);
     }
@@ -89,7 +89,7 @@ public class WeaponModifierTest {
         fakeWeapon.setAccuracy(1.00);
         fakeWeapon.setMods(Arrays.asList(fakeMod, fakeMod2));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(0.75, actualWeaponModified.getAccuracy(), .001);
     }
@@ -101,7 +101,7 @@ public class WeaponModifierTest {
         fakeWeapon.setFireRate(8.0);
         fakeWeapon.setMods(Collections.singletonList(fakeFireRateMod));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(15.200, actualWeaponModified.getFireRate(), .001);
     }
@@ -113,7 +113,7 @@ public class WeaponModifierTest {
         fakeWeapon.setFireRate(8.0);
         fakeWeapon.setMods(Collections.singletonList(fakeFireRateMod));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(5.120, actualWeaponModified.getFireRate(), .001);
     }
@@ -127,7 +127,7 @@ public class WeaponModifierTest {
         fakeWeapon.setFireRate(8.0);
         fakeWeapon.setMods(Arrays.asList(fakeFireRateMod, fakeFireRateMod2));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(12.320, actualWeaponModified.getFireRate(), .001);
     }
@@ -139,7 +139,7 @@ public class WeaponModifierTest {
         fakeWeapon.setMods(Collections.singletonList(fakeMod));
         fakeWeapon.setType(Weapon.WeaponType.BOW);
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(0.179, actualWeaponModified.getChargeTime(), .001);
     }
@@ -151,7 +151,7 @@ public class WeaponModifierTest {
         fakeWeapon.setMods(Collections.singletonList(fakeMod));
         fakeWeapon.setType(Weapon.WeaponType.RIFLE);
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(1.053, actualWeaponModified.getChargeTime(), .001);
     }
@@ -163,7 +163,7 @@ public class WeaponModifierTest {
         fakeWeapon.setMods(Collections.singletonList(fakeMod));
         fakeWeapon.setType(Weapon.WeaponType.BOW);
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(0.781, actualWeaponModified.getChargeTime(), .001);
     }
@@ -175,7 +175,7 @@ public class WeaponModifierTest {
         fakeWeapon.setMods(Collections.singletonList(fakeMod));
         fakeWeapon.setType(Weapon.WeaponType.RIFLE);
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(3.125, actualWeaponModified.getChargeTime(), .001);
     }
@@ -188,7 +188,7 @@ public class WeaponModifierTest {
         fakeWeapon.setMods(Arrays.asList(fakeMod, anotherFakeMod));
         fakeWeapon.setType(Weapon.WeaponType.BOW);
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(0.492, actualWeaponModified.getChargeTime(), .001);
     }
@@ -201,7 +201,7 @@ public class WeaponModifierTest {
         fakeWeapon.setMods(Arrays.asList(fakeMod, anotherFakeMod));
         fakeWeapon.setType(Weapon.WeaponType.RIFLE);
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(1.299, actualWeaponModified.getChargeTime(), .001);
     }
@@ -213,7 +213,7 @@ public class WeaponModifierTest {
         fakeWeapon.setCriticalDamage(2.5);
         fakeWeapon.setMods(Collections.singletonList(fakeCriticalDamageMod));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(5.5, actualWeaponModified.getCriticalDamage(), .001);
     }
@@ -227,7 +227,7 @@ public class WeaponModifierTest {
         fakeWeapon.setCriticalDamage(2.5);
         fakeWeapon.setMods(Arrays.asList(fakeCriticalDamageMod, fakeCriticalDamageMod2));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(5.875, actualWeaponModified.getCriticalDamage(), .001);
     }
@@ -239,7 +239,7 @@ public class WeaponModifierTest {
         fakeWeapon.setCriticalChance(0.17);
         fakeWeapon.setMods(Collections.singletonList(fakeCriticalChanceMod));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(.425, actualWeaponModified.getCriticalChance(), .001);
     }
@@ -253,7 +253,7 @@ public class WeaponModifierTest {
         fakeWeapon.setCriticalChance(0.17);
         fakeWeapon.setMods(Arrays.asList(fakeCriticalChanceMod, fakeCriticalChanceMod2));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(.439, actualWeaponModified.getCriticalChance(), .001);
     }
@@ -265,7 +265,7 @@ public class WeaponModifierTest {
         fakeWeapon.setReloadTime(1.70);
         fakeWeapon.setMods(Collections.singletonList(fakeReloadTimeMod));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(1.308, actualWeaponModified.getReloadTime(), .001);
     }
@@ -277,7 +277,7 @@ public class WeaponModifierTest {
         fakeWeapon.setReloadTime(1.70);
         fakeWeapon.setMods(Collections.singletonList(fakeReloadTimeMod));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(2.537, actualWeaponModified.getReloadTime(), .001);
     }
@@ -291,7 +291,7 @@ public class WeaponModifierTest {
         fakeWeapon.setReloadTime(1.70);
         fakeWeapon.setMods(Arrays.asList(fakeReloadTimeMod, fakeReloadTimeMod2));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(1.393, actualWeaponModified.getReloadTime(), .001);
     }
@@ -303,7 +303,7 @@ public class WeaponModifierTest {
         fakeWeapon.setStatusChance(0.29);
         fakeWeapon.setMods(Collections.singletonList(fakeStatusChanceMod));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(.406, actualWeaponModified.getStatusChance(), .001);
     }
@@ -317,7 +317,7 @@ public class WeaponModifierTest {
         fakeWeapon.setStatusChance(0.29);
         fakeWeapon.setMods(Arrays.asList(fakeStatusChanceMod, fakeStatusChanceMod));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(.638, actualWeaponModified.getStatusChance(), .001);
     }
@@ -328,7 +328,7 @@ public class WeaponModifierTest {
         fakeWeapon.setMagazineSize(200);
         fakeWeapon.addMod(fakeMod);
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(332, actualWeaponModified.getMagazineSize());
     }
@@ -339,7 +339,7 @@ public class WeaponModifierTest {
         fakeWeapon.setMagazineSize(200);
         fakeWeapon.addMod(fakeMod);
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(180, actualWeaponModified.getMagazineSize());
     }
@@ -351,7 +351,7 @@ public class WeaponModifierTest {
         fakeWeapon.setMagazineSize(200);
         fakeWeapon.setMods(Arrays.asList(fakeMod, anotherFakeMod));
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(312, actualWeaponModified.getMagazineSize());
     }
@@ -362,7 +362,7 @@ public class WeaponModifierTest {
         fakeWeapon.setMaxAmmo(800);
         fakeWeapon.addMod(fakeMod);
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(1040, actualWeaponModified.getMaxAmmo());
     }
@@ -378,9 +378,55 @@ public class WeaponModifierTest {
         fakeWeapon.setDamageTypes(Collections.singletonList(heat));
         fakeWeapon.addMod(fakeMod);
 
-        Weapon actualWeaponModified = subject.modifyWeapon(fakeWeapon);
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
         assertEquals(Damage.DamageType.GAS, actualWeaponModified.getDamageTypes().get(0).getType());
+    }
+
+    @Test
+    public void itCanCorrectlyCalculatePositiveDamage() {
+        Damage impact = new Damage(Damage.DamageType.IMPACT);
+        impact.setDamageValue(35.00);
+        fakeWeapon.setDamageTypes(Collections.singletonList(impact));
+        fakeMod.setDamageIncrease(1.65);
+        fakeWeapon.setMods(Collections.singletonList(fakeMod));
+
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
+
+        Damage actualModifiedImpactDamage = actualWeaponModified.getDamageTypes().get(0);
+
+        assertEquals(92.75, actualModifiedImpactDamage.getDamageValue(), .001);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculateNegativeDamage() {
+        Damage impact = new Damage(Damage.DamageType.IMPACT);
+        impact.setDamageValue(35.00);
+        fakeWeapon.setDamageTypes(Collections.singletonList(impact));
+        fakeMod.setDamageIncrease(-0.15);
+        fakeWeapon.setMods(Collections.singletonList(fakeMod));
+
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
+
+        Damage actualModifiedImpactDamage = actualWeaponModified.getDamageTypes().get(0);
+
+        assertEquals(29.75, actualModifiedImpactDamage.getDamageValue(), .001);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculateComplexDamage() {
+        Damage impact = new Damage(Damage.DamageType.IMPACT);
+        impact.setDamageValue(35.00);
+        fakeWeapon.setDamageTypes(Collections.singletonList(impact));
+        fakeMod.setDamageIncrease(-0.15);
+        anotherFakeMod.setDamageIncrease(1.65);
+        fakeWeapon.setMods(Arrays.asList(fakeMod, anotherFakeMod));
+
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
+
+        Damage actualModifiedImpactDamage = actualWeaponModified.getDamageTypes().get(0);
+
+        assertEquals(87.5, actualModifiedImpactDamage.getDamageValue(), .001);
     }
 
 }

@@ -27,7 +27,7 @@ public class ElementalDamageMapperTest {
     }
 
     @Test
-    public void itCanCombeTwoDuplicateTypesIntoThemselves() {
+    public void itCanCombineTwoIdenticalTypesIntoThemselves() {
         Damage heat = new Damage(Damage.DamageType.HEAT);
         Damage heat2 = new Damage(Damage.DamageType.HEAT);
 

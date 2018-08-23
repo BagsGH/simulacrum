@@ -44,7 +44,7 @@ public class Engine {
         ignisWraith.addMod(malignantForce);
 
 
-        Weapon ignisWraithModded = weaponModifier.modifyWeapon(ignisWraith);
+        Weapon ignisWraithModded = weaponModifier.modWeapon(ignisWraith);
 
         System.out.println("===Modded weapons===");
         System.out.println(ignisWraithModded);
