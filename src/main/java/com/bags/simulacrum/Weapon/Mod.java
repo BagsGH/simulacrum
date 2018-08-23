@@ -22,7 +22,7 @@ public class Mod {
     private double statusChanceIncrease;
     private double headshotMultiplierIncrease;
     private double damageIncrease;
-    private Damage damageType;
+    private Damage damage;
     private int index;
 
     public enum Polarity {

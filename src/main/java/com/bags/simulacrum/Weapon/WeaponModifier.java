@@ -18,10 +18,12 @@ public class WeaponModifier {
         weaponMods = originalWeapon.getMods();
         Weapon modifiedWeapon = copyWeaponToMod();
 
-        List<Damage> baseWeaponDamageTypesModdedDamage = calculateModdedDamageValues();
-        List<Damage> damageTypesAndTheirValuesAddedByMods = calculateElementalDamageAddedByMods();
+        List<Damage> moddedBaseDamage = calculateModdedDamageValues();
+        List<Damage> moddedElementalDamage = calculateElementalDamageAddedByMods(moddedBaseDamage);
+        moddedBaseDamage.addAll(moddedElementalDamage);
+        modifiedWeapon.setDamageTypes(moddedBaseDamage);
 
-//        modifiedWeapon.setDamageTypes(baseWeaponDamageTypesModdedDamage);
+//        modifiedWeapon.setDamageTypes(moddedBaseDamage);
 
 
         modifiedWeapon.setFireRate(calculateModdedFireRate());
@@ -38,16 +40,23 @@ public class WeaponModifier {
         return modifiedWeapon;
     }
 
-    private List<Damage> calculateElementalDamageAddedByMods() {
+    private List<Damage> calculateElementalDamageAddedByMods(List<Damage> moddedBaseWeaponDamage) {
+        double baseWeaponDamage = 0;
+        for (Damage individualDamage : moddedBaseWeaponDamage) {
+            baseWeaponDamage += individualDamage.getDamageValue();
+        }
+
         List<Damage> elementalDamageAddedByMods = new ArrayList<>();
 
-        for (Mod m : originalWeapon.getMods()) {
-            if (m.getDamageType() != null) {
-                elementalDamageAddedByMods.add(m.getDamageType());
+        for (Mod mod : originalWeapon.getMods()) {
+            if (mod.getDamage() != null) {
+                Damage modsDamage = mod.getDamage();
+                modsDamage.setDamageValue(baseWeaponDamage * modsDamage.getModElementalDamageRatio());
+                elementalDamageAddedByMods.add(modsDamage);
             }
         }
 
-        return null;
+        return elementalDamageAddedByMods;
     }
 
     private List<Damage> calculateModdedDamageValues() {
@@ -68,14 +77,14 @@ public class WeaponModifier {
 //        List<Damage> elementalDamageOnWeapon = new ArrayList<>();
 //
 //        for (Mod mod : originalWeapon.getMods()) {
-//            if (mod.getDamageType() != null) {
-//                elementalDamageFromMods.add(mod.getDamageType());
+//            if (mod.getDamage() != null) {
+//                elementalDamageFromMods.add(mod.getDamage());
 //            }
 //        }
 //
-//        for (Damage damageType : originalWeapon.getDamageTypes()) {
-//            if (Damage.isElemental(damageType)) {
-//                elementalDamageOnWeapon.add(damageType);
+//        for (Damage damage : originalWeapon.getDamageTypes()) {
+//            if (Damage.isElemental(damage)) {
+//                elementalDamageOnWeapon.add(damage);
 //            }
 //        }
 //

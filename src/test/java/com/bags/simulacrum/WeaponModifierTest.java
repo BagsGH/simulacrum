@@ -371,7 +371,7 @@ public class WeaponModifierTest {
     public void itCanCorrectlyCombineOneElementalModWithWeaponBaseElement() {
         Damage toxic = new Damage(Damage.DamageType.TOXIN);
         toxic.setModElementalDamageRatio(0.60);
-        fakeMod.setDamageType(toxic);
+        fakeMod.setDamage(toxic);
 
         Damage heat = new Damage(Damage.DamageType.HEAT);
         heat.setDamageValue(35.0);
@@ -437,7 +437,7 @@ public class WeaponModifierTest {
 
         Damage toxinModDamage = new Damage(Damage.DamageType.TOXIN);
         toxinModDamage.setModElementalDamageRatio(0.90);
-        fakeMod.setDamageType(toxinModDamage);
+        fakeMod.setDamage(toxinModDamage);
 
         fakeWeapon.setMods(Arrays.asList(fakeMod));
 
