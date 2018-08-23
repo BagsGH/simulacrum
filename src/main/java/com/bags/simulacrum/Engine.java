@@ -32,6 +32,9 @@ public class Engine {
         Mod serration = new Mod();
         serration.setDamageIncrease(1.65);
 
+        Mod splitChamber = new Mod();
+        splitChamber.setMultishotIncrease(0.90);
+
         Mod maligForce = new Mod();
         maligForce.setStatusChanceIncrease(0.60);
         Damage toxin = new Damage(Damage.DamageType.TOXIN);
@@ -53,7 +56,7 @@ public class Engine {
         Mod ps = new Mod();
         ps.setCriticalDamageIncrease(1.20);
 
-        ignisWraith.setMods(Arrays.asList(heavyCalibre, serration, maligForce, vileAccel, hellFire, vs, ps));
+        ignisWraith.setMods(Arrays.asList(heavyCalibre, serration, splitChamber, maligForce, vileAccel, hellFire, vs, ps));
 
         Weapon ignisWraithModded = weaponModifier.modWeapon(ignisWraith);
 

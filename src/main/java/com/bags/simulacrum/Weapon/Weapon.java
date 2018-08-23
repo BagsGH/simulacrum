@@ -16,13 +16,13 @@ public class Weapon {
     private int magazineSize;
     private double reloadTime;
     private List<Damage> damageTypes;
+    private double multishot;
     private double criticalChance;
     private double criticalDamage;
     private double statusChance;
     private double headshotMultiplier;
     private double accuracyMultiplier;
     private double chargeTime;
-    private double multishot;
     private List<Mod> mods;
 
     private int maxAmmo;
