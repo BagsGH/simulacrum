@@ -39,8 +39,7 @@ public class ElementalDamageMapper {
         }};
     }
 
-    public Damage.DamageType combineElements(Damage.DamageType damage1, Damage.DamageType damage2) {
-        System.out.println("Pair: " + new ElementalPair(damage1, damage2));
-        return damageCombinationMap.getOrDefault(new ElementalPair(damage1, damage2), null);
+    public Damage.DamageType combineElements(Damage.DamageType damageType1, Damage.DamageType damageType2) {
+        return damageCombinationMap.getOrDefault(new ElementalPair(damageType1, damageType2), null);
     }
 }

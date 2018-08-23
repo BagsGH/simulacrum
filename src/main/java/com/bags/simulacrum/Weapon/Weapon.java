@@ -22,6 +22,7 @@ public class Weapon {
     private double headshotMultiplier;
     private double accuracyMultiplier;
     private double chargeTime;
+    private double multishot;
     private List<Mod> mods;
 
     private int maxAmmo;

@@ -5,12 +5,12 @@ import lombok.Data;
 @Data
 public class ElementalPair {
 
-    private Damage.DamageType damageOne;
-    private Damage.DamageType damageTwo;
+    private Damage.DamageType damageTypeOne;
+    private Damage.DamageType damageTypeTwo;
 
     public ElementalPair(Damage.DamageType d1, Damage.DamageType d2) {
-        damageOne = d1;
-        damageTwo = d2;
+        damageTypeOne = d1;
+        damageTypeTwo = d2;
     }
 
 }

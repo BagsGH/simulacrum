@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Component
@@ -24,25 +25,35 @@ public class Engine {
         System.out.println("===Original weapons===");
         System.out.println(ignisWraith);
 
-        Mod vitalSense = new Mod();
-        vitalSense.setName("Vital Sense");
-        vitalSense.setCriticalDamageIncrease(1.20);
-        ignisWraith.addMod(vitalSense);
+        Mod heavyCalibre = new Mod();
+        heavyCalibre.setDamageIncrease(1.65);
+        heavyCalibre.setAccuracyIncrease(-0.55);
 
-        Mod pointStrike = new Mod();
-        pointStrike.setName("Point Strike");
-        pointStrike.setCriticalChanceIncrease(1.50);
-        ignisWraith.addMod(pointStrike);
+        Mod serration = new Mod();
+        serration.setDamageIncrease(1.65);
+
+        Mod maligForce = new Mod();
+        maligForce.setStatusChanceIncrease(0.60);
+        Damage toxin = new Damage(Damage.DamageType.TOXIN);
+        toxin.setModElementalDamageRatio(0.60);
+        maligForce.setDamage(toxin);
 
         Mod vileAccel = new Mod();
         vileAccel.setFireRateIncrease(0.90);
-        vileAccel.setAccuracyIncrease(-0.50);
-        ignisWraith.addMod(vileAccel);
+        vileAccel.setDamageIncrease(-0.15);
 
-        Mod malignantForce = new Mod();
-        malignantForce.setName("Malignant Force");
-        ignisWraith.addMod(malignantForce);
+        Mod hellFire = new Mod();
+        Damage heat = new Damage(Damage.DamageType.HEAT);
+        heat.setModElementalDamageRatio(0.90);
+        hellFire.setDamage(heat);
 
+        Mod vs = new Mod();
+        vs.setCriticalChanceIncrease(1.50);
+
+        Mod ps = new Mod();
+        ps.setCriticalDamageIncrease(1.20);
+
+        ignisWraith.setMods(Arrays.asList(heavyCalibre, serration, maligForce, vileAccel, hellFire, vs, ps));
 
         Weapon ignisWraithModded = weaponModifier.modWeapon(ignisWraith);
 
@@ -61,6 +72,7 @@ public class Engine {
         ignisWraith.setMagazineSize(200);
         ignisWraith.setMaxAmmo(800);
         ignisWraith.setAccuracyMultiplier(0.0);
+        ignisWraith.setMultishot(0.00);
         List<Damage> ignisDamageTypes = new ArrayList<>();
         Damage heat = new Damage();
         heat.setDamageValue(35);

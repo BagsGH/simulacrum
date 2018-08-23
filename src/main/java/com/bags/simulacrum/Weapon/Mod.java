@@ -23,6 +23,7 @@ public class Mod {
     private double headshotMultiplierIncrease;
     private double damageIncrease;
     private Damage damage;
+    private double multishotIncrease;
     private int index;
 
     public enum Polarity {

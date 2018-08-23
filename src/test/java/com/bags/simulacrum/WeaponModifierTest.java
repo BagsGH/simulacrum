@@ -494,4 +494,27 @@ public class WeaponModifierTest {
         assertEquals(Damage.DamageType.GAS, actualGasDamage.getType());
     }
 
+    @Test
+    public void itCanCorrectlyCalculatePositiveMultishot() {
+        fakeMod.setMultishotIncrease(0.90);
+        fakeWeapon.setMultishot(0.00);
+        fakeWeapon.setMods(Arrays.asList(fakeMod));
+
+        Weapon actualModdedWeapon = subject.modWeapon(fakeWeapon);
+
+        assertEquals(0.90, actualModdedWeapon.getMultishot(), 0.001);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculateComplexMultishot() {
+        fakeMod.setMultishotIncrease(0.90);
+        anotherFakeMod.setMultishotIncrease(0.60);
+        fakeWeapon.setMultishot(0.00);
+        fakeWeapon.setMods(Arrays.asList(fakeMod, anotherFakeMod));
+
+        Weapon actualModdedWeapon = subject.modWeapon(fakeWeapon);
+
+        assertEquals(01.50, actualModdedWeapon.getMultishot(), 0.001);
+    }
+
 }

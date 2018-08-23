@@ -34,8 +34,14 @@ public class WeaponModifier {
         modifiedWeapon.setCriticalChance(calculateModdedCriticalChance());
         modifiedWeapon.setCriticalDamage(calculateModdedCriticalDamage());
         modifiedWeapon.setStatusChance(calculateModdedStatusChance());
+        modifiedWeapon.setMultishot(calculateModdedMultishot());
 
         return modifiedWeapon;
+    }
+
+    private double calculateModdedMultishot() {
+        double multishotIncrease = weaponMods.stream().filter(mod -> mod.getMultishotIncrease() != 0).mapToDouble(Mod::getMultishotIncrease).sum();
+        return originalWeapon.getMultishot() + multishotIncrease;
     }
 
     private List<Damage> combineDamageTypes(List<Damage> orderedElementalDamageTypes) {
