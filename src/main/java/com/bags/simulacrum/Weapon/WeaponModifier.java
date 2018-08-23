@@ -20,8 +20,9 @@ public class WeaponModifier {
 
         List<Damage> moddedBaseDamage = calculateModdedDamageValues();
         List<Damage> moddedElementalDamage = calculateElementalDamageAddedByMods(moddedBaseDamage);
-        moddedBaseDamage.addAll(moddedElementalDamage);
-        modifiedWeapon.setDamageTypes(moddedBaseDamage);
+        List<Damage> orderedElementalDamageTypes = orderDamageTypes(moddedBaseDamage, moddedElementalDamage);
+
+        modifiedWeapon.setDamageTypes(orderedElementalDamageTypes);
 
 //        modifiedWeapon.setDamageTypes(moddedBaseDamage);
 
@@ -38,6 +39,28 @@ public class WeaponModifier {
         //modifiedWeapon.setDamageTypes(calculateModdedDamageTypes());
 
         return modifiedWeapon;
+    }
+
+    private List<Damage> orderDamageTypes(List<Damage> moddedBaseDamage, List<Damage> moddedElementalDamage) {
+        List<Damage> mergedList = new ArrayList<>();
+        mergedList.addAll(moddedElementalDamage);
+        for (Damage baseDamage : moddedBaseDamage) {
+            if (Damage.isElemental(baseDamage)) {
+                boolean thereIsAModThatIsTheSameType = false;
+                for (Damage modAddedDamage : mergedList) {
+                    if (modAddedDamage.getType().equals(baseDamage.getType())) {
+                        modAddedDamage.setDamageValue(modAddedDamage.getDamageValue() + baseDamage.getDamageValue());
+                        modAddedDamage.setModElementalDamageRatio(0.0);
+                        thereIsAModThatIsTheSameType = true;
+                    }
+                }
+                if (!thereIsAModThatIsTheSameType) {
+                    mergedList.add(baseDamage);
+                }
+            }
+        }
+
+        return mergedList;
     }
 
     private List<Damage> calculateElementalDamageAddedByMods(List<Damage> moddedBaseWeaponDamage) {
@@ -71,44 +94,6 @@ public class WeaponModifier {
         });
         return moddedDamageTypes;
     }
-
-//    private List<Damage> calculateModdedDamageTypes() {
-//        List<Damage> elementalDamageFromMods = new ArrayList<>();
-//        List<Damage> elementalDamageOnWeapon = new ArrayList<>();
-//
-//        for (Mod mod : originalWeapon.getMods()) {
-//            if (mod.getDamage() != null) {
-//                elementalDamageFromMods.add(mod.getDamage());
-//            }
-//        }
-//
-//        for (Damage damage : originalWeapon.getDamageTypes()) {
-//            if (Damage.isElemental(damage)) {
-//                elementalDamageOnWeapon.add(damage);
-//            }
-//        }
-//
-//        return combineElementalDamageTypes(elementalDamageFromMods, elementalDamageOnWeapon);
-//    }
-
-//    private List<Damage> combineElementalDamageTypes(List<Damage> elementalDamageFromMods, List<Damage> elementalDamageOnWeapon) {
-//        List<Damage> combinedDamageTypes = new ArrayList<>();
-//        if (elementalDamageFromMods.size() >= 2) {
-//            for (int i = 0; i < elementalDamageFromMods.size(); i++) {
-//                combinedDamageTypes.add(combineTwoElementalDamageTypes(elementalDamageFromMods.get(i), elementalDamageFromMods.get(i + 1)));
-//            }
-//        } else if (elementalDamageFromMods.size() == 1 && elementalDamageOnWeapon.size() > 0) {
-//            combinedDamageTypes.add(combineTwoElementalDamageTypes(elementalDamageFromMods.get(0), elementalDamageOnWeapon.get(0)));
-//        }
-//        return combinedDamageTypes;
-//    }
-
-//    private Damage combineTwoElementalDamageTypes(Damage damage, Damage damage1) {
-//        if (damage.getType().equals(Damage.DamageType.TOXIN) && damage1.getType().equals(Damage.DamageType.HEAT)) {
-//            return new Damage(Damage.DamageType.GAS);
-//        }
-//        return null;
-//    }
 
     private Weapon copyWeaponToMod() {
         return new Weapon(originalWeapon.getName(), originalWeapon.getMasteryRank(), originalWeapon.getSlot(), originalWeapon.getType(), originalWeapon.getTriggerType(), originalWeapon.getAmmoType(),

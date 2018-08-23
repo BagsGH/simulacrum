@@ -449,4 +449,24 @@ public class WeaponModifierTest {
         assertEquals(Damage.DamageType.TOXIN, actualAddedToxinDamage.getType());
     }
 
+    @Test
+    public void itCanCorrectlyCalculateDamageAddedBy90PercentHeatWhenDefaultWeaponHasHeatDamage() {
+        Damage heatDamage = new Damage(Damage.DamageType.HEAT);
+        heatDamage.setDamageValue(35.00);
+        fakeWeapon.setDamageTypes(Collections.singletonList(heatDamage));
+
+        Damage heatDamageMod = new Damage(Damage.DamageType.HEAT);
+        heatDamageMod.setModElementalDamageRatio(0.90);
+        fakeMod.setDamage(heatDamageMod);
+
+        fakeWeapon.setMods(Arrays.asList(fakeMod));
+
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
+
+        Damage actualAddedDamage = actualWeaponModified.getDamageTypes().get(0);
+
+        assertEquals(66.5, actualAddedDamage.getDamageValue(), .001);
+        assertEquals(Damage.DamageType.HEAT, actualAddedDamage.getType());
+    }
+
 }
