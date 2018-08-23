@@ -429,4 +429,24 @@ public class WeaponModifierTest {
         assertEquals(87.5, actualModifiedImpactDamage.getDamageValue(), .001);
     }
 
+    @Test
+    public void itCanCorrectlyCalculateDamageAddedBy90PercentToxin() {
+        Damage impact = new Damage(Damage.DamageType.IMPACT);
+        impact.setDamageValue(35.00);
+        fakeWeapon.setDamageTypes(Collections.singletonList(impact));
+
+        Damage toxinModDamage = new Damage(Damage.DamageType.TOXIN);
+        toxinModDamage.setModElementalDamageRatio(0.90);
+        fakeMod.setDamageType(toxinModDamage);
+
+        fakeWeapon.setMods(Arrays.asList(fakeMod));
+
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
+
+        Damage actualAddedToxinDamage = actualWeaponModified.getDamageTypes().get(1);
+
+        assertEquals(31.5, actualAddedToxinDamage.getDamageValue(), .001);
+        assertEquals(Damage.DamageType.TOXIN, actualAddedToxinDamage.getType());
+    }
+
 }

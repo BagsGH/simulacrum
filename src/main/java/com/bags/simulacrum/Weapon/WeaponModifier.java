@@ -18,8 +18,12 @@ public class WeaponModifier {
         weaponMods = originalWeapon.getMods();
         Weapon modifiedWeapon = copyWeaponToMod();
 
-        List<Damage> damageTypesWithCalculatedDamage = calculateModdedDamage();
-        modifiedWeapon.setDamageTypes(damageTypesWithCalculatedDamage);
+        List<Damage> baseWeaponDamageTypesModdedDamage = calculateModdedDamageValues();
+        List<Damage> damageTypesAndTheirValuesAddedByMods = calculateElementalDamageAddedByMods();
+
+//        modifiedWeapon.setDamageTypes(baseWeaponDamageTypesModdedDamage);
+
+
         modifiedWeapon.setFireRate(calculateModdedFireRate());
         modifiedWeapon.setAccuracy(calculateModdedAccuracy());
         modifiedWeapon.setMagazineSize(calculateModdedMagazineSize());
@@ -34,7 +38,19 @@ public class WeaponModifier {
         return modifiedWeapon;
     }
 
-    private List<Damage> calculateModdedDamage() {
+    private List<Damage> calculateElementalDamageAddedByMods() {
+        List<Damage> elementalDamageAddedByMods = new ArrayList<>();
+
+        for (Mod m : originalWeapon.getMods()) {
+            if (m.getDamageType() != null) {
+                elementalDamageAddedByMods.add(m.getDamageType());
+            }
+        }
+
+        return null;
+    }
+
+    private List<Damage> calculateModdedDamageValues() {
         double damageIncrease = weaponMods.stream().filter(mod -> mod.getDamageIncrease() != 0).mapToDouble(Mod::getDamageIncrease).sum();
 
         List<Damage> damageTypes = originalWeapon.getDamageTypes();
