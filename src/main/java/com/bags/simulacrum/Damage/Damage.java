@@ -20,10 +20,6 @@ public class Damage {
         this.damageValue = damageValue;
     }
 
-    public Damage() {
-
-    }
-
     public Damage(DamageType type) {
         this.type = type;
     }
@@ -33,5 +29,4 @@ public class Damage {
         this.damageValue = damage.getDamageValue();
         this.modAddedDamageRatio = damage.getModAddedDamageRatio();
     }
-
 }

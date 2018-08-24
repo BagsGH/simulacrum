@@ -1,4 +1,4 @@
 package com.bags.simulacrum.Weapon;
 
-public class DamageModdingHelper {
+public class DamageModHelper {
 }

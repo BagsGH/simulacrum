@@ -79,7 +79,7 @@ public class WeaponModifier {
         ipsDamageIncreaseMap.put(DamageType.PUNCTURE, 0.0);
         ipsDamageIncreaseMap.put(DamageType.SLASH, 0.0);
 
-        for (Mod mod : originalWeapon.getMods()) {
+        for (Mod mod : weaponMods) {
             Damage modDamage = mod.getDamage();
             if (modDamage != null && DamageType.isIPS(modDamage.getType())) {
                 DamageType modIPSDamageType = modDamage.getType();
@@ -155,7 +155,7 @@ public class WeaponModifier {
     private List<Damage> calculateElementalDamageAddedByMods(Double baseDamage) {
         List<Damage> elementalDamageAddedByMods = new ArrayList<>();
 
-        for (Mod mod : originalWeapon.getMods()) {
+        for (Mod mod : weaponMods) {
             if (mod.getDamage() != null && DamageType.isElemental(mod.getDamage().getType())) {
                 Damage modsDamage = mod.getDamage();
                 modsDamage.setDamageValue(baseDamage * modsDamage.getModAddedDamageRatio());
@@ -171,15 +171,15 @@ public class WeaponModifier {
 
         List<Damage> damageTypes = originalWeapon.getDamageTypes();
         List<Damage> moddedDamageTypes = new ArrayList<>();
-        damageTypes.forEach(d -> {
-            moddedDamageTypes.add(new Damage(d.getType(), d.getDamageValue() * (1 + damageIncrease), 0.0));
+        damageTypes.forEach(damageSource -> {
+            moddedDamageTypes.add(new Damage(damageSource.getType(), damageSource.getDamageValue() * (1 + damageIncrease), 0.0));
         });
         return moddedDamageTypes;
     }
 
     private Weapon copyWeaponToMod() {
         return new Weapon(originalWeapon.getName(), originalWeapon.getMasteryRank(), originalWeapon.getSlot(), originalWeapon.getType(), originalWeapon.getTriggerType(), originalWeapon.getAmmoType(),
-                originalWeapon.getRangeLimit(), originalWeapon.getNoiseLevel(), originalWeapon.getMaxAmmo(), originalWeapon.getDisposition(), originalWeapon.getMods());
+                originalWeapon.getRangeLimit(), originalWeapon.getNoiseLevel(), originalWeapon.getMaxAmmo(), originalWeapon.getDisposition(), weaponMods);
     }
 
     private double calculateModdedFireRate() {

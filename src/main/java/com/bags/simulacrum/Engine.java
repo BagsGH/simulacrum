@@ -78,9 +78,7 @@ public class Engine {
         ignisWraith.setAccuracyMultiplier(0.0);
         ignisWraith.setMultishot(0.00);
         List<Damage> ignisDamageTypes = new ArrayList<>();
-        Damage heat = new Damage();
-        heat.setDamageValue(35);
-        heat.setType(DamageType.HEAT);
+        Damage heat = new Damage(DamageType.HEAT, 35.0);
         ignisDamageTypes.add(heat);
 
         ignisWraith.setDamageTypes(ignisDamageTypes);
