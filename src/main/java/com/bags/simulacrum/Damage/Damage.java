@@ -20,7 +20,6 @@ public class Damage {
         this.damageValue = damageValue;
     }
 
-
     public Damage() {
 
     }
@@ -33,33 +32,6 @@ public class Damage {
         this.type = damage.getType();
         this.damageValue = damage.getDamageValue();
         this.modAddedDamageRatio = damage.getModAddedDamageRatio();
-    }
-
-    public enum DamageType {
-        PUNCTURE,
-        IMPACT,
-        SLASH,
-        ELECTRICITY,
-        COLD,
-        HEAT,
-        TOXIN,
-        TRUE,
-        VOID,
-        BLAST,
-        CORROSIVE,
-        GAS,
-        MAGNETIC,
-        RADIATION,
-        VIRAL
-    }
-
-    public static boolean isElemental(Damage damage) {
-        return damage.getType().equals(DamageType.ELECTRICITY) || damage.getType().equals(DamageType.COLD) || damage.getType().equals(DamageType.HEAT) || damage.getType().equals(DamageType.TOXIN) || damage.getType().equals(DamageType.BLAST) ||
-                damage.getType().equals(DamageType.CORROSIVE) || damage.getType().equals(DamageType.GAS) || damage.getType().equals(DamageType.MAGNETIC) || damage.getType().equals(DamageType.RADIATION) || damage.getType().equals(DamageType.VIRAL);
-    }
-
-    public static boolean isIPS(Damage damage) {
-        return damage.getType().equals(DamageType.IMPACT) || damage.getType().equals(DamageType.PUNCTURE) || damage.getType().equals(DamageType.SLASH);
     }
 
 }

@@ -18,22 +18,22 @@
 //
 //    @Test
 //    public void itCanCombineTwoDifferentElementsCorrectly() {
-//        Damage heat = new Damage(Damage.DamageType.HEAT);
-//        Damage toxin = new Damage(Damage.DamageType.TOXIN);
+//        Damage heat = new Damage(DamageType.HEAT);
+//        Damage toxin = new Damage(DamageType.TOXIN);
 //
 //        Damage combined = subject.combineElements(heat, toxin);
 //
-//        assertEquals(Damage.DamageType.GAS, combined.getType());
+//        assertEquals(DamageType.GAS, combined.getType());
 //    }
 //
 //    @Test
 //    public void itCanCombineTwoIdenticalTypesIntoThemselves() {
-//        Damage heat = new Damage(Damage.DamageType.HEAT);
-//        Damage heat2 = new Damage(Damage.DamageType.HEAT);
+//        Damage heat = new Damage(DamageType.HEAT);
+//        Damage heat2 = new Damage(DamageType.HEAT);
 //
 //        Damage combined = subject.combineElements(heat, heat2);
 //
-//        assertEquals(Damage.DamageType.HEAT, combined.getType());
+//        assertEquals(DamageType.HEAT, combined.getType());
 //    }
 //
 //}

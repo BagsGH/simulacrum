@@ -5,10 +5,10 @@ import lombok.Data;
 @Data
 public class ElementalPair {
 
-    private Damage.DamageType damageTypeOne;
-    private Damage.DamageType damageTypeTwo;
+    private DamageType damageTypeOne;
+    private DamageType damageTypeTwo;
 
-    public ElementalPair(Damage.DamageType d1, Damage.DamageType d2) {
+    public ElementalPair(DamageType d1, DamageType d2) {
         damageTypeOne = d1;
         damageTypeTwo = d2;
     }

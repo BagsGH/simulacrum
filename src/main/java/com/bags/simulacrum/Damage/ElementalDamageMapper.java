@@ -8,38 +8,38 @@ import java.util.Map;
 @Component
 public class ElementalDamageMapper {
 
-    private static final Map<ElementalPair, Damage.DamageType> damageCombinationMap;
+    private static final Map<ElementalPair, DamageType> damageCombinationMap;
 
     static {
-        damageCombinationMap = new HashMap<ElementalPair, Damage.DamageType>() {{
+        damageCombinationMap = new HashMap<ElementalPair, DamageType>() {{
             /*Heat*/
-            put(new ElementalPair(Damage.DamageType.HEAT, Damage.DamageType.HEAT), Damage.DamageType.HEAT);
-            put(new ElementalPair(Damage.DamageType.HEAT, Damage.DamageType.ELECTRICITY), Damage.DamageType.RADIATION);
-            put(new ElementalPair(Damage.DamageType.HEAT, Damage.DamageType.TOXIN), Damage.DamageType.GAS);
-            put(new ElementalPair(Damage.DamageType.HEAT, Damage.DamageType.COLD), Damage.DamageType.BLAST);
+            put(new ElementalPair(DamageType.HEAT, DamageType.HEAT), DamageType.HEAT);
+            put(new ElementalPair(DamageType.HEAT, DamageType.ELECTRICITY), DamageType.RADIATION);
+            put(new ElementalPair(DamageType.HEAT, DamageType.TOXIN), DamageType.GAS);
+            put(new ElementalPair(DamageType.HEAT, DamageType.COLD), DamageType.BLAST);
 
             /*Electric*/
-            put(new ElementalPair(Damage.DamageType.ELECTRICITY, Damage.DamageType.ELECTRICITY), Damage.DamageType.ELECTRICITY);
-            put(new ElementalPair(Damage.DamageType.ELECTRICITY, Damage.DamageType.COLD), Damage.DamageType.MAGNETIC);
-            put(new ElementalPair(Damage.DamageType.ELECTRICITY, Damage.DamageType.HEAT), Damage.DamageType.RADIATION);
-            put(new ElementalPair(Damage.DamageType.ELECTRICITY, Damage.DamageType.TOXIN), Damage.DamageType.CORROSIVE);
+            put(new ElementalPair(DamageType.ELECTRICITY, DamageType.ELECTRICITY), DamageType.ELECTRICITY);
+            put(new ElementalPair(DamageType.ELECTRICITY, DamageType.COLD), DamageType.MAGNETIC);
+            put(new ElementalPair(DamageType.ELECTRICITY, DamageType.HEAT), DamageType.RADIATION);
+            put(new ElementalPair(DamageType.ELECTRICITY, DamageType.TOXIN), DamageType.CORROSIVE);
 
             /*Cold*/
-            put(new ElementalPair(Damage.DamageType.COLD, Damage.DamageType.COLD), Damage.DamageType.COLD);
-            put(new ElementalPair(Damage.DamageType.COLD, Damage.DamageType.ELECTRICITY), Damage.DamageType.MAGNETIC);
-            put(new ElementalPair(Damage.DamageType.COLD, Damage.DamageType.HEAT), Damage.DamageType.BLAST);
-            put(new ElementalPair(Damage.DamageType.COLD, Damage.DamageType.TOXIN), Damage.DamageType.VIRAL);
+            put(new ElementalPair(DamageType.COLD, DamageType.COLD), DamageType.COLD);
+            put(new ElementalPair(DamageType.COLD, DamageType.ELECTRICITY), DamageType.MAGNETIC);
+            put(new ElementalPair(DamageType.COLD, DamageType.HEAT), DamageType.BLAST);
+            put(new ElementalPair(DamageType.COLD, DamageType.TOXIN), DamageType.VIRAL);
 
 
             /*Toxin*/
-            put(new ElementalPair(Damage.DamageType.TOXIN, Damage.DamageType.TOXIN), Damage.DamageType.TOXIN);
-            put(new ElementalPair(Damage.DamageType.TOXIN, Damage.DamageType.ELECTRICITY), Damage.DamageType.CORROSIVE);
-            put(new ElementalPair(Damage.DamageType.TOXIN, Damage.DamageType.HEAT), Damage.DamageType.GAS);
-            put(new ElementalPair(Damage.DamageType.TOXIN, Damage.DamageType.COLD), Damage.DamageType.VIRAL);
+            put(new ElementalPair(DamageType.TOXIN, DamageType.TOXIN), DamageType.TOXIN);
+            put(new ElementalPair(DamageType.TOXIN, DamageType.ELECTRICITY), DamageType.CORROSIVE);
+            put(new ElementalPair(DamageType.TOXIN, DamageType.HEAT), DamageType.GAS);
+            put(new ElementalPair(DamageType.TOXIN, DamageType.COLD), DamageType.VIRAL);
         }};
     }
 
-    public Damage.DamageType combineElements(Damage.DamageType damageType1, Damage.DamageType damageType2) {
+    public DamageType combineElements(DamageType damageType1, DamageType damageType2) {
         return damageCombinationMap.getOrDefault(new ElementalPair(damageType1, damageType2), null);
     }
 }

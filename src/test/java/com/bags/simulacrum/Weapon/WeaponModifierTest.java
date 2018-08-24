@@ -1,6 +1,7 @@
 package com.bags.simulacrum.Weapon;
 
 import com.bags.simulacrum.Damage.Damage;
+import com.bags.simulacrum.Damage.DamageType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -366,23 +367,23 @@ public class WeaponModifierTest {
 
     @Test
     public void itCanCorrectlyCombineOneElementalModWithWeaponBaseElement() {
-        Damage toxic = new Damage(Damage.DamageType.TOXIN);
+        Damage toxic = new Damage(DamageType.TOXIN);
         toxic.setModAddedDamageRatio(0.60);
         fakeMod.setDamage(toxic);
 
-        Damage heat = new Damage(Damage.DamageType.HEAT);
+        Damage heat = new Damage(DamageType.HEAT);
         heat.setDamageValue(35.0);
         fakeWeapon.setDamageTypes(Collections.singletonList(heat));
         fakeWeapon.addMod(fakeMod);
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
-        assertEquals(Damage.DamageType.GAS, actualWeaponModified.getDamageTypes().get(0).getType());
+        assertEquals(DamageType.GAS, actualWeaponModified.getDamageTypes().get(0).getType());
     }
 
     @Test
     public void itCanCorrectlyCalculatePositiveDamage() {
-        Damage impact = new Damage(Damage.DamageType.IMPACT);
+        Damage impact = new Damage(DamageType.IMPACT);
         impact.setDamageValue(35.00);
         fakeWeapon.setDamageTypes(Collections.singletonList(impact));
         fakeMod.setDamageIncrease(1.65);
@@ -397,7 +398,7 @@ public class WeaponModifierTest {
 
     @Test
     public void itCanCorrectlyCalculateNegativeDamage() {
-        Damage impact = new Damage(Damage.DamageType.IMPACT);
+        Damage impact = new Damage(DamageType.IMPACT);
         impact.setDamageValue(35.00);
         fakeWeapon.setDamageTypes(Collections.singletonList(impact));
         fakeMod.setDamageIncrease(-0.15);
@@ -412,7 +413,7 @@ public class WeaponModifierTest {
 
     @Test
     public void itCanCorrectlyCalculateComplexDamage() {
-        Damage impact = new Damage(Damage.DamageType.IMPACT);
+        Damage impact = new Damage(DamageType.IMPACT);
         impact.setDamageValue(35.00);
         fakeWeapon.setDamageTypes(Collections.singletonList(impact));
         fakeMod.setDamageIncrease(-0.15);
@@ -428,11 +429,11 @@ public class WeaponModifierTest {
 
     @Test
     public void itCanCorrectlyCalculateDamageAddedBy90PercentToxin() {
-        Damage impact = new Damage(Damage.DamageType.IMPACT);
+        Damage impact = new Damage(DamageType.IMPACT);
         impact.setDamageValue(35.00);
         fakeWeapon.setDamageTypes(Collections.singletonList(impact));
 
-        Damage toxinModDamage = new Damage(Damage.DamageType.TOXIN);
+        Damage toxinModDamage = new Damage(DamageType.TOXIN);
         toxinModDamage.setModAddedDamageRatio(0.90);
         fakeMod.setDamage(toxinModDamage);
 
@@ -446,17 +447,17 @@ public class WeaponModifierTest {
 
         assertEquals(35.0, originalImpactDamage.getDamageValue(), .001);
         assertEquals(31.5, actualAddedToxinDamage.getDamageValue(), .001);
-        assertEquals(Damage.DamageType.TOXIN, actualAddedToxinDamage.getType());
-        assertEquals(Damage.DamageType.IMPACT, originalImpactDamage.getType());
+        assertEquals(DamageType.TOXIN, actualAddedToxinDamage.getType());
+        assertEquals(DamageType.IMPACT, originalImpactDamage.getType());
     }
 
     @Test
     public void itCanCorrectlyCalculateDamageAddedBy90PercentHeatWhenDefaultWeaponHasHeatDamage() {
-        Damage heatDamage = new Damage(Damage.DamageType.HEAT);
+        Damage heatDamage = new Damage(DamageType.HEAT);
         heatDamage.setDamageValue(35.00);
         fakeWeapon.setDamageTypes(Collections.singletonList(heatDamage));
 
-        Damage heatDamageMod = new Damage(Damage.DamageType.HEAT);
+        Damage heatDamageMod = new Damage(DamageType.HEAT);
         heatDamageMod.setModAddedDamageRatio(0.90);
         fakeMod.setDamage(heatDamageMod);
 
@@ -467,16 +468,16 @@ public class WeaponModifierTest {
         Damage actualAddedDamage = actualWeaponModified.getDamageTypes().get(0);
 
         assertEquals(66.5, actualAddedDamage.getDamageValue(), .001);
-        assertEquals(Damage.DamageType.HEAT, actualAddedDamage.getType());
+        assertEquals(DamageType.HEAT, actualAddedDamage.getType());
     }
 
     @Test
     public void itCanCorrectlyCombineElements() {
-        Damage baseWeaponHeatDamage = new Damage(Damage.DamageType.HEAT);
+        Damage baseWeaponHeatDamage = new Damage(DamageType.HEAT);
         baseWeaponHeatDamage.setDamageValue(35.00);
         fakeWeapon.setDamageTypes(Collections.singletonList(baseWeaponHeatDamage));
 
-        Damage toxinModDamage = new Damage(Damage.DamageType.TOXIN);
+        Damage toxinModDamage = new Damage(DamageType.TOXIN);
         toxinModDamage.setModAddedDamageRatio(0.90);
         fakeMod.setDamage(toxinModDamage);
 
@@ -488,7 +489,7 @@ public class WeaponModifierTest {
 
 
         assertEquals(66.5, actualGasDamage.getDamageValue(), .001);
-        assertEquals(Damage.DamageType.GAS, actualGasDamage.getType());
+        assertEquals(DamageType.GAS, actualGasDamage.getType());
     }
 
     @Test
@@ -516,17 +517,17 @@ public class WeaponModifierTest {
 
     @Test
     public void itCanCorrectlyCalculateIPSDamage() {
-        Damage impact = new Damage(Damage.DamageType.IMPACT, 9.0);
+        Damage impact = new Damage(DamageType.IMPACT, 9.0);
         fakeWeapon.setDamageTypes(Arrays.asList(impact));
 
-        Damage modImpact = new Damage(Damage.DamageType.IMPACT, 0.0, 0.20);
+        Damage modImpact = new Damage(DamageType.IMPACT, 0.0, 0.20);
         fakeMod.setDamage(modImpact);
         fakeWeapon.setMods(Arrays.asList(fakeMod));
 
         Weapon actualWeapon = subject.modWeapon(fakeWeapon);
 
         assertEquals(10.8, actualWeapon.getDamageTypes().get(0).getDamageValue(), 0.001);
-        assertEquals(Damage.DamageType.IMPACT, actualWeapon.getDamageTypes().get(0).getType());
+        assertEquals(DamageType.IMPACT, actualWeapon.getDamageTypes().get(0).getType());
 
 
     }

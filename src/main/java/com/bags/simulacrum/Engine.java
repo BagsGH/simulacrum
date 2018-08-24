@@ -2,6 +2,7 @@ package com.bags.simulacrum;
 
 
 import com.bags.simulacrum.Damage.Damage;
+import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Weapon.Mod;
 import com.bags.simulacrum.Weapon.Weapon;
 import com.bags.simulacrum.Weapon.WeaponModifier;
@@ -37,7 +38,7 @@ public class Engine {
 
         Mod maligForce = new Mod();
         maligForce.setStatusChanceIncrease(0.60);
-        Damage toxin = new Damage(Damage.DamageType.TOXIN);
+        Damage toxin = new Damage(DamageType.TOXIN);
         toxin.setModAddedDamageRatio(0.60);
         maligForce.setDamage(toxin);
 
@@ -46,7 +47,7 @@ public class Engine {
         vileAccel.setDamageIncrease(-0.15);
 
         Mod hellFire = new Mod();
-        Damage heat = new Damage(Damage.DamageType.HEAT);
+        Damage heat = new Damage(DamageType.HEAT);
         heat.setModAddedDamageRatio(0.90);
         hellFire.setDamage(heat);
 
@@ -79,7 +80,7 @@ public class Engine {
         List<Damage> ignisDamageTypes = new ArrayList<>();
         Damage heat = new Damage();
         heat.setDamageValue(35);
-        heat.setType(Damage.DamageType.HEAT);
+        heat.setType(DamageType.HEAT);
         ignisDamageTypes.add(heat);
 
         ignisWraith.setDamageTypes(ignisDamageTypes);
