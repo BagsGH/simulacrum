@@ -6,7 +6,9 @@ import org.decimal4j.util.DoubleRounder;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class WeaponModifier {
@@ -19,12 +21,13 @@ public class WeaponModifier {
         weaponMods = originalWeapon.getMods();
         Weapon modifiedWeapon = copyWeaponToMod();
 
-        List<Damage> moddedBaseDamage = calculateModdedDamageValues();
-        // moddedBaseDamage = calculateIPSDamageAddedByMods(moddedBaseDamage);
-        List<Damage> moddedElementalDamage = calculateElementalDamageAddedByMods(moddedBaseDamage);
-        List<Damage> orderedDamageTypes = orderDamageTypes(moddedBaseDamage, moddedElementalDamage);
+        List<Damage> defaultDamagesModded = calculateModdedDamageValues();
+        List<Damage> moddedIPSDamage = calculateIPSDamageMods(defaultDamagesModded);
+        List<Damage> moddedElementalDamage = calculateElementalDamageAddedByMods(defaultDamagesModded);
+        List<Damage> orderedDamageTypes = orderDamageTypes(defaultDamagesModded, moddedElementalDamage);
         List<Damage> combinedElementalDamageTypes = combineDamageTypes(orderedDamageTypes);
-        modifiedWeapon.setDamageTypes(combinedElementalDamageTypes);
+        List<Damage> allDamageTypes = mergeElementalAndIPS(combinedElementalDamageTypes, moddedIPSDamage);
+        modifiedWeapon.setDamageTypes(allDamageTypes);
 
         modifiedWeapon.setFireRate(calculateModdedFireRate());
         modifiedWeapon.setAccuracy(calculateModdedAccuracy());
@@ -40,7 +43,47 @@ public class WeaponModifier {
         return modifiedWeapon;
     }
 
-    
+    private List<Damage> mergeElementalAndIPS(List<Damage> combinedElementalDamageTypes, List<Damage> moddedIPSDamage) {
+        List<Damage> finalL = new ArrayList<Damage>();
+        int size = combinedElementalDamageTypes.size();
+        for (int i = 0; i < size; i++) {
+            if (Damage.isIPS(combinedElementalDamageTypes.get(i))) {
+                combinedElementalDamageTypes.remove(i);
+                size--;
+            }
+        }
+
+        finalL.addAll(combinedElementalDamageTypes);
+        finalL.addAll(moddedIPSDamage);
+
+
+        return finalL;
+    }
+
+    private List<Damage> calculateIPSDamageMods(List<Damage> moddedBaseDamage) {
+        List<Damage> baseDamageWithIPSMods = new ArrayList<>();
+        Map<Damage.DamageType, Double> ipsDamageIncreaseMap = new HashMap<>();
+        ipsDamageIncreaseMap.put(Damage.DamageType.IMPACT, 0.0);
+        ipsDamageIncreaseMap.put(Damage.DamageType.PUNCTURE, 0.0);
+        ipsDamageIncreaseMap.put(Damage.DamageType.SLASH, 0.0);
+
+        for (Mod mod : originalWeapon.getMods()) {
+            Damage modDamage = mod.getDamage();
+            if (modDamage != null && Damage.isIPS(modDamage)) {
+                Damage.DamageType modIPSDamageType = modDamage.getType();
+                ipsDamageIncreaseMap.put(modIPSDamageType, ipsDamageIncreaseMap.get(modIPSDamageType) + modDamage.getModAddedDamageRatio());
+            }
+        }
+        for (Damage d : moddedBaseDamage) {
+            if (Damage.isIPS(d)) {
+                Damage.DamageType damageType = d.getType();
+                baseDamageWithIPSMods.add(new Damage(damageType, d.getDamageValue() * (1 + ipsDamageIncreaseMap.get(damageType)), 0.0));
+            }
+        }
+
+        return baseDamageWithIPSMods;
+    }
+
     private double calculateModdedMultishot() {
         double multishotIncrease = weaponMods.stream().filter(mod -> mod.getMultishotIncrease() != 0).mapToDouble(Mod::getMultishotIncrease).sum();
         return originalWeapon.getMultishot() + multishotIncrease;
@@ -106,7 +149,7 @@ public class WeaponModifier {
         List<Damage> elementalDamageAddedByMods = new ArrayList<>();
 
         for (Mod mod : originalWeapon.getMods()) {
-            if (mod.getDamage() != null) {
+            if (mod.getDamage() != null && Damage.isElemental(mod.getDamage())) {
                 Damage modsDamage = mod.getDamage();
                 modsDamage.setDamageValue(baseWeaponDamage * modsDamage.getModAddedDamageRatio());
                 elementalDamageAddedByMods.add(modsDamage);

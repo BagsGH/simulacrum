@@ -15,6 +15,12 @@ public class Damage {
         this.modAddedDamageRatio = modAddedDamageRatio;
     }
 
+    public Damage(DamageType type, double damageValue) {
+        this.type = type;
+        this.damageValue = damageValue;
+    }
+
+
     public Damage() {
 
     }

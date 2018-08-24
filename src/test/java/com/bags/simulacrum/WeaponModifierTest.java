@@ -517,4 +517,21 @@ public class WeaponModifierTest {
         assertEquals(01.50, actualModdedWeapon.getMultishot(), 0.001);
     }
 
+    @Test
+    public void itCanCorrectlyCalculateIPSDamage() {
+        Damage impact = new Damage(Damage.DamageType.IMPACT, 9.0);
+        fakeWeapon.setDamageTypes(Arrays.asList(impact));
+
+        Damage modImpact = new Damage(Damage.DamageType.IMPACT, 0.0, 0.20);
+        fakeMod.setDamage(modImpact);
+        fakeWeapon.setMods(Arrays.asList(fakeMod));
+
+        Weapon actualWeapon = subject.modWeapon(fakeWeapon);
+
+        assertEquals(10.8, actualWeapon.getDamageTypes().get(0).getDamageValue(), 0.001);
+        assertEquals(Damage.DamageType.IMPACT, actualWeapon.getDamageTypes().get(0).getType());
+
+
+    }
+
 }
