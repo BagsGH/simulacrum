@@ -20,6 +20,7 @@ public class WeaponModifier {
         Weapon modifiedWeapon = copyWeaponToMod();
 
         List<Damage> moddedBaseDamage = calculateModdedDamageValues();
+        // moddedBaseDamage = calculateIPSDamageAddedByMods(moddedBaseDamage);
         List<Damage> moddedElementalDamage = calculateElementalDamageAddedByMods(moddedBaseDamage);
         List<Damage> orderedDamageTypes = orderDamageTypes(moddedBaseDamage, moddedElementalDamage);
         List<Damage> combinedElementalDamageTypes = combineDamageTypes(orderedDamageTypes);
@@ -39,6 +40,7 @@ public class WeaponModifier {
         return modifiedWeapon;
     }
 
+    
     private double calculateModdedMultishot() {
         double multishotIncrease = weaponMods.stream().filter(mod -> mod.getMultishotIncrease() != 0).mapToDouble(Mod::getMultishotIncrease).sum();
         return originalWeapon.getMultishot() + multishotIncrease;
@@ -47,18 +49,23 @@ public class WeaponModifier {
     private List<Damage> combineDamageTypes(List<Damage> orderedElementalDamageTypes) {
         ElementalDamageMapper mapper = new ElementalDamageMapper();
         List<Damage> combinedElementalDamages = new ArrayList<>();
+        if (orderedElementalDamageTypes.size() < 2) {
+            return orderedElementalDamageTypes;
+        }
         for (int i = 0; i < orderedElementalDamageTypes.size() - 1; i++) {
             if (orderedElementalDamageTypes.size() >= 2) {
                 Damage d1 = orderedElementalDamageTypes.get(i);
                 Damage d2 = orderedElementalDamageTypes.get(i + 1);
                 Damage.DamageType combinedDamageType = mapper.combineElements(d1.getType(), d2.getType());
                 if (combinedDamageType != null) {
-                    Damage CombinedDamage = new Damage(combinedDamageType);
-                    CombinedDamage.setDamageValue(d1.getDamageValue() + d2.getDamageValue());
+                    Damage CombinedDamage = new Damage(combinedDamageType, d1.getDamageValue() + d2.getDamageValue(), 0.00);
                     combinedElementalDamages.add(CombinedDamage);
                     i++;
                 } else {
                     combinedElementalDamages.add(d1);
+                    if (i + 2 >= orderedElementalDamageTypes.size()) {
+                        combinedElementalDamages.add(d2);
+                    }
                 }
             }
         }
@@ -75,7 +82,7 @@ public class WeaponModifier {
                 for (Damage modAddedDamage : mergedList) {
                     if (modAddedDamage.getType().equals(baseDamage.getType())) {
                         modAddedDamage.setDamageValue(modAddedDamage.getDamageValue() + baseDamage.getDamageValue());
-                        modAddedDamage.setModElementalDamageRatio(0.0);
+                        modAddedDamage.setModAddedDamageRatio(0.0);
                         thereIsAModThatIsTheSameType = true;
                     }
                 }
@@ -101,7 +108,7 @@ public class WeaponModifier {
         for (Mod mod : originalWeapon.getMods()) {
             if (mod.getDamage() != null) {
                 Damage modsDamage = mod.getDamage();
-                modsDamage.setDamageValue(baseWeaponDamage * modsDamage.getModElementalDamageRatio());
+                modsDamage.setDamageValue(baseWeaponDamage * modsDamage.getModAddedDamageRatio());
                 elementalDamageAddedByMods.add(modsDamage);
             }
         }
@@ -115,9 +122,7 @@ public class WeaponModifier {
         List<Damage> damageTypes = originalWeapon.getDamageTypes();
         List<Damage> moddedDamageTypes = new ArrayList<>();
         damageTypes.forEach(d -> {
-            Damage newD = new Damage(d);
-            newD.setDamageValue(newD.getDamageValue() * (1 + damageIncrease));
-            moddedDamageTypes.add(newD);
+            moddedDamageTypes.add(new Damage(d.getType(), d.getDamageValue() * (1 + damageIncrease), 0.0));
         });
         return moddedDamageTypes;
     }

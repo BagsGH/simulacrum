@@ -38,7 +38,7 @@ public class Engine {
         Mod maligForce = new Mod();
         maligForce.setStatusChanceIncrease(0.60);
         Damage toxin = new Damage(Damage.DamageType.TOXIN);
-        toxin.setModElementalDamageRatio(0.60);
+        toxin.setModAddedDamageRatio(0.60);
         maligForce.setDamage(toxin);
 
         Mod vileAccel = new Mod();
@@ -47,7 +47,7 @@ public class Engine {
 
         Mod hellFire = new Mod();
         Damage heat = new Damage(Damage.DamageType.HEAT);
-        heat.setModElementalDamageRatio(0.90);
+        heat.setModAddedDamageRatio(0.90);
         hellFire.setDamage(heat);
 
         Mod vs = new Mod();

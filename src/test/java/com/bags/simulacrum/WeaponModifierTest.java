@@ -370,7 +370,7 @@ public class WeaponModifierTest {
     @Test
     public void itCanCorrectlyCombineOneElementalModWithWeaponBaseElement() {
         Damage toxic = new Damage(Damage.DamageType.TOXIN);
-        toxic.setModElementalDamageRatio(0.60);
+        toxic.setModAddedDamageRatio(0.60);
         fakeMod.setDamage(toxic);
 
         Damage heat = new Damage(Damage.DamageType.HEAT);
@@ -436,7 +436,7 @@ public class WeaponModifierTest {
         fakeWeapon.setDamageTypes(Collections.singletonList(impact));
 
         Damage toxinModDamage = new Damage(Damage.DamageType.TOXIN);
-        toxinModDamage.setModElementalDamageRatio(0.90);
+        toxinModDamage.setModAddedDamageRatio(0.90);
         fakeMod.setDamage(toxinModDamage);
 
         fakeWeapon.setMods(Arrays.asList(fakeMod));
@@ -460,7 +460,7 @@ public class WeaponModifierTest {
         fakeWeapon.setDamageTypes(Collections.singletonList(heatDamage));
 
         Damage heatDamageMod = new Damage(Damage.DamageType.HEAT);
-        heatDamageMod.setModElementalDamageRatio(0.90);
+        heatDamageMod.setModAddedDamageRatio(0.90);
         fakeMod.setDamage(heatDamageMod);
 
         fakeWeapon.setMods(Arrays.asList(fakeMod));
@@ -480,7 +480,7 @@ public class WeaponModifierTest {
         fakeWeapon.setDamageTypes(Collections.singletonList(baseWeaponHeatDamage));
 
         Damage toxinModDamage = new Damage(Damage.DamageType.TOXIN);
-        toxinModDamage.setModElementalDamageRatio(0.90);
+        toxinModDamage.setModAddedDamageRatio(0.90);
         fakeMod.setDamage(toxinModDamage);
 
         fakeWeapon.setMods(Arrays.asList(fakeMod));
