@@ -10,7 +10,9 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public class WeaponModifierTest {
@@ -391,14 +393,12 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
-        Damage actualModifiedImpactDamage = actualWeaponModified.getDamageTypes().get(0);
-
-        assertEquals(92.75, actualModifiedImpactDamage.getDamageValue(), .001);
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 92.75), actualWeaponModified.getDamageTypes(), 0.001);
     }
 
     @Test
     public void itCanCorrectlyCalculateNegativeDamage() {
-        Damage impact = new Damage(DamageType.IMPACT);
+        Damage impact = new Damage(DamageType.TOXIN);
         impact.setDamageValue(35.00);
         fakeWeapon.setDamageTypes(Collections.singletonList(impact));
         fakeMod.setDamageIncrease(-0.15);
@@ -406,14 +406,12 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
-        Damage actualModifiedImpactDamage = actualWeaponModified.getDamageTypes().get(0);
-
-        assertEquals(29.75, actualModifiedImpactDamage.getDamageValue(), .001);
+        assertExpectedDamageExists(new Damage(DamageType.TOXIN, 29.75), actualWeaponModified.getDamageTypes(), 0.001);
     }
 
     @Test
     public void itCanCorrectlyCalculateComplexDamage() {
-        Damage impact = new Damage(DamageType.IMPACT);
+        Damage impact = new Damage(DamageType.HEAT);
         impact.setDamageValue(35.00);
         fakeWeapon.setDamageTypes(Collections.singletonList(impact));
         fakeMod.setDamageIncrease(-0.15);
@@ -422,9 +420,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
-        Damage actualModifiedImpactDamage = actualWeaponModified.getDamageTypes().get(0);
-
-        assertEquals(87.5, actualModifiedImpactDamage.getDamageValue(), .001);
+        assertExpectedDamageExists(new Damage(DamageType.HEAT, 87.5), actualWeaponModified.getDamageTypes(), 0.001);
     }
 
 
@@ -438,9 +434,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
-        Damage actualModifiedImpactDamage = actualWeaponModified.getSecondaryDamageTypes().get(0);
-
-        assertEquals(92.75, actualModifiedImpactDamage.getDamageValue(), .001);
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 92.75), actualWeaponModified.getSecondaryDamageTypes(), 0.001);
     }
 
     @Test
@@ -453,9 +447,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
-        Damage actualModifiedImpactDamage = actualWeaponModified.getSecondaryDamageTypes().get(0);
-
-        assertEquals(29.75, actualModifiedImpactDamage.getDamageValue(), .001);
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 29.75), actualWeaponModified.getSecondaryDamageTypes(), 0.001);
     }
 
     @Test
@@ -469,9 +461,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
-        Damage actualModifiedImpactDamage = actualWeaponModified.getSecondaryDamageTypes().get(0);
-
-        assertEquals(87.5, actualModifiedImpactDamage.getDamageValue(), .001);
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 87.5), actualWeaponModified.getSecondaryDamageTypes(), 0.001);
     }
 
 
@@ -489,14 +479,8 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
-        Damage actualAddedToxinDamage = actualWeaponModified.getDamageTypes().get(0);
-        Damage originalImpactDamage = actualWeaponModified.getDamageTypes().get(1);
-
-
-        assertEquals(35.0, originalImpactDamage.getDamageValue(), .001);
-        assertEquals(31.5, actualAddedToxinDamage.getDamageValue(), .001);
-        assertEquals(DamageType.TOXIN, actualAddedToxinDamage.getType());
-        assertEquals(DamageType.IMPACT, originalImpactDamage.getType());
+        assertExpectedDamageExists(new Damage(DamageType.TOXIN, 31.5), actualWeaponModified.getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 35.0), actualWeaponModified.getDamageTypes(), 0.001);
     }
 
     @Test
@@ -513,10 +497,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
-        Damage actualAddedDamage = actualWeaponModified.getDamageTypes().get(0);
-
-        assertEquals(66.5, actualAddedDamage.getDamageValue(), .001);
-        assertEquals(DamageType.HEAT, actualAddedDamage.getType());
+        assertExpectedDamageExists(new Damage(DamageType.HEAT, 66.5), actualWeaponModified.getDamageTypes(), 0.001);
     }
 
     @Test
@@ -533,11 +514,7 @@ public class WeaponModifierTest {
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
-        Damage actualGasDamage = actualWeaponModified.getDamageTypes().get(0);
-
-
-        assertEquals(66.5, actualGasDamage.getDamageValue(), .001);
-        assertEquals(DamageType.GAS, actualGasDamage.getType());
+        assertExpectedDamageExists(new Damage(DamageType.GAS, 66.5), actualWeaponModified.getDamageTypes(), 0.001);
     }
 
     @Test
@@ -574,10 +551,20 @@ public class WeaponModifierTest {
 
         Weapon actualWeapon = subject.modWeapon(fakeWeapon);
 
-        assertEquals(10.8, actualWeapon.getDamageTypes().get(0).getDamageValue(), 0.001);
-        assertEquals(DamageType.IMPACT, actualWeapon.getDamageTypes().get(0).getType());
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 10.8), actualWeapon.getDamageTypes(), 0.001);
+    }
 
+    public void assertExpectedDamageExists(Damage damageExpected, List<Damage> actualDamageSources, double threshold) {
+        boolean asExpected = false;
+        System.out.println("Expected:" + damageExpected);
+        for (Damage d : actualDamageSources) {
+            System.out.println(d);
+            if (d.getType().equals(damageExpected.getType()) && Math.abs(d.getDamageValue() - damageExpected.getDamageValue()) < threshold) {
+                asExpected = true;
+            }
+        }
 
+        assertTrue(asExpected);
     }
 
 }

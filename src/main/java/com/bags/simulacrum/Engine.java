@@ -67,11 +67,11 @@ public class Engine {
         opticor.setMods(Arrays.asList(vileAccel, heavyCalibre, vs, ps, serration, heatdmg));
 
 
-        Weapon ignisWraithModded = weaponModifier.modWeapon(ignisWraith);
+        // Weapon ignisWraithModded = weaponModifier.modWeapon(ignisWraith);
         Weapon opticorModded = weaponModifier.modWeapon(opticor);
 
         System.out.println("===Modded weapons===");
-        System.out.println(ignisWraithModded);
+        //System.out.println(ignisWraithModded);
         System.out.println(opticorModded);
     }
 
