@@ -22,16 +22,9 @@ public class WeaponModifier {
         weaponMods = originalWeapon.getMods();
         Weapon modifiedWeapon = copyWeaponToMod();
 
-        List<Damage> damagesAfterRawDamageMods = calculateModdedDamageValues(); //#1
-        double sumOfAllDamages = sumAllDamageTypes(damagesAfterRawDamageMods);
-        List<Damage> damagesAfterIPSDamageMods = calculateIPSDamageMods(damagesAfterRawDamageMods); //#2
-        List<Damage> damagesAfterElementalMods = calculateElementalDamageAddedByMods(sumOfAllDamages); //#3
-        List<Damage> damagesAfterOrderingBasedOnModOrder = orderDamageTypes(damagesAfterRawDamageMods, damagesAfterElementalMods);
-        List<Damage> damagesAfterCombiningElementalTypes = combineDamageTypes(damagesAfterOrderingBasedOnModOrder); //#4
-
-        //TODO: make the next line redundant by fixing this in #2. Weird to merge back in.
-        List<Damage> damagesAfterAddingIPSBackInTODOREMOVETHIS = mergeElementalAndIPS(damagesAfterCombiningElementalTypes, damagesAfterIPSDamageMods);
-        modifiedWeapon.setDamageTypes(damagesAfterAddingIPSBackInTODOREMOVETHIS);
+        //List<Damage> damagesAfterAddingIPSBackInTODOREMOVETHIS = calculateDamageSources();
+        modifiedWeapon.setDamageTypes(calculateDamageSources());
+        modifiedWeapon.setSecondaryDamageTypes(calculateSecondaryDamageSources());
 
         modifiedWeapon.setFireRate(calculateModdedFireRate());
         modifiedWeapon.setAccuracy(calculateModdedAccuracy());
@@ -45,6 +38,25 @@ public class WeaponModifier {
         modifiedWeapon.setMultishot(calculateModdedMultishot());
 
         return modifiedWeapon;
+    }
+
+    private List<Damage> calculateSecondaryDamageSources() {
+        if (originalWeapon.getSecondaryDamageTypes() != null) {
+            return calculateModdedDamageValues(originalWeapon.getSecondaryDamageTypes());
+        }
+        return null;
+    }
+
+    private List<Damage> calculateDamageSources() {
+        List<Damage> damagesAfterRawDamageMods = calculateModdedDamageValues(originalWeapon.getDamageTypes()); //#1
+        double sumOfAllDamages = sumAllDamageTypes(damagesAfterRawDamageMods);
+        List<Damage> damagesAfterIPSDamageMods = calculateIPSDamageMods(damagesAfterRawDamageMods); //#2
+        List<Damage> damagesAfterElementalMods = calculateElementalDamageAddedByMods(sumOfAllDamages); //#3
+        List<Damage> damagesAfterOrderingBasedOnModOrder = orderDamageTypes(damagesAfterRawDamageMods, damagesAfterElementalMods);
+        List<Damage> damagesAfterCombiningElementalTypes = combineDamageTypes(damagesAfterOrderingBasedOnModOrder); //#4
+
+        //TODO: make the next line redundant by fixing this in #2. Weird to merge back in.
+        return mergeElementalAndIPS(damagesAfterCombiningElementalTypes, damagesAfterIPSDamageMods);
     }
 
     private double sumAllDamageTypes(List<Damage> defaultDamagesModded) {
@@ -166,10 +178,9 @@ public class WeaponModifier {
         return elementalDamageAddedByMods;
     }
 
-    private List<Damage> calculateModdedDamageValues() {
+    private List<Damage> calculateModdedDamageValues(List<Damage> damageTypes) {
         double damageIncrease = weaponMods.stream().filter(mod -> mod.getDamageIncrease() != 0).mapToDouble(Mod::getDamageIncrease).sum();
 
-        List<Damage> damageTypes = originalWeapon.getDamageTypes();
         List<Damage> moddedDamageTypes = new ArrayList<>();
         damageTypes.forEach(damageSource -> {
             moddedDamageTypes.add(new Damage(damageSource.getType(), damageSource.getDamageValue() * (1 + damageIncrease), 0.0));

@@ -427,6 +427,54 @@ public class WeaponModifierTest {
         assertEquals(87.5, actualModifiedImpactDamage.getDamageValue(), .001);
     }
 
+
+    @Test
+    public void itCanCorrectlyCalculatePositiveSecondaryDamage() {
+        Damage impact = new Damage(DamageType.IMPACT);
+        impact.setDamageValue(35.00);
+        fakeWeapon.setSecondaryDamageTypes(Collections.singletonList(impact));
+        fakeMod.setDamageIncrease(1.65);
+        fakeWeapon.setMods(Collections.singletonList(fakeMod));
+
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
+
+        Damage actualModifiedImpactDamage = actualWeaponModified.getSecondaryDamageTypes().get(0);
+
+        assertEquals(92.75, actualModifiedImpactDamage.getDamageValue(), .001);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculateNegativeSecondaryDamage() {
+        Damage impact = new Damage(DamageType.IMPACT);
+        impact.setDamageValue(35.00);
+        fakeWeapon.setSecondaryDamageTypes(Collections.singletonList(impact));
+        fakeMod.setDamageIncrease(-0.15);
+        fakeWeapon.setMods(Collections.singletonList(fakeMod));
+
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
+
+        Damage actualModifiedImpactDamage = actualWeaponModified.getSecondaryDamageTypes().get(0);
+
+        assertEquals(29.75, actualModifiedImpactDamage.getDamageValue(), .001);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculateComplexSecondaryDamage() {
+        Damage impact = new Damage(DamageType.IMPACT);
+        impact.setDamageValue(35.00);
+        fakeWeapon.setSecondaryDamageTypes(Collections.singletonList(impact));
+        fakeMod.setDamageIncrease(-0.15);
+        anotherFakeMod.setDamageIncrease(1.65);
+        fakeWeapon.setMods(Arrays.asList(fakeMod, anotherFakeMod));
+
+        Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
+
+        Damage actualModifiedImpactDamage = actualWeaponModified.getSecondaryDamageTypes().get(0);
+
+        assertEquals(87.5, actualModifiedImpactDamage.getDamageValue(), .001);
+    }
+
+
     @Test
     public void itCanCorrectlyCalculateDamageAddedBy90PercentToxin() {
         Damage impact = new Damage(DamageType.IMPACT);

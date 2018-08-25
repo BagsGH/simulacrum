@@ -22,9 +22,11 @@ public class Engine {
     public void start() {
         weaponModifier = new WeaponModifier();
         Weapon ignisWraith = setupIgnis();
+        Weapon opticor = setupOpticor();
 
         System.out.println("===Original weapons===");
         System.out.println(ignisWraith);
+        System.out.println(opticor);
 
         Mod heavyCalibre = new Mod();
         heavyCalibre.setDamageIncrease(1.65);
@@ -59,10 +61,18 @@ public class Engine {
 
         ignisWraith.setMods(Arrays.asList(heavyCalibre, serration, splitChamber, maligForce, vileAccel, hellFire, vs, ps));
 
+        Mod heatdmg = new Mod();
+        heatdmg.setDamage(new Damage(DamageType.HEAT, 0.0, 0.15));
+
+        opticor.setMods(Arrays.asList(vileAccel, heavyCalibre, vs, ps, serration, heatdmg));
+
+
         Weapon ignisWraithModded = weaponModifier.modWeapon(ignisWraith);
+        Weapon opticorModded = weaponModifier.modWeapon(opticor);
 
         System.out.println("===Modded weapons===");
         System.out.println(ignisWraithModded);
+        System.out.println(opticorModded);
     }
 
     private Weapon setupIgnis() {
@@ -97,6 +107,48 @@ public class Engine {
         ignisWraith.setName("Ignis Wraith");
         ignisWraith.setMods(new ArrayList<>());
         return ignisWraith;
+    }
+
+    private Weapon setupOpticor() {
+        Weapon opticor = new Weapon();
+        opticor.setAccuracy(1.00);
+        opticor.setCriticalChance(0.20);
+
+        opticor.setChargeTime(2.00);
+        opticor.setCriticalDamage(2.5);
+        opticor.setHeadshotMultiplier(2.0);
+        opticor.setFireRate(1.0);
+        opticor.setMagazineSize(5);
+        opticor.setMaxAmmo(200);
+        opticor.setAccuracyMultiplier(1.0);
+        opticor.setMultishot(0.00);
+        List<Damage> opticorDamageTypes = new ArrayList<>();
+        List<Damage> opticorSecondaryDamageTypes = new ArrayList<>();
+
+        opticorDamageTypes.add(new Damage(DamageType.PUNCTURE, 850));
+        opticorDamageTypes.add(new Damage(DamageType.IMPACT, 100));
+        opticorDamageTypes.add(new Damage(DamageType.SLASH, 50));
+        opticorSecondaryDamageTypes.add(new Damage(DamageType.MAGNETIC, 400));
+
+        opticor.setDamageTypes(opticorDamageTypes);
+        opticor.setSecondaryDamageTypes(opticorSecondaryDamageTypes);
+        opticor.setReloadTime(2.0);
+        opticor.setStatusChance(.20);
+
+        /* Fluff weapon information. **/
+        opticor.setNoiseLevel(Weapon.NoiseLevel.ALARMING);
+        opticor.setTriggerType(Weapon.TriggerType.CHARGE);
+        opticor.setSlot(Weapon.Slot.PRIMARY);
+        opticor.setType(Weapon.WeaponType.RIFLE);
+        opticor.setAmmoType(Weapon.AmmoType.RIFLE);
+        opticor.setDisposition(Weapon.Disposition.STRONG);
+        opticor.setRangeLimit(-1.0);
+        opticor.setMasteryRank(14);
+        opticor.setName("Opticor");
+        opticor.setMods(new ArrayList<>());
+
+
+        return opticor;
     }
 
 }
