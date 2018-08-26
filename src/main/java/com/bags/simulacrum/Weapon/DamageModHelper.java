@@ -137,35 +137,52 @@ public class DamageModHelper {
         if (orderedElementalDamageTypes.size() < 2) {
             return orderedElementalDamageTypes;
         }
+
         for (int i = 0; i < orderedElementalDamageTypes.size(); i++) {
-            if (lastDamageSource(orderedElementalDamageTypes, i)) {
-                combinedElementalDamages.add(orderedElementalDamageTypes.get(i));
-            } else if (elementalPairsPossible(orderedElementalDamageTypes)) {
-                Damage d1 = orderedElementalDamageTypes.get(i);
-                Damage d2 = orderedElementalDamageTypes.get(i + 1);
-                DamageType combinedDamageType = mapper.combineElements(d1.getType(), d2.getType());
+            Damage damage1 = orderedElementalDamageTypes.get(i);
+            if (endOfList(orderedElementalDamageTypes, i)) {
+                combinedElementalDamages.add(damage1);
+                break;
+            }
+            if (DamageType.isCombinedElemental(damage1.getType())) {
+                combinedElementalDamages.add(damage1);
+            } else {
+                Damage damage2 = orderedElementalDamageTypes.get(i + 1);
+                DamageType combinedDamageType = mapper.combineElements(damage1.getType(), damage2.getType());
                 if (combinedDamageType != null) {
-                    Damage CombinedDamage = new Damage(combinedDamageType, d1.getDamageValue() + d2.getDamageValue(), 0.00);
+                    Damage CombinedDamage = new Damage(combinedDamageType, damage1.getDamageValue() + damage2.getDamageValue(), 0.00);
                     combinedElementalDamages.add(CombinedDamage);
                     i++;
-                } else {
-                    combinedElementalDamages.add(d1);
-                    if (i + 1 > orderedElementalDamageTypes.size()) {
-                        combinedElementalDamages.add(d2);
-                    }
                 }
             }
         }
-
-        return combinedElementalDamages;
+        return sumIdenticalTypes(combinedElementalDamages);
     }
 
-    private boolean lastDamageSource(List<Damage> orderedElementalDamageTypes, int i) {
+    private List<Damage> sumIdenticalTypes(List<Damage> combinedElementalDamages) {
+        List<Damage> finalizedDamageTypes = new ArrayList<>();
+        for (DamageType damageType : DamageType.damageTypes) {
+            double summedDamageForType = 0.0;
+            int count = 0;
+            Damage possibleLoner = null;
+            for (Damage damage : combinedElementalDamages) {
+                if (damage.getType().equals(damageType)) {
+                    possibleLoner = damage;
+                    summedDamageForType += damage.getDamageValue();
+                    count++;
+                }
+            }
+            if (count == 1) {
+                finalizedDamageTypes.add(possibleLoner);
+            } else if (count > 1) {
+                finalizedDamageTypes.add(new Damage(damageType, summedDamageForType));
+            }
+        }
+        return finalizedDamageTypes;
+    }
+
+    private boolean endOfList(List<Damage> orderedElementalDamageTypes, int i) {
         return i == orderedElementalDamageTypes.size() - 1;
-    }
-
-    private boolean elementalPairsPossible(List<Damage> orderedElementalDamageTypes) {
-        return orderedElementalDamageTypes.size() >= 2;
     }
 
     private List<Damage> mergeElementalAndIPS(List<Damage> combinedElementalDamageTypes, List<Damage> moddedIPSDamage) {

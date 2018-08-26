@@ -1,5 +1,8 @@
 package com.bags.simulacrum.Damage;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum DamageType {
     PUNCTURE,
     IMPACT,
@@ -16,6 +19,9 @@ public enum DamageType {
     MAGNETIC,
     RADIATION,
     VIRAL;
+
+    public final static List<DamageType> damageTypes = Arrays.asList(ELECTRICITY, COLD, HEAT, TOXIN,
+            BLAST, VOID, CORROSIVE, GAS, MAGNETIC, RADIATION, VIRAL);
 
     public static boolean isElemental(DamageType damageType) {
         return damageType.equals(ELECTRICITY) || damageType.equals(COLD) || damageType.equals(HEAT) || damageType.equals(TOXIN) || damageType.equals(BLAST) ||
