@@ -125,6 +125,12 @@ public class DamageModHelper {
         return mergedList;
     }
 
+    //[0][1][2]
+    //[C][H][R]
+    //Combine C+H, "if last, R"
+    //[R][C][H]
+    //If i is combined, add and move on
+
     private List<Damage> combineDamageTypes(List<Damage> orderedElementalDamageTypes) {
         ElementalDamageMapper mapper = new ElementalDamageMapper();
         List<Damage> combinedElementalDamages = new ArrayList<>();
