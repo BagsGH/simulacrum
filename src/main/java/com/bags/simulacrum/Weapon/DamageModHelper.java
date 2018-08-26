@@ -18,59 +18,56 @@ public class DamageModHelper {
     public List<Damage> calculateDamageSources(Weapon originalWeapon) {
         this.originalWeapon = originalWeapon;
 
-        List<Damage> damagesAfterRawDamageMods = calculateModdedDamageValues(originalWeapon.getDamageTypes()); //#1
-        double sumOfAllDamages = sumAllDamageTypes(damagesAfterRawDamageMods);
-        List<Damage> damagesAfterIPSDamageMods = calculateIPSDamageMods(damagesAfterRawDamageMods); //#2
-        List<Damage> damagesAfterElementalMods = calculateElementalDamageAddedByMods(sumOfAllDamages); //#3
-        List<Damage> damagesAfterOrderingBasedOnModOrder = orderDamageTypes(damagesAfterRawDamageMods, damagesAfterElementalMods);
-        List<Damage> damagesAfterCombiningElementalTypes = combineDamageTypes(damagesAfterOrderingBasedOnModOrder); //#4
+        List<Damage> baseDamageSourcesAfterRawDamageMods = calculateModdedDamageValues(originalWeapon.getDamageTypes()); //#1
+        double sumOfAllDamages = sumAllDamageTypes(baseDamageSourcesAfterRawDamageMods);
+        List<Damage> ipsDamageSources = calculateIPSDamageMods(baseDamageSourcesAfterRawDamageMods); //#2
+        List<Damage> elementalDamageSourcesAddedByMods = calculateElementalDamageAddedByMods(sumOfAllDamages); //#3
+        List<Damage> orderedElementalDamageSourcesFromWeaponAndMods = orderDamageTypesBasedOnModIndex(baseDamageSourcesAfterRawDamageMods, elementalDamageSourcesAddedByMods);
+        List<Damage> finalElementalDamageSources = combineDamageTypes(orderedElementalDamageSourcesFromWeaponAndMods); //#4
 
         //TODO: make the next line redundant by fixing this in #2. Weird to merge back in.
-        return mergeElementalAndIPS(damagesAfterCombiningElementalTypes, damagesAfterIPSDamageMods);
-
-
+        return mergeElementalAndIPS(finalElementalDamageSources, ipsDamageSources);
     }
 
     public List<Damage> calculateSecondaryDamageSources(Weapon originalWeapon) {
         this.originalWeapon = originalWeapon;
-        if (this.originalWeapon.getSecondaryDamageTypes() != null) {
-            return calculateModdedDamageValues(this.originalWeapon.getSecondaryDamageTypes());
-        }
-        return null;
+        return this.originalWeapon.getSecondaryDamageTypes() != null ? calculateModdedDamageValues(this.originalWeapon.getSecondaryDamageTypes()) : null;
     }
 
     private double sumAllDamageTypes(List<Damage> defaultDamagesModded) {
-        double baseWeaponDamage = 0;
-        for (Damage individualDamage : defaultDamagesModded) {
-            baseWeaponDamage += individualDamage.getDamageValue();
-        }
-
-        return baseWeaponDamage;
+        return defaultDamagesModded.stream().mapToDouble(Damage::getDamageValue).sum();
     }
 
-    private List<Damage> mergeElementalAndIPS(List<Damage> combinedElementalDamageTypes, List<Damage> moddedIPSDamage) {
-        List<Damage> finalL = new ArrayList<>();
-        int size = combinedElementalDamageTypes.size();
-        for (int i = 0; i < size; i++) {
-            if (DamageType.isIPS(combinedElementalDamageTypes.get(i).getType())) {
-                combinedElementalDamageTypes.remove(i);
-                size--;
-            }
-        }
+    private List<Damage> calculateModdedDamageValues(List<Damage> damageTypes) {
+        double damageIncrease = originalWeapon.getMods().stream().filter(mod -> mod.getDamageIncrease() != 0).mapToDouble(Mod::getDamageIncrease).sum();
 
-        finalL.addAll(combinedElementalDamageTypes);
-        finalL.addAll(moddedIPSDamage);
-
-        return finalL;
+        List<Damage> moddedDamageTypes = new ArrayList<>();
+        damageTypes.forEach(damageSource -> {
+            moddedDamageTypes.add(new Damage(damageSource.getType(), damageSource.getDamageValue() * (1 + damageIncrease)));
+        });
+        return moddedDamageTypes;
     }
 
-    private List<Damage> calculateIPSDamageMods(List<Damage> moddedBaseDamage) {
-        List<Damage> baseDamageWithIPSMods = new ArrayList<>();
+    private List<Damage> calculateIPSDamageMods(List<Damage> baseDamageSourcesAfterRawDamageMods) {
+        List<Damage> ipsDamageSources = new ArrayList<>();
         Map<DamageType, Double> ipsDamageIncreaseMap = new HashMap<>();
         ipsDamageIncreaseMap.put(DamageType.IMPACT, 0.0);
         ipsDamageIncreaseMap.put(DamageType.PUNCTURE, 0.0);
         ipsDamageIncreaseMap.put(DamageType.SLASH, 0.0);
 
+        populateIPSDamageIncreaseMap(ipsDamageIncreaseMap);
+
+        for (Damage damageSource : baseDamageSourcesAfterRawDamageMods) {
+            if (DamageType.isIPS(damageSource.getType())) {
+                DamageType damageType = damageSource.getType();
+                ipsDamageSources.add(new Damage(damageType, damageSource.getDamageValue() * (1 + ipsDamageIncreaseMap.get(damageType)), 0.0));
+            }
+        }
+
+        return ipsDamageSources;
+    }
+
+    private void populateIPSDamageIncreaseMap(Map<DamageType, Double> ipsDamageIncreaseMap) {
         for (Mod mod : originalWeapon.getMods()) {
             Damage modDamage = mod.getDamage();
             if (modDamage != null && DamageType.isIPS(modDamage.getType())) {
@@ -78,14 +75,46 @@ public class DamageModHelper {
                 ipsDamageIncreaseMap.put(modIPSDamageType, ipsDamageIncreaseMap.get(modIPSDamageType) + modDamage.getModAddedDamageRatio());
             }
         }
-        for (Damage d : moddedBaseDamage) {
-            if (DamageType.isIPS(d.getType())) {
-                DamageType damageType = d.getType();
-                baseDamageWithIPSMods.add(new Damage(damageType, d.getDamageValue() * (1 + ipsDamageIncreaseMap.get(damageType)), 0.0));
+    }
+
+    private List<Damage> calculateElementalDamageAddedByMods(Double baseDamage) {
+        List<Damage> elementalDamageSourcesAddedByMods = new ArrayList<>();
+
+        for (Mod mod : originalWeapon.getMods()) {
+            if (modAddsElementalDamageSource(mod)) {
+                Damage modDamageSource = mod.getDamage();
+                modDamageSource.setDamageValue(baseDamage * modDamageSource.getModAddedDamageRatio());
+                elementalDamageSourcesAddedByMods.add(modDamageSource);
             }
         }
 
-        return baseDamageWithIPSMods;
+        return elementalDamageSourcesAddedByMods;
+    }
+
+    private boolean modAddsElementalDamageSource(Mod mod) {
+        return mod.getDamage() != null && DamageType.isElemental(mod.getDamage().getType());
+    }
+
+    private List<Damage> orderDamageTypesBasedOnModIndex(List<Damage> moddedBaseDamage, List<Damage> moddedElementalDamage) {
+        List<Damage> mergedList = new ArrayList<>();
+        mergedList.addAll(moddedElementalDamage);
+        for (Damage baseDamage : moddedBaseDamage) {
+            if (DamageType.isElemental(baseDamage.getType())) {
+                boolean thereIsAModThatIsTheSameType = false;
+                for (Damage modAddedDamage : mergedList) {
+                    if (modAddedDamage.getType().equals(baseDamage.getType())) {
+                        modAddedDamage.setDamageValue(modAddedDamage.getDamageValue() + baseDamage.getDamageValue());
+                        modAddedDamage.setModAddedDamageRatio(0.0);
+                        thereIsAModThatIsTheSameType = true;
+                    }
+                }
+                if (!thereIsAModThatIsTheSameType) {
+                    mergedList.add(baseDamage);
+                }
+            }
+        }
+
+        return mergedList;
     }
 
     private List<Damage> combineDamageTypes(List<Damage> orderedElementalDamageTypes) {
@@ -115,53 +144,11 @@ public class DamageModHelper {
         return combinedElementalDamages;
     }
 
-    private List<Damage> orderDamageTypes(List<Damage> moddedBaseDamage, List<Damage> moddedElementalDamage) {
-        List<Damage> mergedList = new ArrayList<>();
-        mergedList.addAll(moddedElementalDamage);
-        for (Damage baseDamage : moddedBaseDamage) {
-            if (DamageType.isElemental(baseDamage.getType())) {
-                boolean thereIsAModThatIsTheSameType = false;
-                for (Damage modAddedDamage : mergedList) {
-                    if (modAddedDamage.getType().equals(baseDamage.getType())) {
-                        modAddedDamage.setDamageValue(modAddedDamage.getDamageValue() + baseDamage.getDamageValue());
-                        modAddedDamage.setModAddedDamageRatio(0.0);
-                        thereIsAModThatIsTheSameType = true;
-                    }
-                }
-                if (!thereIsAModThatIsTheSameType) {
-                    mergedList.add(baseDamage);
-                }
-            } else {
-                mergedList.add(baseDamage);
-            }
-        }
+    private List<Damage> mergeElementalAndIPS(List<Damage> combinedElementalDamageTypes, List<Damage> moddedIPSDamage) {
+        List<Damage> finalDamageSourceList = new ArrayList<>();
+        finalDamageSourceList.addAll(combinedElementalDamageTypes);
+        finalDamageSourceList.addAll(moddedIPSDamage);
 
-        return mergedList;
+        return finalDamageSourceList;
     }
-
-    private List<Damage> calculateElementalDamageAddedByMods(Double baseDamage) {
-        List<Damage> elementalDamageAddedByMods = new ArrayList<>();
-
-        for (Mod mod : originalWeapon.getMods()) {
-            if (mod.getDamage() != null && DamageType.isElemental(mod.getDamage().getType())) {
-                Damage modsDamage = mod.getDamage();
-                modsDamage.setDamageValue(baseDamage * modsDamage.getModAddedDamageRatio());
-                elementalDamageAddedByMods.add(modsDamage);
-            }
-        }
-
-        return elementalDamageAddedByMods;
-    }
-
-    private List<Damage> calculateModdedDamageValues(List<Damage> damageTypes) {
-        double damageIncrease = originalWeapon.getMods().stream().filter(mod -> mod.getDamageIncrease() != 0).mapToDouble(Mod::getDamageIncrease).sum();
-
-        List<Damage> moddedDamageTypes = new ArrayList<>();
-        damageTypes.forEach(damageSource -> {
-            moddedDamageTypes.add(new Damage(damageSource.getType(), damageSource.getDamageValue() * (1 + damageIncrease), 0.0));
-        });
-        return moddedDamageTypes;
-    }
-
-
 }
