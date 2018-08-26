@@ -131,8 +131,10 @@ public class DamageModHelper {
         if (orderedElementalDamageTypes.size() < 2) {
             return orderedElementalDamageTypes;
         }
-        for (int i = 0; i < orderedElementalDamageTypes.size() - 1; i++) {
-            if (orderedElementalDamageTypes.size() >= 2) {
+        for (int i = 0; i < orderedElementalDamageTypes.size(); i++) {
+            if (lastDamageSource(orderedElementalDamageTypes, i)) {
+                combinedElementalDamages.add(orderedElementalDamageTypes.get(i));
+            } else if (elementalPairsPossible(orderedElementalDamageTypes)) {
                 Damage d1 = orderedElementalDamageTypes.get(i);
                 Damage d2 = orderedElementalDamageTypes.get(i + 1);
                 DamageType combinedDamageType = mapper.combineElements(d1.getType(), d2.getType());
@@ -142,7 +144,7 @@ public class DamageModHelper {
                     i++;
                 } else {
                     combinedElementalDamages.add(d1);
-                    if (i + 2 >= orderedElementalDamageTypes.size()) {
+                    if (i + 1 > orderedElementalDamageTypes.size()) {
                         combinedElementalDamages.add(d2);
                     }
                 }
@@ -150,6 +152,14 @@ public class DamageModHelper {
         }
 
         return combinedElementalDamages;
+    }
+
+    private boolean lastDamageSource(List<Damage> orderedElementalDamageTypes, int i) {
+        return i == orderedElementalDamageTypes.size() - 1;
+    }
+
+    private boolean elementalPairsPossible(List<Damage> orderedElementalDamageTypes) {
+        return orderedElementalDamageTypes.size() >= 2;
     }
 
     private List<Damage> mergeElementalAndIPS(List<Damage> combinedElementalDamageTypes, List<Damage> moddedIPSDamage) {
