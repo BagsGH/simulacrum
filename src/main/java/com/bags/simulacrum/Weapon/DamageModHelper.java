@@ -15,6 +15,14 @@ public class DamageModHelper {
 
     private Weapon originalWeapon;
 
+    //TODO: figure out how the hell to handle weapons like the Lenz with base combined damage, where the damage you're adding is a prt of the combined element, but not already present on the weapon...
+    /*
+        If a weapon has blast and cold, and you add heat, heres what seems to happen
+        For total damage of weapon, cold is ignored. So we have impact (50) + blast (660) = 710. 90% of that is 639, that's out heat damage.
+        Then you take the cold, add it to blast, and then add 90% of that also. So you go from 660 to 679 blast.
+
+        If you mod heat and cold, its just base damage (cold + imp + blast) * 1.8 + base blast
+     */
     public List<Damage> calculateDamageSources(Weapon originalWeapon) {
         this.originalWeapon = originalWeapon;
 

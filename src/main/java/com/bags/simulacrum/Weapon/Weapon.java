@@ -71,7 +71,8 @@ public class Weapon {
         RIFLE,
         SNIPER,
         PISTOL,
-        SHOTGUN
+        SHOTGUN,
+        BOW
     }
 
     public enum NoiseLevel {
@@ -107,7 +108,7 @@ public class Weapon {
         CHARGE,
         DUPLEXAUTO,
         AUTOSPOOL,
-        AUTO
+        AUTO, SEMIAUTO;
     }
 
 }

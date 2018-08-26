@@ -23,10 +23,14 @@ public class Engine {
         weaponModifier = new WeaponModifier();
         Weapon ignisWraith = setupIgnis();
         Weapon opticor = setupOpticor();
+        Weapon lenz = setupLenz();
+        Weapon plasmor = setupPlasmor();
 
         System.out.println("===Original weapons===");
         System.out.println(ignisWraith);
         System.out.println(opticor);
+        System.out.println(lenz);
+        System.out.println(plasmor);
 
         Mod heavyCalibre = new Mod();
         heavyCalibre.setDamageIncrease(1.65);
@@ -66,13 +70,105 @@ public class Engine {
 
         opticor.setMods(Arrays.asList(vileAccel, heavyCalibre, vs, ps, serration, heatdmg));
 
+        Mod hellfire = new Mod();
+        hellfire.setDamage(new Damage(DamageType.HEAT, 0.0, 0.90));
+
+        Mod ryme = new Mod();
+        ryme.setDamage(new Damage(DamageType.COLD, 0, 0.60));
+
+        lenz.setMods(Arrays.asList(ryme));
+
+        Mod blaze = new Mod();
+        blaze.setDamage(new Damage(DamageType.HEAT, 0.0, 0.60));
+        blaze.setDamageIncrease(0.60);
+        Mod charged = new Mod();
+        charged.setDamage(new Damage(DamageType.ELECTRICITY, 0.0, 0.90));
+
+        plasmor.setMods(Arrays.asList(blaze, charged));
 
         // Weapon ignisWraithModded = weaponModifier.modWeapon(ignisWraith);
-        Weapon opticorModded = weaponModifier.modWeapon(opticor);
+        //Weapon opticorModded = weaponModifier.modWeapon(opticor);
+        //Weapon lenzModded = weaponModifier.modWeapon(lenz);
+        Weapon plasmorModded = weaponModifier.modWeapon(plasmor);
 
         System.out.println("===Modded weapons===");
         //System.out.println(ignisWraithModded);
-        System.out.println(opticorModded);
+        //System.out.println(opticorModded);
+        //System.out.println(lenzModded);
+        System.out.println(plasmorModded);
+    }
+
+    private Weapon setupPlasmor() {
+        Weapon plasmor = new Weapon();
+        plasmor.setAccuracy(0.091);
+        plasmor.setCriticalChance(0.220);
+
+        plasmor.setCriticalDamage(1.60);
+        plasmor.setHeadshotMultiplier(1.0);
+        plasmor.setFireRate(1.1);
+        plasmor.setMagazineSize(10);
+        plasmor.setMaxAmmo(48);
+        plasmor.setAccuracyMultiplier(1.0);
+        plasmor.setMultishot(0.00);
+        List<Damage> plasmorDamageSources = new ArrayList<>();
+
+        plasmorDamageSources.add(new Damage(DamageType.RADIATION, 600));
+
+        plasmor.setDamageTypes(plasmorDamageSources);
+        plasmor.setReloadTime(2.8);
+        plasmor.setStatusChance(0.28);
+
+        /* Fluff weapon information. **/
+        plasmor.setNoiseLevel(Weapon.NoiseLevel.ALARMING);
+        plasmor.setTriggerType(Weapon.TriggerType.SEMIAUTO);
+        plasmor.setSlot(Weapon.Slot.PRIMARY);
+        plasmor.setType(Weapon.WeaponType.SHOTGUN);
+        plasmor.setAmmoType(Weapon.AmmoType.SHOTGUN);
+        plasmor.setDisposition(Weapon.Disposition.NEUTRAL);
+        plasmor.setRangeLimit(20.0);
+        plasmor.setMasteryRank(10);
+        plasmor.setName("Arca Plasmor");
+        plasmor.setMods(new ArrayList<>());
+
+        return plasmor;
+    }
+
+    private Weapon setupLenz() {
+        Weapon lenz = new Weapon();
+        lenz.setAccuracy(0.167);
+        lenz.setCriticalChance(0.50);
+
+        lenz.setChargeTime(1.20);
+        lenz.setCriticalDamage(2.0);
+        lenz.setHeadshotMultiplier(2.0);
+        lenz.setFireRate(1.0);
+        lenz.setMagazineSize(1);
+        lenz.setMaxAmmo(6);
+        lenz.setAccuracyMultiplier(1.0);
+        lenz.setMultishot(0.00);
+        List<Damage> lenzDamageSources = new ArrayList<>();
+
+        lenzDamageSources.add(new Damage(DamageType.IMPACT, 50));
+        lenzDamageSources.add(new Damage(DamageType.COLD, 10));
+        lenzDamageSources.add(new Damage(DamageType.BLAST, 660));
+
+        lenz.setDamageTypes(lenzDamageSources);
+        lenz.setReloadTime(0.60);
+        lenz.setStatusChance(0.05);
+
+        /* Fluff weapon information. **/
+        lenz.setNoiseLevel(Weapon.NoiseLevel.ALARMING);
+        lenz.setTriggerType(Weapon.TriggerType.CHARGE);
+        lenz.setSlot(Weapon.Slot.PRIMARY);
+        lenz.setType(Weapon.WeaponType.BOW);
+        lenz.setAmmoType(Weapon.AmmoType.BOW);
+        lenz.setDisposition(Weapon.Disposition.NEUTRAL);
+        lenz.setRangeLimit(-1.0);
+        lenz.setMasteryRank(8);
+        lenz.setName("Lenz");
+        lenz.setMods(new ArrayList<>());
+
+        return lenz;
     }
 
     private Weapon setupIgnis() {
