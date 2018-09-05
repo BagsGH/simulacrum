@@ -28,11 +28,11 @@ public class DamageModHelper {
         this.originalWeaponMods = mods;
         DamageSource modifiedDamageSource = new DamageSource(damageSource);
 
-        List<Damage> baseDamageSourcesAfterRawDamageMods = calculateModdedDamageValues(damageSource.getDamageTypes()); //#1
-        double sumOfAllDamages = sumAllDamageTypes(baseDamageSourcesAfterRawDamageMods);
-        List<Damage> ipsDamageSources = calculateIPSDamageMods(baseDamageSourcesAfterRawDamageMods); //#2
+        List<Damage> baseDamagesAfterRawDamageMods = calculateModdedDamageValues(damageSource.getDamageTypes()); //#1
+        double sumOfAllDamages = sumAllDamageTypes(baseDamagesAfterRawDamageMods);
+        List<Damage> ipsDamageSources = calculateIPSDamageMods(baseDamagesAfterRawDamageMods); //#2
         List<Damage> elementalDamageSourcesAddedByMods = calculateElementalDamageAddedByMods(sumOfAllDamages); //#3
-        List<Damage> orderedElementalDamageSourcesFromWeaponAndMods = orderDamageTypesBasedOnModIndex(baseDamageSourcesAfterRawDamageMods, elementalDamageSourcesAddedByMods);
+        List<Damage> orderedElementalDamageSourcesFromWeaponAndMods = orderDamageTypesBasedOnModIndex(baseDamagesAfterRawDamageMods, elementalDamageSourcesAddedByMods);
         List<Damage> finalElementalDamageSources = combineDamageTypes(orderedElementalDamageSourcesFromWeaponAndMods); //#4
 
         modifiedDamageSource.setDamageTypes(mergeElementalAndIPS(finalElementalDamageSources, ipsDamageSources));

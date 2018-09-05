@@ -79,7 +79,11 @@ public class Engine {
         Mod ryme = new Mod();
         ryme.setDamage(new Damage(DamageType.COLD, 0, 0.60));
 
-        lenz.setMods(Arrays.asList(ryme, heavyCalibre));
+        Mod cryo = new Mod();
+        cryo.setDamage(new Damage(DamageType.COLD, 0.0, 0.90));
+
+        //lenz.setMods(Arrays.asList(vileAccel, hellFire, heavyCalibre, splitChamber, serration, cryo, vs, ps));
+        lenz.setMods(Arrays.asList(vileAccel, hellFire, heavyCalibre, splitChamber, serration, cryo, vs, ps));
 
         Mod blaze = new Mod();
         blaze.setDamage(new Damage(DamageType.HEAT, 0.0, 0.60));
@@ -118,12 +122,12 @@ public class Engine {
         plasmor.setMagazineSize(10);
         plasmor.setMaxAmmo(48);
         plasmor.setAccuracyMultiplier(1.0);
-        plasmor.setMultishot(0.00);
+        plasmor.setMultishot(1.00);
         List<Damage> plasmorDamageSources = new ArrayList<>();
 
         plasmorDamageSources.add(new Damage(DamageType.RADIATION, 600));
 
-        plasmor.setDamageSources(Arrays.asList(new DamageSource(DamageSourceType.SHOT, plasmorDamageSources)));
+        plasmor.setDamageSources(Arrays.asList(new DamageSource(DamageSourceType.PROJECTILE, plasmorDamageSources)));
 
         plasmor.setReloadTime(2.8);
         plasmor.setStatusChance(0.28);
@@ -155,10 +159,10 @@ public class Engine {
         lenz.setMagazineSize(1);
         lenz.setMaxAmmo(6);
         lenz.setAccuracyMultiplier(1.0);
-        lenz.setMultishot(0.00);
+        lenz.setMultishot(1.00);
         List<Damage> lenzDamageSources = new ArrayList<>();
 
-        DamageSource shotSource = new DamageSource(DamageSourceType.SHOT, Arrays.asList(new Damage(DamageType.IMPACT, 50)));
+        DamageSource shotSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.IMPACT, 50)));
         DamageSource impactExplosion = new DamageSource(DamageSourceType.HIT_AOE, Arrays.asList(new Damage(DamageType.COLD, 10)), 0, 10.0);
         DamageSource delayExplosion = new DamageSource(DamageSourceType.DELAYED_AOE, Arrays.asList(new Damage(DamageType.BLAST, 660)), 2.0, 10.0);
 
@@ -193,7 +197,7 @@ public class Engine {
         ignisWraith.setMagazineSize(200);
         ignisWraith.setMaxAmmo(800);
         ignisWraith.setAccuracyMultiplier(0.0);
-        ignisWraith.setMultishot(0.00);
+        ignisWraith.setMultishot(1.00);
         List<Damage> ignisDamageTypes = new ArrayList<>();
         Damage heat = new Damage(DamageType.HEAT, 35.0);
         ignisDamageTypes.add(heat);
@@ -227,7 +231,7 @@ public class Engine {
         opticor.setMagazineSize(5);
         opticor.setMaxAmmo(200);
         opticor.setAccuracyMultiplier(1.0);
-        opticor.setMultishot(0.00);
+        opticor.setMultishot(1.00);
         List<Damage> opticorDamageTypes = new ArrayList<>();
         List<Damage> opticorSecondaryDamageTypes = new ArrayList<>();
 

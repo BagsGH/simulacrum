@@ -32,7 +32,7 @@ public class WeaponModifierTest {
         fakeWeapon = new Weapon();
         fakeWeapon.setType(Weapon.WeaponType.RIFLE);
 
-        DamageSource damageSource = new DamageSource(DamageSourceType.SHOT, Collections.singletonList(new Damage(DamageType.IMPACT, 5.0, 0.0)));
+        DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.IMPACT, 5.0, 0.0)));
         fakeWeapon.addDamageSource(damageSource);
 
         fakeMod = new Mod();
@@ -372,23 +372,23 @@ public class WeaponModifierTest {
     @Test
     public void itCanCorrectlyCalculatePositiveMultishot() {
         fakeMod.setMultishotIncrease(0.90);
-        fakeWeapon.setMultishot(0.00);
+        fakeWeapon.setMultishot(1.00);
         fakeWeapon.setMods(Arrays.asList(fakeMod));
 
         Weapon actualModdedWeapon = subject.modWeapon(fakeWeapon);
 
-        assertEquals(0.90, actualModdedWeapon.getMultishot(), 0.001);
+        assertEquals(1.90, actualModdedWeapon.getMultishot(), 0.001);
     }
 
     @Test
     public void itCanCorrectlyCalculateComplexMultishot() {
         fakeMod.setMultishotIncrease(0.90);
         anotherFakeMod.setMultishotIncrease(0.60);
-        fakeWeapon.setMultishot(0.00);
+        fakeWeapon.setMultishot(1.00);
         fakeWeapon.setMods(Arrays.asList(fakeMod, anotherFakeMod));
 
         Weapon actualModdedWeapon = subject.modWeapon(fakeWeapon);
 
-        assertEquals(01.50, actualModdedWeapon.getMultishot(), 0.001);
+        assertEquals(2.50, actualModdedWeapon.getMultishot(), 0.001);
     }
 }

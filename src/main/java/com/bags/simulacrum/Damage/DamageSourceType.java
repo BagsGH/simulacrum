@@ -1,7 +1,7 @@
 package com.bags.simulacrum.Damage;
 
 public enum DamageSourceType {
-    SHOT,
+    PROJECTILE,
     HIT,
     HIT_AOE,
     DELAYED,

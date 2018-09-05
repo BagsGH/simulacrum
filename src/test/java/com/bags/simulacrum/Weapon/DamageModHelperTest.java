@@ -34,7 +34,7 @@ public class DamageModHelperTest {
     public void itCanCorrectlyCombineOneElementalModWithBaseElement() {
         fakeMod.setDamage(new Damage(DamageType.TOXIN, 0.0, 0.60));
         fakeModList.add(fakeMod);
-        DamageSource damageSource = new DamageSource(DamageSourceType.SHOT, Arrays.asList(new Damage(DamageType.HEAT, 35.0, 0.0)));
+        DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.HEAT, 35.0, 0.0)));
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
@@ -46,7 +46,7 @@ public class DamageModHelperTest {
     public void itCanCorrectlyCalculatePositiveDamage() {
         fakeMod.setDamageIncrease(1.65);
         fakeModList.add(fakeMod);
-        DamageSource damageSource = new DamageSource(DamageSourceType.SHOT, Arrays.asList(new Damage(DamageType.IMPACT, 35.0, 0.0)));
+        DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.IMPACT, 35.0, 0.0)));
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
@@ -57,7 +57,7 @@ public class DamageModHelperTest {
     public void itCanCorrectlyCalculateNegativeDamage() {
         fakeMod.setDamageIncrease(-0.15);
         fakeModList.add(fakeMod);
-        DamageSource damageSource = new DamageSource(DamageSourceType.SHOT, Arrays.asList(new Damage(DamageType.TOXIN, 35.0, 0.0)));
+        DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.TOXIN, 35.0, 0.0)));
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
@@ -70,7 +70,7 @@ public class DamageModHelperTest {
         anotherFakeMod.setDamageIncrease(1.65);
         fakeModList.add(fakeMod);
         fakeModList.add(anotherFakeMod);
-        DamageSource damageSource = new DamageSource(DamageSourceType.SHOT, Arrays.asList(new Damage(DamageType.IMPACT, 35.0, 0.0)));
+        DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.IMPACT, 35.0, 0.0)));
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
@@ -81,7 +81,7 @@ public class DamageModHelperTest {
     public void itCanCorrectlyCalculateDamageAddedBy90PercentToxin() {
         fakeMod.setDamage(new Damage(DamageType.TOXIN, 0.0, 0.90));
         fakeModList.add(fakeMod);
-        DamageSource damageSource = new DamageSource(DamageSourceType.SHOT, Arrays.asList(new Damage(DamageType.IMPACT, 35.0, 0.0)));
+        DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.IMPACT, 35.0, 0.0)));
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
@@ -93,7 +93,7 @@ public class DamageModHelperTest {
     public void itCanCorrectlyCalculateDamageAddedBy90PercentHeatWhenDefaultSourceHasHeatDamage() {
         fakeMod.setDamage(new Damage(DamageType.HEAT, 0.0, 0.90));
         fakeModList.add(fakeMod);
-        DamageSource damageSource = new DamageSource(DamageSourceType.SHOT, Arrays.asList(new Damage(DamageType.HEAT, 35.0, 0.0)));
+        DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.HEAT, 35.0, 0.0)));
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
@@ -104,7 +104,7 @@ public class DamageModHelperTest {
     public void itCanCorrectlyCombineElements() {
         fakeMod.setDamage(new Damage(DamageType.HEAT, 0.0, 0.90));
         fakeModList.add(fakeMod);
-        DamageSource damageSource = new DamageSource(DamageSourceType.SHOT, Arrays.asList(new Damage(DamageType.TOXIN, 35.0, 0.0)));
+        DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.TOXIN, 35.0, 0.0)));
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
@@ -115,7 +115,7 @@ public class DamageModHelperTest {
     public void itCanCorrectlyCalculateIPSDamage() {
         fakeMod.setDamage(new Damage(DamageType.IMPACT, 0.0, 0.20));
         fakeModList.add(fakeMod);
-        DamageSource damageSource = new DamageSource(DamageSourceType.SHOT, Arrays.asList(new Damage(DamageType.IMPACT, 9.0, 0.0)));
+        DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.IMPACT, 9.0, 0.0)));
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
