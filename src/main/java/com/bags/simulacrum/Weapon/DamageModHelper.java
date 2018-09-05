@@ -153,6 +153,9 @@ public class DamageModHelper {
                     Damage CombinedDamage = new Damage(combinedDamageType, damage1.getDamageValue() + damage2.getDamageValue(), 0.00);
                     combinedElementalDamages.add(CombinedDamage);
                     i++;
+                } //TODO: test this else
+                else {
+                    combinedElementalDamages.add(damage1);
                 }
             }
         }
