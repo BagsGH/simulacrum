@@ -2,6 +2,7 @@ package com.bags.simulacrum.Damage;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -32,6 +33,13 @@ public class DamageSource {
 
     public DamageSource() {
 
+    }
+
+    public void addDamage(Damage damage) {
+        if (damageTypes == null) {
+            damageTypes = new ArrayList<>();
+        }
+        damageTypes.add(damage);
     }
 
 }
