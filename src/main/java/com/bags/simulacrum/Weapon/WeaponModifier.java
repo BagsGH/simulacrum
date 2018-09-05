@@ -26,13 +26,9 @@ public class WeaponModifier {
 
         List<DamageSource> modifiedDamageSources = new ArrayList<>();
         for (DamageSource damageSource : originalWeapon.getDamageSources()) {
-            DamageSource ds = damageModHelper.calculateDamageSources(originalWeapon, damageSource);
-            modifiedDamageSources.add(ds);
+            modifiedDamageSources.add(damageModHelper.calculateDamageSources(damageSource, originalWeapon.getMods()));
         }
         modifiedWeapon.setDamageSources(modifiedDamageSources);
-
-//        modifiedWeapon.setDamageTypes(damageModHelper.calculateDamageSources(originalWeapon));
-//        modifiedWeapon.setSecondaryDamageTypes(damageModHelper.calculateSecondaryDamageSources(originalWeapon));
 
         modifiedWeapon.setFireRate(calculateModdedFireRate());
         modifiedWeapon.setAccuracy(calculateModdedAccuracy());

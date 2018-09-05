@@ -24,8 +24,8 @@ public class DamageModHelper {
 
         If you mod heat and cold, its just base damage (cold + imp + blast) * 1.8 + base blast
      */
-    public DamageSource calculateDamageSources(Weapon originalWeapon, DamageSource damageSource) {
-        this.originalWeaponMods = originalWeapon.getMods();
+    public DamageSource calculateDamageSources(DamageSource damageSource, List<Mod> mods) {
+        this.originalWeaponMods = mods;
         DamageSource modifiedDamageSource = new DamageSource(damageSource);
 
         List<Damage> baseDamageSourcesAfterRawDamageMods = calculateModdedDamageValues(damageSource.getDamageTypes()); //#1
@@ -39,11 +39,6 @@ public class DamageModHelper {
 
         return modifiedDamageSource;
     }
-//
-//    public List<Damage> calculateSecondaryDamageSources(Weapon originalWeapon) {
-//        this.originalWeapon = originalWeapon;
-//        return this.originalWeapon.getSecondaryDamageTypes() != null ? calculateModdedDamageValues(this.originalWeapon.getSecondaryDamageTypes()) : null;
-//    }
 
     private double sumAllDamageTypes(List<Damage> defaultDamagesModded) {
         return defaultDamagesModded.stream().mapToDouble(Damage::getDamageValue).sum();
@@ -126,12 +121,6 @@ public class DamageModHelper {
 
         return mergedList;
     }
-
-    //[0][1][2]
-    //[C][H][R]
-    //Combine C+H, "if last, R"
-    //[R][C][H]
-    //If i is combined, add and move on
 
     private List<Damage> combineDamageTypes(List<Damage> orderedElementalDamageTypes) {
         ElementalDamageMapper mapper = new ElementalDamageMapper();
