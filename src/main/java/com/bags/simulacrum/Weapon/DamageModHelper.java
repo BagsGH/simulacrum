@@ -1,6 +1,7 @@
 package com.bags.simulacrum.Weapon;
 
 import com.bags.simulacrum.Damage.Damage;
+import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Damage.ElementalDamageMapper;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ import java.util.Map;
 @Component
 public class DamageModHelper {
 
-    private Weapon originalWeapon;
+    private List<Mod> originalWeaponMods;
 
     //TODO: figure out how the hell to handle weapons like the Lenz with base combined damage, where the damage you're adding is a prt of the combined element, but not already present on the weapon...
     /*
@@ -23,31 +24,33 @@ public class DamageModHelper {
 
         If you mod heat and cold, its just base damage (cold + imp + blast) * 1.8 + base blast
      */
-    public List<Damage> calculateDamageSources(Weapon originalWeapon) {
-        this.originalWeapon = originalWeapon;
+    public DamageSource calculateDamageSources(Weapon originalWeapon, DamageSource damageSource) {
+        this.originalWeaponMods = originalWeapon.getMods();
+        DamageSource modifiedDamageSource = new DamageSource(damageSource);
 
-        List<Damage> baseDamageSourcesAfterRawDamageMods = calculateModdedDamageValues(originalWeapon.getDamageTypes()); //#1
+        List<Damage> baseDamageSourcesAfterRawDamageMods = calculateModdedDamageValues(damageSource.getDamageTypes()); //#1
         double sumOfAllDamages = sumAllDamageTypes(baseDamageSourcesAfterRawDamageMods);
         List<Damage> ipsDamageSources = calculateIPSDamageMods(baseDamageSourcesAfterRawDamageMods); //#2
         List<Damage> elementalDamageSourcesAddedByMods = calculateElementalDamageAddedByMods(sumOfAllDamages); //#3
         List<Damage> orderedElementalDamageSourcesFromWeaponAndMods = orderDamageTypesBasedOnModIndex(baseDamageSourcesAfterRawDamageMods, elementalDamageSourcesAddedByMods);
         List<Damage> finalElementalDamageSources = combineDamageTypes(orderedElementalDamageSourcesFromWeaponAndMods); //#4
 
-        //TODO: make the next line redundant by fixing this in #2. Weird to merge back in.
-        return mergeElementalAndIPS(finalElementalDamageSources, ipsDamageSources);
-    }
+        modifiedDamageSource.setDamageTypes(mergeElementalAndIPS(finalElementalDamageSources, ipsDamageSources));
 
-    public List<Damage> calculateSecondaryDamageSources(Weapon originalWeapon) {
-        this.originalWeapon = originalWeapon;
-        return this.originalWeapon.getSecondaryDamageTypes() != null ? calculateModdedDamageValues(this.originalWeapon.getSecondaryDamageTypes()) : null;
+        return modifiedDamageSource;
     }
+//
+//    public List<Damage> calculateSecondaryDamageSources(Weapon originalWeapon) {
+//        this.originalWeapon = originalWeapon;
+//        return this.originalWeapon.getSecondaryDamageTypes() != null ? calculateModdedDamageValues(this.originalWeapon.getSecondaryDamageTypes()) : null;
+//    }
 
     private double sumAllDamageTypes(List<Damage> defaultDamagesModded) {
         return defaultDamagesModded.stream().mapToDouble(Damage::getDamageValue).sum();
     }
 
     private List<Damage> calculateModdedDamageValues(List<Damage> damageTypes) {
-        double damageIncrease = originalWeapon.getMods().stream().filter(mod -> mod.getDamageIncrease() != 0).mapToDouble(Mod::getDamageIncrease).sum();
+        double damageIncrease = originalWeaponMods.stream().filter(mod -> mod.getDamageIncrease() != 0).mapToDouble(Mod::getDamageIncrease).sum();
 
         List<Damage> moddedDamageTypes = new ArrayList<>();
         damageTypes.forEach(damageSource -> {
@@ -76,7 +79,7 @@ public class DamageModHelper {
     }
 
     private void populateIPSDamageIncreaseMap(Map<DamageType, Double> ipsDamageIncreaseMap) {
-        for (Mod mod : originalWeapon.getMods()) {
+        for (Mod mod : originalWeaponMods) {
             Damage modDamage = mod.getDamage();
             if (modDamage != null && DamageType.isIPS(modDamage.getType())) {
                 DamageType modIPSDamageType = modDamage.getType();
@@ -88,11 +91,10 @@ public class DamageModHelper {
     private List<Damage> calculateElementalDamageAddedByMods(Double baseDamage) {
         List<Damage> elementalDamageSourcesAddedByMods = new ArrayList<>();
 
-        for (Mod mod : originalWeapon.getMods()) {
+        for (Mod mod : originalWeaponMods) {
             if (modAddsElementalDamageSource(mod)) {
                 Damage modDamageSource = mod.getDamage();
-                modDamageSource.setDamageValue(baseDamage * modDamageSource.getModAddedDamageRatio());
-                elementalDamageSourcesAddedByMods.add(modDamageSource);
+                elementalDamageSourcesAddedByMods.add(new Damage(modDamageSource.getType(), baseDamage * modDamageSource.getModAddedDamageRatio()));
             }
         }
 
@@ -154,7 +156,7 @@ public class DamageModHelper {
                     combinedElementalDamages.add(CombinedDamage);
                     i++;
                 } //TODO: test this else
-                else {
+                else if (damage1.getDamageValue() != 0.0) {
                     combinedElementalDamages.add(damage1);
                 }
             }

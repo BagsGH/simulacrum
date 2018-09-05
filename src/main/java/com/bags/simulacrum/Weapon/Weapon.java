@@ -1,6 +1,7 @@
 package com.bags.simulacrum.Weapon;
 
 import com.bags.simulacrum.Damage.Damage;
+import com.bags.simulacrum.Damage.DamageSource;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -15,6 +16,7 @@ public class Weapon {
     private double accuracy;
     private int magazineSize;
     private double reloadTime;
+    private List<DamageSource> damageSources;
     private List<Damage> damageTypes;
     private List<Damage> secondaryDamageTypes;
     private double multishot;
@@ -109,6 +111,13 @@ public class Weapon {
         DUPLEXAUTO,
         AUTOSPOOL,
         AUTO, SEMIAUTO;
+    }
+
+    public void addDamageSource(DamageSource damageSource) {
+        if (damageSources == null) {
+            damageSources = new ArrayList<>();
+        }
+        damageSources.add(damageSource);
     }
 
 }

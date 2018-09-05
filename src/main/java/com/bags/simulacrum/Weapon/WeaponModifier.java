@@ -1,9 +1,11 @@
 package com.bags.simulacrum.Weapon;
 
+import com.bags.simulacrum.Damage.DamageSource;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -22,8 +24,15 @@ public class WeaponModifier {
 
         damageModHelper = new DamageModHelper();
 
-        modifiedWeapon.setDamageTypes(damageModHelper.calculateDamageSources(originalWeapon));
-        modifiedWeapon.setSecondaryDamageTypes(damageModHelper.calculateSecondaryDamageSources(originalWeapon));
+        List<DamageSource> modifiedDamageSources = new ArrayList<>();
+        for (DamageSource damageSource : originalWeapon.getDamageSources()) {
+            DamageSource ds = damageModHelper.calculateDamageSources(originalWeapon, damageSource);
+            modifiedDamageSources.add(ds);
+        }
+        modifiedWeapon.setDamageSources(modifiedDamageSources);
+
+//        modifiedWeapon.setDamageTypes(damageModHelper.calculateDamageSources(originalWeapon));
+//        modifiedWeapon.setSecondaryDamageTypes(damageModHelper.calculateSecondaryDamageSources(originalWeapon));
 
         modifiedWeapon.setFireRate(calculateModdedFireRate());
         modifiedWeapon.setAccuracy(calculateModdedAccuracy());

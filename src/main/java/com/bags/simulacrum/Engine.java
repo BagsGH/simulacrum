@@ -2,6 +2,8 @@ package com.bags.simulacrum;
 
 
 import com.bags.simulacrum.Damage.Damage;
+import com.bags.simulacrum.Damage.DamageSource;
+import com.bags.simulacrum.Damage.DamageSourceType;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Weapon.Mod;
 import com.bags.simulacrum.Weapon.Weapon;
@@ -63,7 +65,8 @@ public class Engine {
         Mod ps = new Mod();
         ps.setCriticalDamageIncrease(1.20);
 
-        ignisWraith.setMods(Arrays.asList(heavyCalibre, serration, splitChamber, maligForce, vileAccel, hellFire, vs, ps));
+//        ignisWraith.setMods(Arrays.asList(heavyCalibre, serration, splitChamber, maligForce, vileAccel, hellFire, vs, ps));
+        ignisWraith.setMods(Arrays.asList(heavyCalibre, serration));
 
         Mod heatdmg = new Mod();
         heatdmg.setDamage(new Damage(DamageType.HEAT, 0.0, 0.15));
@@ -76,7 +79,7 @@ public class Engine {
         Mod ryme = new Mod();
         ryme.setDamage(new Damage(DamageType.COLD, 0, 0.60));
 
-        lenz.setMods(Arrays.asList(ryme));
+        lenz.setMods(Arrays.asList(ryme, heavyCalibre));
 
         Mod blaze = new Mod();
         blaze.setDamage(new Damage(DamageType.HEAT, 0.0, 0.60));
@@ -84,18 +87,24 @@ public class Engine {
         Mod charged = new Mod();
         charged.setDamage(new Damage(DamageType.ELECTRICITY, 0.0, 0.90));
 
-        plasmor.setMods(Arrays.asList(blaze, charged));
+        Mod frigid = new Mod();
+        frigid.setDamage(new Damage(DamageType.COLD, 0.0, 0.30));
+        Mod toxicBarrage = new Mod();
+        toxicBarrage.setDamage(new Damage(DamageType.TOXIN, 0.0, 0.15));
 
-        // Weapon ignisWraithModded = weaponModifier.modWeapon(ignisWraith);
+
+        plasmor.setMods(Arrays.asList(frigid, charged, blaze, toxicBarrage));
+
+        //Weapon ignisWraithModded = weaponModifier.modWeapon(ignisWraith);
         //Weapon opticorModded = weaponModifier.modWeapon(opticor);
-        //Weapon lenzModded = weaponModifier.modWeapon(lenz);
-        Weapon plasmorModded = weaponModifier.modWeapon(plasmor);
+        Weapon lenzModded = weaponModifier.modWeapon(lenz);
+        //Weapon plasmorModded = weaponModifier.modWeapon(plasmor);
 
         System.out.println("===Modded weapons===");
         //System.out.println(ignisWraithModded);
         //System.out.println(opticorModded);
-        //System.out.println(lenzModded);
-        System.out.println(plasmorModded);
+        System.out.println(lenzModded);
+        //System.out.println(plasmorModded);
     }
 
     private Weapon setupPlasmor() {
@@ -114,7 +123,8 @@ public class Engine {
 
         plasmorDamageSources.add(new Damage(DamageType.RADIATION, 600));
 
-        plasmor.setDamageTypes(plasmorDamageSources);
+        plasmor.setDamageSources(Arrays.asList(new DamageSource(DamageSourceType.SHOT, plasmorDamageSources)));
+
         plasmor.setReloadTime(2.8);
         plasmor.setStatusChance(0.28);
 
@@ -148,11 +158,12 @@ public class Engine {
         lenz.setMultishot(0.00);
         List<Damage> lenzDamageSources = new ArrayList<>();
 
-        lenzDamageSources.add(new Damage(DamageType.IMPACT, 50));
-        lenzDamageSources.add(new Damage(DamageType.COLD, 10));
-        lenzDamageSources.add(new Damage(DamageType.BLAST, 660));
+        DamageSource shotSource = new DamageSource(DamageSourceType.SHOT, Arrays.asList(new Damage(DamageType.IMPACT, 50)));
+        DamageSource impactExplosion = new DamageSource(DamageSourceType.HIT_AOE, Arrays.asList(new Damage(DamageType.COLD, 10)), 0, 10.0);
+        DamageSource delayExplosion = new DamageSource(DamageSourceType.DELAYED_AOE, Arrays.asList(new Damage(DamageType.BLAST, 660)), 2.0, 10.0);
 
-        lenz.setDamageTypes(lenzDamageSources);
+        lenz.setDamageSources(Arrays.asList(shotSource, impactExplosion, delayExplosion));
+
         lenz.setReloadTime(0.60);
         lenz.setStatusChance(0.05);
 
