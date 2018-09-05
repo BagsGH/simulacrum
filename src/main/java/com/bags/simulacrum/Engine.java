@@ -198,7 +198,6 @@ public class Engine {
         Damage heat = new Damage(DamageType.HEAT, 35.0);
         ignisDamageTypes.add(heat);
 
-        ignisWraith.setDamageTypes(ignisDamageTypes);
         ignisWraith.setReloadTime(1.7);
         ignisWraith.setStatusChance(.29);
 
@@ -237,8 +236,6 @@ public class Engine {
         opticorDamageTypes.add(new Damage(DamageType.SLASH, 50));
         opticorSecondaryDamageTypes.add(new Damage(DamageType.MAGNETIC, 400));
 
-        opticor.setDamageTypes(opticorDamageTypes);
-        opticor.setSecondaryDamageTypes(opticorSecondaryDamageTypes);
         opticor.setReloadTime(2.0);
         opticor.setStatusChance(.20);
 

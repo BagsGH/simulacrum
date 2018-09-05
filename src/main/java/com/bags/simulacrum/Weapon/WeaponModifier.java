@@ -20,6 +20,9 @@ public class WeaponModifier {
     public Weapon modWeapon(Weapon weapon) {
         originalWeapon = weapon;
         weaponMods = originalWeapon.getMods();
+        if (weaponHasNoMods()) {
+            return originalWeapon;
+        }
         Weapon modifiedWeapon = copyWeaponToMod();
 
         damageModHelper = new DamageModHelper();
@@ -42,6 +45,10 @@ public class WeaponModifier {
         modifiedWeapon.setMultishot(calculateModdedMultishot());
 
         return modifiedWeapon;
+    }
+
+    private boolean weaponHasNoMods() {
+        return weaponMods == null || weaponMods.size() == 0;
     }
 
     private Weapon copyWeaponToMod() {

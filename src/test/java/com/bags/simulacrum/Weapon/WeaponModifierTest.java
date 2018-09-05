@@ -1,6 +1,9 @@
 package com.bags.simulacrum.Weapon;
 
 import com.bags.simulacrum.Damage.Damage;
+import com.bags.simulacrum.Damage.DamageSource;
+import com.bags.simulacrum.Damage.DamageSourceType;
+import com.bags.simulacrum.Damage.DamageType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -9,9 +12,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public class WeaponModifierTest {
@@ -30,7 +31,9 @@ public class WeaponModifierTest {
         subject = new WeaponModifier();
         fakeWeapon = new Weapon();
         fakeWeapon.setType(Weapon.WeaponType.RIFLE);
-        fakeWeapon.setDamageTypes(new ArrayList<>());
+
+        DamageSource damageSource = new DamageSource(DamageSourceType.SHOT, Collections.singletonList(new Damage(DamageType.IMPACT, 5.0, 0.0)));
+        fakeWeapon.addDamageSource(damageSource);
 
         fakeMod = new Mod();
         anotherFakeMod = new Mod();
@@ -366,7 +369,6 @@ public class WeaponModifierTest {
         assertEquals(1040, actualWeaponModified.getMaxAmmo());
     }
 
-
     @Test
     public void itCanCorrectlyCalculatePositiveMultishot() {
         fakeMod.setMultishotIncrease(0.90);
@@ -389,19 +391,4 @@ public class WeaponModifierTest {
 
         assertEquals(01.50, actualModdedWeapon.getMultishot(), 0.001);
     }
-
-
-    public void assertExpectedDamageExists(Damage damageExpected, List<Damage> actualDamageSources, double threshold) {
-        boolean asExpected = false;
-        System.out.println("Expected:" + damageExpected);
-        for (Damage d : actualDamageSources) {
-            System.out.println(d);
-            if (d.getType().equals(damageExpected.getType()) && Math.abs(d.getDamageValue() - damageExpected.getDamageValue()) < threshold) {
-                asExpected = true;
-            }
-        }
-
-        assertTrue(asExpected);
-    }
-
 }

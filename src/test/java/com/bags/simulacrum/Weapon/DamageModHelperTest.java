@@ -122,6 +122,10 @@ public class DamageModHelperTest {
         assertExpectedDamageExists(new Damage(DamageType.IMPACT, 10.8), actualModifiedDamageSource.getDamageTypes(), 0.001);
     }
 
+    //TODO: Test with multiple damage sources
+    //TODO: Test with other complex scenarios
+    //TODO: Test full weapons
+
     public void assertExpectedDamageExists(Damage damageExpected, List<Damage> actualDamageSources, double threshold) {
         boolean asExpected = false;
         System.out.println("Expected:" + damageExpected);

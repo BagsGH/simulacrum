@@ -1,6 +1,5 @@
 package com.bags.simulacrum.Weapon;
 
-import com.bags.simulacrum.Damage.Damage;
 import com.bags.simulacrum.Damage.DamageSource;
 import lombok.Data;
 
@@ -17,8 +16,6 @@ public class Weapon {
     private int magazineSize;
     private double reloadTime;
     private List<DamageSource> damageSources;
-    private List<Damage> damageTypes;
-    private List<Damage> secondaryDamageTypes;
     private double multishot;
     private double criticalChance;
     private double criticalDamage;
