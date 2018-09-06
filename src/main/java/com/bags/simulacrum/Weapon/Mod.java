@@ -33,4 +33,11 @@ public class Mod {
         EQUALS
     }
 
+    public Mod() {
+
+    }
+
+    public Mod(Damage damage) {
+        this.damage = damage;
+    }
 }

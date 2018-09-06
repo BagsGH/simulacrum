@@ -12,7 +12,9 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public class WeaponModifierTest {
@@ -390,5 +392,91 @@ public class WeaponModifierTest {
         Weapon actualModdedWeapon = subject.modWeapon(fakeWeapon);
 
         assertEquals(2.50, actualModdedWeapon.getMultishot(), 0.001);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculateMultipleDamagesOnMultipleDamageSources() {
+        fakeMod.setDamage(new Damage(DamageType.TOXIN, 0.0, 0.90));
+        anotherFakeMod.setDamageIncrease(1.65);
+
+        DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, null);
+        damageSource.addDamage(new Damage(DamageType.IMPACT, 35.0, 0.0));
+        damageSource.addDamage(new Damage(DamageType.HEAT, 35.0, 0.0));
+
+        DamageSource damageSource2 = new DamageSource(DamageSourceType.PROJECTILE, null);
+        damageSource2.addDamage(new Damage(DamageType.PUNCTURE, 35.0, 0.0));
+        damageSource2.addDamage(new Damage(DamageType.COLD, 35.0, 0.0));
+
+        fakeWeapon.setDamageSources(Arrays.asList(damageSource, damageSource2));
+
+        fakeWeapon.setMods(Arrays.asList(fakeMod, anotherFakeMod));
+
+        Weapon actualModifiedWeapon = subject.modWeapon(fakeWeapon);
+
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 92.75), actualModifiedWeapon.getDamageSources().get(0).getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.GAS, 259.7), actualModifiedWeapon.getDamageSources().get(0).getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.PUNCTURE, 92.75), actualModifiedWeapon.getDamageSources().get(1).getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.VIRAL, 259.7), actualModifiedWeapon.getDamageSources().get(1).getDamageTypes(), 0.001);
+    }
+
+    @Test
+    public void itCanCorrectlyCalculateLenzWithMultipleDamageSources() {
+        setupFakeWeaponAsLenz();
+
+        Weapon actualModifiedWeapon = subject.modWeapon(fakeWeapon);
+
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 207.5), actualModifiedWeapon.getDamageSources().get(0).getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.BLAST, 373.5), actualModifiedWeapon.getDamageSources().get(0).getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.BLAST, 116.2), actualModifiedWeapon.getDamageSources().get(1).getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.BLAST, 7669.2), actualModifiedWeapon.getDamageSources().get(2).getDamageTypes(), 0.001);
+
+        assertEquals(1.25, actualModifiedWeapon.getCriticalChance(), 0.001);
+        assertEquals(4.4, actualModifiedWeapon.getCriticalDamage(), 0.001);
+        assertEquals(0.429, actualModifiedWeapon.getChargeTime(), 0.001);
+        assertEquals(1.90, actualModifiedWeapon.getMultishot(), 0.001);
+    }
+
+    private void setupFakeWeaponAsLenz() {
+        DamageSource shotSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.IMPACT, 50)));
+        DamageSource impactExplosion = new DamageSource(DamageSourceType.HIT_AOE, Collections.singletonList(new Damage(DamageType.COLD, 10)), 0, 10.0);
+        DamageSource delayExplosion = new DamageSource(DamageSourceType.DELAYED_AOE, Collections.singletonList(new Damage(DamageType.BLAST, 660)), 2.0, 10.0);
+
+        fakeWeapon.setDamageSources(Arrays.asList(shotSource, impactExplosion, delayExplosion));
+        fakeWeapon.setCriticalChance(0.50);
+        fakeWeapon.setCriticalDamage(2.0);
+        fakeWeapon.setChargeTime(1.2);
+        fakeWeapon.setMultishot(1.0);
+        fakeWeapon.setType(Weapon.WeaponType.BOW);
+
+        Mod vileAcceleration = new Mod();
+        vileAcceleration.setDamageIncrease(-0.15);
+        vileAcceleration.setFireRateIncrease(0.90);
+
+        Mod hellfire = new Mod(new Damage(DamageType.HEAT, 0.0, 0.90));
+        Mod cryoRounds = new Mod(new Damage(DamageType.COLD, 0.0, 0.90));
+        Mod serration = new Mod();
+        serration.setDamageIncrease(1.65);
+
+        Mod heavyCaliber = new Mod();
+        heavyCaliber.setDamageIncrease(1.65);
+        heavyCaliber.setAccuracyIncrease(-0.55);
+
+        Mod vitalSense = new Mod();
+        vitalSense.setCriticalDamageIncrease(1.20);
+
+        Mod pointStrike = new Mod();
+        pointStrike.setCriticalChanceIncrease(1.50);
+
+        Mod splitChamber = new Mod();
+        splitChamber.setMultishotIncrease(0.90);
+
+        fakeWeapon.setMods(Arrays.asList(vileAcceleration, hellfire, heavyCaliber, splitChamber, serration, cryoRounds, vitalSense, pointStrike));
+    }
+
+    //lenz.setMods(Arrays.asList(vileAccel, hellFire, heavyCalibre, splitChamber, serration, cryo, vs, ps));
+
+
+    public void assertExpectedDamageExists(Damage damageExpected, List<Damage> actualDamages, double accuracyThreshold) {
+        assertTrue(actualDamages.stream().anyMatch(damage -> damage.getType().equals(damageExpected.getType()) && Math.abs(damage.getDamageValue() - damageExpected.getDamageValue()) < accuracyThreshold));
     }
 }

@@ -138,10 +138,6 @@ public class DamageModHelperTest {
         assertExpectedDamageExists(new Damage(DamageType.GAS, 259.7), actualModifiedDamageSource.getDamageTypes(), 0.001);
     }
 
-    //TODO: Test with multiple damage sources - in the other class
-    //TODO: Test with other complex scenarios
-    //TODO: Test full weapons
-
     public void assertExpectedDamageExists(Damage damageExpected, List<Damage> actualDamages, double accuracyThreshold) {
         assertTrue(actualDamages.stream().anyMatch(damage -> damage.getType().equals(damageExpected.getType()) && Math.abs(damage.getDamageValue() - damageExpected.getDamageValue()) < accuracyThreshold));
     }
