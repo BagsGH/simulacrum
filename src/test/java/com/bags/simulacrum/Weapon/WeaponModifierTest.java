@@ -427,7 +427,9 @@ public class WeaponModifierTest {
 
         assertExpectedDamageExists(new Damage(DamageType.IMPACT, 207.5), actualModifiedWeapon.getDamageSources().get(0).getDamageTypes(), 0.001);
         assertExpectedDamageExists(new Damage(DamageType.BLAST, 373.5), actualModifiedWeapon.getDamageSources().get(0).getDamageTypes(), 0.001);
+
         assertExpectedDamageExists(new Damage(DamageType.BLAST, 116.2), actualModifiedWeapon.getDamageSources().get(1).getDamageTypes(), 0.001);
+
         assertExpectedDamageExists(new Damage(DamageType.BLAST, 7669.2), actualModifiedWeapon.getDamageSources().get(2).getDamageTypes(), 0.001);
 
         assertEquals(1.25, actualModifiedWeapon.getCriticalChance(), 0.001);
@@ -473,10 +475,7 @@ public class WeaponModifierTest {
         fakeWeapon.setMods(Arrays.asList(vileAcceleration, hellfire, heavyCaliber, splitChamber, serration, cryoRounds, vitalSense, pointStrike));
     }
 
-    //lenz.setMods(Arrays.asList(vileAccel, hellFire, heavyCalibre, splitChamber, serration, cryo, vs, ps));
-
-
-    public void assertExpectedDamageExists(Damage damageExpected, List<Damage> actualDamages, double accuracyThreshold) {
+    private void assertExpectedDamageExists(Damage damageExpected, List<Damage> actualDamages, double accuracyThreshold) {
         assertTrue(actualDamages.stream().anyMatch(damage -> damage.getType().equals(damageExpected.getType()) && Math.abs(damage.getDamageValue() - damageExpected.getDamageValue()) < accuracyThreshold));
     }
 }

@@ -138,7 +138,7 @@ public class DamageModHelperTest {
         assertExpectedDamageExists(new Damage(DamageType.GAS, 259.7), actualModifiedDamageSource.getDamageTypes(), 0.001);
     }
 
-    public void assertExpectedDamageExists(Damage damageExpected, List<Damage> actualDamages, double accuracyThreshold) {
+    private void assertExpectedDamageExists(Damage damageExpected, List<Damage> actualDamages, double accuracyThreshold) {
         assertTrue(actualDamages.stream().anyMatch(damage -> damage.getType().equals(damageExpected.getType()) && Math.abs(damage.getDamageValue() - damageExpected.getDamageValue()) < accuracyThreshold));
     }
 }
