@@ -403,7 +403,7 @@ public class WeaponModifierTest {
         damageSource.addDamage(new Damage(DamageType.IMPACT, 35.0, 0.0));
         damageSource.addDamage(new Damage(DamageType.HEAT, 35.0, 0.0));
 
-        DamageSource damageSource2 = new DamageSource(DamageSourceType.PROJECTILE, null);
+        DamageSource damageSource2 = new DamageSource(DamageSourceType.HIT_AOE, null);
         damageSource2.addDamage(new Damage(DamageType.PUNCTURE, 35.0, 0.0));
         damageSource2.addDamage(new Damage(DamageType.COLD, 35.0, 0.0));
 
