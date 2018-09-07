@@ -20,14 +20,14 @@ public class DamageModHelper {
         this.originalWeaponMods = mods;
         DamageSource modifiedDamageSource = new DamageSource(damageSource);
 
-        List<Damage> baseDamagesAfterRawDamageMods = calculateModdedDamageValues(damageSource.getDamageTypes()); //#1
+        List<Damage> baseDamagesAfterRawDamageMods = calculateModdedDamageValues(damageSource.getDamages()); //#1
         double sumOfAllDamages = sumAllDamageTypes(baseDamagesAfterRawDamageMods);
         List<Damage> ipsDamageSources = calculateIPSDamageMods(baseDamagesAfterRawDamageMods); //#2
         List<Damage> elementalDamageSourcesAddedByMods = calculateElementalDamageAddedByMods(sumOfAllDamages); //#3
         List<Damage> orderedElementalDamageSourcesFromWeaponAndMods = orderDamageTypesBasedOnModIndex(baseDamagesAfterRawDamageMods, elementalDamageSourcesAddedByMods);
         List<Damage> finalElementalDamageSources = combineDamageTypes(orderedElementalDamageSourcesFromWeaponAndMods); //#4
 
-        modifiedDamageSource.setDamageTypes(mergeElementalAndIPS(finalElementalDamageSources, ipsDamageSources));
+        modifiedDamageSource.setDamages(mergeElementalAndIPS(finalElementalDamageSources, ipsDamageSources));
 
         return modifiedDamageSource;
     }
@@ -136,8 +136,7 @@ public class DamageModHelper {
                     Damage CombinedDamage = new Damage(combinedDamageType, damage1.getDamageValue() + damage2.getDamageValue(), 0.00);
                     combinedElementalDamages.add(CombinedDamage);
                     i++;
-                } //TODO: test this else
-                else if (damage1.getDamageValue() != 0.0) {
+                } else {
                     combinedElementalDamages.add(damage1);
                 }
             }

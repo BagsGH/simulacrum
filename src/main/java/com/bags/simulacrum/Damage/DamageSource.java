@@ -9,17 +9,17 @@ import java.util.List;
 public class DamageSource {
 
     private DamageSourceType damageSourceType;
-    private List<Damage> damageTypes;
+    private List<Damage> damages;
     private double delay;
     private double aoe;
 
-    public DamageSource(DamageSourceType damageSourcetype, List<Damage> damageTypes) {
-        this.damageTypes = damageTypes;
+    public DamageSource(DamageSourceType damageSourcetype, List<Damage> damages) {
+        this.damages = damages;
         this.damageSourceType = damageSourcetype;
     }
 
-    public DamageSource(DamageSourceType damageSourcetype, List<Damage> damageTypes, double delay, double aoe) {
-        this.damageTypes = damageTypes;
+    public DamageSource(DamageSourceType damageSourcetype, List<Damage> damages, double delay, double aoe) {
+        this.damages = damages;
         this.damageSourceType = damageSourcetype;
         this.delay = delay;
         this.aoe = aoe;
@@ -36,10 +36,10 @@ public class DamageSource {
     }
 
     public void addDamage(Damage damage) {
-        if (damageTypes == null) {
-            damageTypes = new ArrayList<>();
+        if (damages == null) {
+            damages = new ArrayList<>();
         }
-        damageTypes.add(damage);
+        damages.add(damage);
     }
 
 }

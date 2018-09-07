@@ -413,10 +413,10 @@ public class WeaponModifierTest {
 
         Weapon actualModifiedWeapon = subject.modWeapon(fakeWeapon);
 
-        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 92.75), actualModifiedWeapon.getDamageSources().get(0).getDamageTypes(), 0.001);
-        assertExpectedDamageExists(new Damage(DamageType.GAS, 259.7), actualModifiedWeapon.getDamageSources().get(0).getDamageTypes(), 0.001);
-        assertExpectedDamageExists(new Damage(DamageType.PUNCTURE, 92.75), actualModifiedWeapon.getDamageSources().get(1).getDamageTypes(), 0.001);
-        assertExpectedDamageExists(new Damage(DamageType.VIRAL, 259.7), actualModifiedWeapon.getDamageSources().get(1).getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 92.75), actualModifiedWeapon.getDamageSources().get(0).getDamages(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.GAS, 259.7), actualModifiedWeapon.getDamageSources().get(0).getDamages(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.PUNCTURE, 92.75), actualModifiedWeapon.getDamageSources().get(1).getDamages(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.VIRAL, 259.7), actualModifiedWeapon.getDamageSources().get(1).getDamages(), 0.001);
     }
 
     @Test
@@ -425,12 +425,12 @@ public class WeaponModifierTest {
 
         Weapon actualModifiedWeapon = subject.modWeapon(fakeWeapon);
 
-        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 207.5), actualModifiedWeapon.getDamageSources().get(0).getDamageTypes(), 0.001);
-        assertExpectedDamageExists(new Damage(DamageType.BLAST, 373.5), actualModifiedWeapon.getDamageSources().get(0).getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 207.5), actualModifiedWeapon.getDamageSources().get(0).getDamages(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.BLAST, 373.5), actualModifiedWeapon.getDamageSources().get(0).getDamages(), 0.001);
 
-        assertExpectedDamageExists(new Damage(DamageType.BLAST, 116.2), actualModifiedWeapon.getDamageSources().get(1).getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.BLAST, 116.2), actualModifiedWeapon.getDamageSources().get(1).getDamages(), 0.001);
 
-        assertExpectedDamageExists(new Damage(DamageType.BLAST, 7669.2), actualModifiedWeapon.getDamageSources().get(2).getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.BLAST, 7669.2), actualModifiedWeapon.getDamageSources().get(2).getDamages(), 0.001);
 
         assertEquals(1.25, actualModifiedWeapon.getCriticalChance(), 0.001);
         assertEquals(4.4, actualModifiedWeapon.getCriticalDamage(), 0.001);

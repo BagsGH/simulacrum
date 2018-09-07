@@ -38,7 +38,7 @@ public class DamageModHelperTest {
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
-        assertEquals(DamageType.GAS, actualModifiedDamageSource.getDamageTypes().get(0).getType());
+        assertEquals(DamageType.GAS, actualModifiedDamageSource.getDamages().get(0).getType());
         assertEquals(damageSource.getDamageSourceType(), actualModifiedDamageSource.getDamageSourceType());
     }
 
@@ -50,7 +50,7 @@ public class DamageModHelperTest {
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
-        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 92.75), actualModifiedDamageSource.getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 92.75), actualModifiedDamageSource.getDamages(), 0.001);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class DamageModHelperTest {
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
-        assertExpectedDamageExists(new Damage(DamageType.TOXIN, 29.75), actualModifiedDamageSource.getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.TOXIN, 29.75), actualModifiedDamageSource.getDamages(), 0.001);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class DamageModHelperTest {
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
-        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 87.5), actualModifiedDamageSource.getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 87.5), actualModifiedDamageSource.getDamages(), 0.001);
     }
 
     @Test
@@ -85,8 +85,8 @@ public class DamageModHelperTest {
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
-        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 35.0), actualModifiedDamageSource.getDamageTypes(), 0.001);
-        assertExpectedDamageExists(new Damage(DamageType.TOXIN, 31.5), actualModifiedDamageSource.getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 35.0), actualModifiedDamageSource.getDamages(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.TOXIN, 31.5), actualModifiedDamageSource.getDamages(), 0.001);
     }
 
     @Test
@@ -97,7 +97,7 @@ public class DamageModHelperTest {
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
-        assertExpectedDamageExists(new Damage(DamageType.HEAT, 66.5), actualModifiedDamageSource.getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.HEAT, 66.5), actualModifiedDamageSource.getDamages(), 0.001);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class DamageModHelperTest {
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
-        assertExpectedDamageExists(new Damage(DamageType.GAS, 66.5), actualModifiedDamageSource.getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.GAS, 66.5), actualModifiedDamageSource.getDamages(), 0.001);
     }
 
     @Test
@@ -119,7 +119,7 @@ public class DamageModHelperTest {
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
-        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 10.8), actualModifiedDamageSource.getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 10.8), actualModifiedDamageSource.getDamages(), 0.001);
     }
 
     @Test
@@ -134,10 +134,10 @@ public class DamageModHelperTest {
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
-        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 92.75), actualModifiedDamageSource.getDamageTypes(), 0.001);
-        assertExpectedDamageExists(new Damage(DamageType.GAS, 259.7), actualModifiedDamageSource.getDamageTypes(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 92.75), actualModifiedDamageSource.getDamages(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.GAS, 259.7), actualModifiedDamageSource.getDamages(), 0.001);
     }
-
+    
     private void assertExpectedDamageExists(Damage damageExpected, List<Damage> actualDamages, double accuracyThreshold) {
         assertTrue(actualDamages.stream().anyMatch(damage -> damage.getType().equals(damageExpected.getType()) && Math.abs(damage.getDamageValue() - damageExpected.getDamageValue()) < accuracyThreshold));
     }
