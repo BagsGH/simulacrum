@@ -13,6 +13,10 @@ public enum HealthType {
     INFESTED_FLESH,
     FOSSILIZED,
     SINEW,
-    OBJECT
+    OBJECT;
+
+    public static boolean isArmor(HealthType healthType) {
+        return healthType.equals(FERRITE) || healthType.equals(ALLOY);
+    }
 
 }

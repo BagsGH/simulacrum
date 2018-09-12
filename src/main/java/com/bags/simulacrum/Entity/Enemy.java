@@ -1,5 +1,6 @@
 package com.bags.simulacrum.Entity;
 
+import com.bags.simulacrum.Armor.Health;
 import lombok.Data;
 
 import java.util.List;
@@ -13,9 +14,7 @@ public class Enemy {
     private EnemyType type;
     private List<String> weapons;
     private List<String> abilities;
-    private Map<HealthClass, Double> healthClasses;
-    private Map<ArmorType, Double> maxArmors;
-    private Map<ArmorType, Double> currentArmors;
+    private Health health;
     private Map<String, Double> bodyMultipliers;
     private List<StatusProc> procImmunities;
     private int baseLevel;
@@ -30,27 +29,6 @@ public class Enemy {
     public enum EnemyType {
         RANGED,
         MELEE
-    }
-
-    public enum ArmorType {
-        FERRITE_ARMOR,
-        ALLOY_ARMOR
-    }
-
-    public enum HealthClass {
-        CLONED_FLESH,
-        MACHINERY,
-        FLESH,
-        ROBOTIC,
-        INFESTED,
-        INFESTED_FLESH,
-        FOSSILIZED,
-        INFESTED_SINEW,
-        OBJECT,
-        SHIELD,
-        PROTO_SHIELD,
-        FERRITE_ARMOR,
-        ALLOY_ARMOR
     }
 
     public enum StatusProc {
