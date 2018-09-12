@@ -8,7 +8,6 @@ import java.util.Map;
 
 public class DamageBonusMapper {
 
-
     private static final Map<Pair<HealthType, DamageType>, Double> damagehealthMap;
 
     static {
@@ -57,12 +56,12 @@ public class DamageBonusMapper {
             put(new Pair<>(HealthType.SINEW, DamageType.RADIATION), 0.50);
 
             /*Machinery*/
-            put(new Pair<>(HealthType.CLONED_FLESH, DamageType.IMPACT), 0.25);
-            put(new Pair<>(HealthType.CLONED_FLESH, DamageType.ELECTRICITY), 0.50);
-            put(new Pair<>(HealthType.CLONED_FLESH, DamageType.TOXIN), -0.25);
-            put(new Pair<>(HealthType.CLONED_FLESH, DamageType.BLAST), 0.75);
-            put(new Pair<>(HealthType.CLONED_FLESH, DamageType.VIRAL), -0.25);
-            put(new Pair<>(HealthType.CLONED_FLESH, DamageType.VOID), -0.50);
+            put(new Pair<>(HealthType.MACHINERY, DamageType.IMPACT), 0.25);
+            put(new Pair<>(HealthType.MACHINERY, DamageType.ELECTRICITY), 0.50);
+            put(new Pair<>(HealthType.MACHINERY, DamageType.TOXIN), -0.25);
+            put(new Pair<>(HealthType.MACHINERY, DamageType.BLAST), 0.75);
+            put(new Pair<>(HealthType.MACHINERY, DamageType.VIRAL), -0.25);
+            put(new Pair<>(HealthType.MACHINERY, DamageType.VOID), -0.50);
 
             /*Robotic*/
             put(new Pair<>(HealthType.ROBOTIC, DamageType.PUNCTURE), 0.25);
