@@ -1,12 +1,12 @@
 package com.bags.simulacrum.Damage;
 
-import com.bags.simulacrum.Armor.HealthType;
+import com.bags.simulacrum.Armor.HealthClass;
 import lombok.Data;
 
 @Data
 public class DamageInflicted {
 
     DamageType damageType;
-    HealthType healthType;
+    HealthClass healthClass;
     double value;
 }

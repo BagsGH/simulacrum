@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class Health {
 
-    private double healthPool;
-    private HealthType healthType;
-    private double armor;
+    private double valueMax;
+    private double value;
+    private HealthClass healthClass;
 }

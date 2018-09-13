@@ -17,30 +17,30 @@ public class DamageBonusMapperTest {
 
     @Test
     public void itMapsDamageBonusesCorrectly_1() {
-        HealthType healthType = HealthType.MACHINERY;
+        HealthClass healthClass = HealthClass.MACHINERY;
         DamageType damageType = DamageType.BLAST;
 
-        double bonus = damageBonusMapper.getBonus(healthType, damageType);
+        double bonus = damageBonusMapper.getBonus(healthClass, damageType);
 
         assertEquals(0.75, bonus, .001);
     }
 
     @Test
     public void itMapsDamageBonusesCorrectly_2() {
-        HealthType healthType = HealthType.SHIELD;
+        HealthClass healthClass = HealthClass.SHIELD;
         DamageType damageType = DamageType.RADIATION;
 
-        double bonus = damageBonusMapper.getBonus(healthType, damageType);
+        double bonus = damageBonusMapper.getBonus(healthClass, damageType);
 
         assertEquals(-0.25, bonus, .001);
     }
 
     @Test
     public void itMapsDamageBonusesCorrectly_3() {
-        HealthType healthType = HealthType.ALLOY;
+        HealthClass healthClass = HealthClass.ALLOY;
         DamageType damageType = DamageType.MAGNETIC;
 
-        double bonus = damageBonusMapper.getBonus(healthType, damageType);
+        double bonus = damageBonusMapper.getBonus(healthClass, damageType);
 
         assertEquals(-0.50, bonus, .001);
     }
