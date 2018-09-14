@@ -26,16 +26,20 @@ public class DamageCalculator {
         double healthMultiplier = !damagingShields /*damagingHealth(baseHealth, targetShieldValue, damageType)*/ ? 1 + damageBonusMapper.getBonus(baseHealth.getHealthClass(), damageType) : 1.0; //TODO: replace with !damagingShields?
         double headCritModifier = calculateHeadshotAndCriticalModifier(critLevel, targetHeadshotMultiplier, isCorpus, weaponCriticalDamageMultiplier, damagingShields);
 
-        double allModifiers = headCritModifier * shieldMultiplier * healthMultiplier;
-        double armorAmount = targetHasArmor(targetArmor) ? targetArmor.getValue() : 0.0;
-        double armorMultiplier = targetHasArmor(targetArmor) ? damageBonusMapper.getBonus(targetArmor.getHealthClass(), damageType) : 0.0;
-        double armorReduction = 1 + ((armorAmount * (1 - armorMultiplier)) / ARMOR_CONSTANT);
+        double baseDamageModifiers = headCritModifier * shieldMultiplier * healthMultiplier;
+        double armorReduction = 1 + ((getArmorAmount(targetArmor) * (1 - getArmorDamageMultiplier(targetArmor, damageType))) / ARMOR_CONSTANT);
+        double finalDamageModifier = baseDamageModifiers / armorReduction;
 
-        double damageModifier = allModifiers / armorReduction;
-
-        return damage.getDamageValue() * damageModifier;
+        return damage.getDamageValue() * finalDamageModifier;
     }
 
+    private double getArmorAmount(Health targetArmor) {
+        return targetArmor != null ? targetArmor.getValue() : 0.0;
+    }
+
+    private double getArmorDamageMultiplier(Health targetArmor, DamageType damageType) {
+        return targetArmor != null ? damageBonusMapper.getBonus(targetArmor.getHealthClass(), damageType) : 0.0;
+    }
 
     private double calculateHeadshotAndCriticalModifier(int critLevel, double headshotMultiplier, boolean isCorpusNoHeadshots, double weaponCriticalDamageMultiplier, boolean damagingShields) {
         if (isHeadshot(headshotMultiplier, isCorpusNoHeadshots, damagingShields) && !isCritical(critLevel)) { //TODO: Check that shields do block headshots
@@ -62,10 +66,6 @@ public class DamageCalculator {
 
     private boolean damagingShields(Health targetShield, double targetShieldValue, DamageType damageType) {
         return targetShield != null && targetShieldValue > 0 && !damageType.equals(DamageType.GAS);
-    }
-
-    private boolean targetHasArmor(Health targetArmor) {
-        return targetArmor != null;
     }
 
     //TODO: Caller can use these.
