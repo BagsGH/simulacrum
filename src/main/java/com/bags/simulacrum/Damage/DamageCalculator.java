@@ -22,7 +22,7 @@ public class DamageCalculator {
 
      */
 
-    public List<DamageInflicted> calculateDamageDone(DamageSource damageSource, Enemy target, double weaponCriticalDamageMultiplier, int critLevel, double headshotMultiplier) {
+    public List<DamageInflicted> calculateDamageFromHit(DamageSource damageSource, Enemy target, double weaponCriticalDamageMultiplier, int critLevel, double headshotMultiplier) {
         List<DamageInflicted> damageInflicted = new ArrayList<>();
         List<Health> targetHealths = target.getHealth(); //TODO: This should probably be the responsibility of the caller.
         Health baseHealth = findBaseHealth(targetHealths);
@@ -45,7 +45,7 @@ public class DamageCalculator {
             double allModifiers = headCritModifier * shieldMultiplier * healthMultiplier;
             double armorAmount = targetHasArmor(targetArmor) ? targetArmor.getValue() : 0.0;
             double armorMultiplier = targetHasArmor(targetArmor) ? damageBonusMapper.getBonus(targetArmor.getHealthClass(), damageType) : 0.0;
-            double armorReduction = 1 + ((armorAmount * (1 - armorMultiplier)) / 300);
+            double armorReduction = 1 + ((armorAmount * (1 - armorMultiplier)) / ARMOR_CONSTANT);
 
             damageModifier = allModifiers / armorReduction;
             double damageDone = baseDamage * damageModifier;
@@ -58,15 +58,12 @@ public class DamageCalculator {
 
 
     private double calculateHeadshotAndCriticalModifier(int critLevel, double headshotMultiplier, boolean isCorpusNoHeadshots, double weaponCriticalDamageMultiplier, boolean damagingShields) {
-        if (isHeadshot(headshotMultiplier) && !isCorpusNoHeadshots && !isCritical(critLevel) && !damagingShields) { //TODO: Check that shields do block headshots
+        if (isHeadshot(headshotMultiplier, isCorpusNoHeadshots, damagingShields) && !isCritical(critLevel)) { //TODO: Check that shields do block headshots
             return headshotMultiplier;
         }
         if (isCritical(critLevel)) {
             double critModifier = (critLevel * (weaponCriticalDamageMultiplier - 1)) + 1;
-            if (isHeadshot(headshotMultiplier) && !isCorpusNoHeadshots && !damagingShields) {
-                return critModifier * headshotMultiplier * HEADCRIT_MULTIPLIER;
-            }
-            return critModifier;
+            return isHeadshot(headshotMultiplier, isCorpusNoHeadshots, damagingShields) ? headshotMultiplier * HEADCRIT_MULTIPLIER * critModifier : critModifier;
         }
         return 1.0;
     }
@@ -75,8 +72,8 @@ public class DamageCalculator {
         return critLevel != 0;
     }
 
-    private boolean isHeadshot(double headshotMultiplier) {
-        return headshotMultiplier != 0;
+    private boolean isHeadshot(double headshotMultiplier, boolean isCorpusNoHeadshots, boolean damagingShields) {
+        return headshotMultiplier != 0 && !isCorpusNoHeadshots && !damagingShields;
     }
 
 //    private boolean damagingHealth(Health baseHealth, double targetShieldValue, DamageType damageType) {
