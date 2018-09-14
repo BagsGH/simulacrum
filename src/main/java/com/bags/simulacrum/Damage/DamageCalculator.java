@@ -5,7 +5,6 @@ import com.bags.simulacrum.Armor.Health;
 import com.bags.simulacrum.Armor.HealthClass;
 import com.bags.simulacrum.Entity.Enemy;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DamageCalculator {
@@ -22,38 +21,30 @@ public class DamageCalculator {
 
      */
 
-    public List<DamageInflicted> calculateDamageFromHit(DamageSource damageSource, Enemy target, double weaponCriticalDamageMultiplier, int critLevel, double headshotMultiplier) {
-        List<DamageInflicted> damageInflicted = new ArrayList<>();
-        List<Health> targetHealths = target.getHealth(); //TODO: This should probably be the responsibility of the caller.
-        Health baseHealth = findBaseHealth(targetHealths);
-        Health targetShield = findShields(targetHealths);//TODO: This should probably be the responsibility of the caller.
-        Health targetArmor = findArmor(targetHealths);//TODO: This should probably be the responsibility of the caller.
+    public double calculateDamage(Damage damage, Health baseHealth, Health targetShield, Health targetArmor, boolean isCorpus, double weaponCriticalDamageMultiplier, int critLevel, double headshotMultiplier) {
+//        List<Health> targetHealths = target.getHealth(); //TODO: This should probably be the responsibility of the caller.
+//        Health baseHealth = findBaseHealth(targetHealths);
+//        Health targetShield = findShields(targetHealths);//TODO: This should probably be the responsibility of the caller.
+//        Health targetArmor = findArmor(targetHealths);//TODO: This should probably be the responsibility of the caller.
         double targetShieldValue = targetShield != null ? targetShield.getValue() : 0.0;
 
-        boolean isCorpusNoHeadshots = isTargetCorpus(target); //TODO: caller handles
+        DamageType damageType = damage.getType();
+        double baseDamage = damage.getDamageValue();
+        double damageModifier;
+        boolean damagingShields = damagingShields(targetShield, targetShieldValue, damageType);
 
-        for (Damage damage : damageSource.getDamages()) {
-            DamageType damageType = damage.getType();
-            double baseDamage = damage.getDamageValue();
-            double damageModifier;
-            boolean damagingShields = damagingShields(targetShield, targetShieldValue, damageType);
+        double shieldMultiplier = damagingShields ? 1 + damageBonusMapper.getBonus(targetShield.getHealthClass(), damageType) : 1.0;
+        double healthMultiplier = !damagingShields /*damagingHealth(baseHealth, targetShieldValue, damageType)*/ ? 1 + damageBonusMapper.getBonus(baseHealth.getHealthClass(), damageType) : 1.0; //TODO: replace with !damagingShields?
+        double headCritModifier = calculateHeadshotAndCriticalModifier(critLevel, headshotMultiplier, isCorpus, weaponCriticalDamageMultiplier, damagingShields);
 
-            double shieldMultiplier = damagingShields ? 1 + damageBonusMapper.getBonus(targetShield.getHealthClass(), damageType) : 1.0;
-            double healthMultiplier = !damagingShields /*damagingHealth(baseHealth, targetShieldValue, damageType)*/ ? 1 + damageBonusMapper.getBonus(baseHealth.getHealthClass(), damageType) : 1.0; //TODO: replace with !damagingShields?
-            double headCritModifier = calculateHeadshotAndCriticalModifier(critLevel, headshotMultiplier, isCorpusNoHeadshots, weaponCriticalDamageMultiplier, damagingShields);
+        double allModifiers = headCritModifier * shieldMultiplier * healthMultiplier;
+        double armorAmount = targetHasArmor(targetArmor) ? targetArmor.getValue() : 0.0;
+        double armorMultiplier = targetHasArmor(targetArmor) ? damageBonusMapper.getBonus(targetArmor.getHealthClass(), damageType) : 0.0;
+        double armorReduction = 1 + ((armorAmount * (1 - armorMultiplier)) / ARMOR_CONSTANT);
 
-            double allModifiers = headCritModifier * shieldMultiplier * healthMultiplier;
-            double armorAmount = targetHasArmor(targetArmor) ? targetArmor.getValue() : 0.0;
-            double armorMultiplier = targetHasArmor(targetArmor) ? damageBonusMapper.getBonus(targetArmor.getHealthClass(), damageType) : 0.0;
-            double armorReduction = 1 + ((armorAmount * (1 - armorMultiplier)) / ARMOR_CONSTANT);
+        damageModifier = allModifiers / armorReduction;
 
-            damageModifier = allModifiers / armorReduction;
-            double damageDone = baseDamage * damageModifier;
-
-            targetShieldValue = targetShieldValue - damageDone; //TODO: probably replaced by keeping track of it on the Target itself? Maybe some checks to avoid "Thorwing away" damage into a shield if it has like, 1 hp left. Also if it's gas... special case
-        }
-
-        return damageInflicted;
+        return baseDamage * damageModifier;
     }
 
 
@@ -88,8 +79,8 @@ public class DamageCalculator {
         return targetArmor != null;
     }
 
-    private boolean isTargetCorpus(Enemy target) {
-        return target.getFaction().equals(Enemy.Faction.CORPUS);
+    private boolean isTargetCorpus(Enemy.Faction faction) {
+        return faction.equals(Enemy.Faction.CORPUS);
     }
 
     private Health findArmor(List<Health> health) {
