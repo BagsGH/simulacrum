@@ -4,7 +4,6 @@ import com.bags.simulacrum.Armor.DamageBonusMapper;
 import com.bags.simulacrum.Armor.Health;
 import com.bags.simulacrum.Armor.HealthClass;
 import com.bags.simulacrum.Entity.Enemy;
-import com.bags.simulacrum.Weapon.Weapon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,7 @@ public class DamageCalculator {
 
      */
 
-    public List<DamageInflicted> calculateDamageDone(DamageSource damageSource, Enemy target, boolean shotCrit, Weapon weapon, int critLevel, boolean headshot) {
+    public List<DamageInflicted> calculateDamageDone(DamageSource damageSource, Enemy target, double weaponCriticalDamageMultiplier, int critLevel, double headshotMultiplier) {
         List<DamageInflicted> damageInflicted = new ArrayList<>();
         List<Health> targetHealths = target.getHealth(); //TODO: This should probably be the responsibility of the caller.
         Health baseHealth = findBaseHealth(targetHealths);
@@ -39,7 +38,7 @@ public class DamageCalculator {
             double damageModifier = 1.0;
             double shieldMultiplier = damagingShields(targetShield, targetShieldValue) ? damageBonusMapper.getBonus(targetShield.getHealthClass(), damageType) : 0.0;
             double healthMultiplier = damagingHealth(baseHealth, targetShieldValue) ? damageBonusMapper.getBonus(baseHealth.getHealthClass(), damageType) : 0.0;
-            double headCritModifier = calculateHeadshotAndCriticalModifier(shotCrit, critLevel, headshot, isCorpusNoHeadshots, target, weapon);
+            double headCritModifier = calculateHeadshotAndCriticalModifier(critLevel, headshotMultiplier, isCorpusNoHeadshots, weaponCriticalDamageMultiplier);
 
             double allModifiers = headCritModifier * (1 + shieldMultiplier) * (1 + healthMultiplier);
             double armorAmount = targetHasArmor(targetArmor) ? targetArmor.getValue() : 0.0;
@@ -57,18 +56,26 @@ public class DamageCalculator {
     }
 
 
-    private double calculateHeadshotAndCriticalModifier(boolean shotCrit, int critLevel, boolean headshot, boolean isCorpusNoHeadshots, Enemy target, Weapon weapon) {
-        if (headshot && !isCorpusNoHeadshots && !shotCrit) {
-            return target.getHeadshotMultiplier();
+    private double calculateHeadshotAndCriticalModifier(int critLevel, double headshotMultiplier, boolean isCorpusNoHeadshots, double weaponCriticalDamageMultiplier) {
+        if (isHeadshot(headshotMultiplier) && !isCorpusNoHeadshots && !isCritical(critLevel)) {
+            return headshotMultiplier;
         }
-        if (shotCrit) {
-            double critModifier = (critLevel * (weapon.getCriticalDamage() - 1)) + 1;
-            if (headshot && !isCorpusNoHeadshots) {
-                return critModifier * target.getHeadshotMultiplier() * HEADCRIT_MULTIPLIER;
+        if (isCritical(critLevel)) {
+            double critModifier = (critLevel * (weaponCriticalDamageMultiplier - 1)) + 1;
+            if (isHeadshot(headshotMultiplier) && !isCorpusNoHeadshots) {
+                return critModifier * headshotMultiplier * HEADCRIT_MULTIPLIER;
             }
             return critModifier;
         }
         return 0.0;
+    }
+
+    private boolean isCritical(int critLevel) {
+        return critLevel != 0;
+    }
+
+    private boolean isHeadshot(double headshotMultiplier) {
+        return headshotMultiplier != 0;
     }
 
     private boolean damagingHealth(Health baseHealth, double targetShieldValue) {
