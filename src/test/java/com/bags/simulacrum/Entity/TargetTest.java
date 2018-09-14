@@ -2,7 +2,7 @@ package com.bags.simulacrum.Entity;
 
 import org.junit.Before;
 
-public class EnemyTest {
+public class TargetTest {
 
     @Before
     public void setUp() throws Exception {

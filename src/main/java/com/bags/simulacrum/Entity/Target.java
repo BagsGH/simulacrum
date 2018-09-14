@@ -3,10 +3,11 @@ package com.bags.simulacrum.Entity;
 import com.bags.simulacrum.Armor.Health;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class Enemy {
+public class Target {
 
     private String name;
     private Faction faction;
@@ -21,7 +22,7 @@ public class Enemy {
 
     /*
 
-    Enemy has:
+    Target has:
 
     Multiple healths
         Health can be health, shield, or armor.
@@ -37,6 +38,13 @@ public class Enemy {
 
 
      */
+
+    public void addHealth(Health health) {
+        if (this.health == null) {
+            this.health = new ArrayList<>();
+        }
+        this.health.add(health);
+    }
 
     public enum Faction {
         GRINEER,

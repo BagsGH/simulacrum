@@ -12,7 +12,7 @@ public class DamageCalculator {
     /*
         1.) Weapon *fires*
         2.) Calculate damage from instant damage source (based on enemy health types, current armor, current shields
-            a.) Enemy with shield remaining takes no armor reduction to that damage
+            a.) Target with shield remaining takes no armor reduction to that damage
             b.) Damage types have bonuses vs shields
 
      */
@@ -41,13 +41,13 @@ public class DamageCalculator {
         return targetArmor != null ? damageBonusMapper.getBonus(targetArmor.getHealthClass(), damageType) : 0.0;
     }
 
-    private double calculateHeadshotAndCriticalModifier(int critLevel, double headshotMultiplier, boolean isCorpusNoHeadshots, double weaponCriticalDamageMultiplier) {
-        if (isHeadshot(headshotMultiplier, isCorpusNoHeadshots) && !isCritical(critLevel)) { //TODO: Check that shields do block headshots
-            return headshotMultiplier;
+    private double calculateHeadshotAndCriticalModifier(int critLevel, double targetHeadshotMultiplier, boolean isCorpusNoHeadshots, double weaponCriticalDamageMultiplier) {
+        if (isHeadshot(targetHeadshotMultiplier, isCorpusNoHeadshots) && !isCritical(critLevel)) { //TODO: Check that shields do block headshots
+            return targetHeadshotMultiplier;
         }
         if (isCritical(critLevel)) {
             double critModifier = (critLevel * (weaponCriticalDamageMultiplier - 1)) + 1;
-            return isHeadshot(headshotMultiplier, isCorpusNoHeadshots) ? headshotMultiplier * HEADCRIT_MULTIPLIER * critModifier : critModifier;
+            return isHeadshot(targetHeadshotMultiplier, isCorpusNoHeadshots) ? targetHeadshotMultiplier * HEADCRIT_MULTIPLIER * critModifier : critModifier;
         }
         return 1.0;
     }
@@ -69,8 +69,8 @@ public class DamageCalculator {
     }
 
     //TODO: Caller can use these.
-//    private boolean isTargetCorpus(Enemy.Faction faction) {
-//        return faction.equals(Enemy.Faction.CORPUS);
+//    private boolean isTargetCorpus(Target.Faction faction) {
+//        return faction.equals(Target.Faction.CORPUS);
 //    }
 //
 //    private Health findArmor(List<Health> health) {
