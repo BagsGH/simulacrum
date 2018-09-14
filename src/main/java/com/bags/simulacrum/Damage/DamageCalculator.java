@@ -2,10 +2,6 @@ package com.bags.simulacrum.Damage;
 
 import com.bags.simulacrum.Armor.DamageBonusMapper;
 import com.bags.simulacrum.Armor.Health;
-import com.bags.simulacrum.Armor.HealthClass;
-import com.bags.simulacrum.Entity.Enemy;
-
-import java.util.List;
 
 public class DamageCalculator {
 
@@ -21,30 +17,23 @@ public class DamageCalculator {
 
      */
 
-    public double calculateDamage(Damage damage, Health baseHealth, Health targetShield, Health targetArmor, boolean isCorpus, double weaponCriticalDamageMultiplier, int critLevel, double headshotMultiplier) {
-//        List<Health> targetHealths = target.getHealth(); //TODO: This should probably be the responsibility of the caller.
-//        Health baseHealth = findBaseHealth(targetHealths);
-//        Health targetShield = findShields(targetHealths);//TODO: This should probably be the responsibility of the caller.
-//        Health targetArmor = findArmor(targetHealths);//TODO: This should probably be the responsibility of the caller.
+    public double calculateDamage(Health baseHealth, Health targetShield, Health targetArmor, double targetHeadshotMultiplier, boolean isCorpus, Damage damage, double weaponCriticalDamageMultiplier, int critLevel) {
         double targetShieldValue = targetShield != null ? targetShield.getValue() : 0.0;
-
         DamageType damageType = damage.getType();
-        double baseDamage = damage.getDamageValue();
-        double damageModifier;
         boolean damagingShields = damagingShields(targetShield, targetShieldValue, damageType);
 
         double shieldMultiplier = damagingShields ? 1 + damageBonusMapper.getBonus(targetShield.getHealthClass(), damageType) : 1.0;
         double healthMultiplier = !damagingShields /*damagingHealth(baseHealth, targetShieldValue, damageType)*/ ? 1 + damageBonusMapper.getBonus(baseHealth.getHealthClass(), damageType) : 1.0; //TODO: replace with !damagingShields?
-        double headCritModifier = calculateHeadshotAndCriticalModifier(critLevel, headshotMultiplier, isCorpus, weaponCriticalDamageMultiplier, damagingShields);
+        double headCritModifier = calculateHeadshotAndCriticalModifier(critLevel, targetHeadshotMultiplier, isCorpus, weaponCriticalDamageMultiplier, damagingShields);
 
         double allModifiers = headCritModifier * shieldMultiplier * healthMultiplier;
         double armorAmount = targetHasArmor(targetArmor) ? targetArmor.getValue() : 0.0;
         double armorMultiplier = targetHasArmor(targetArmor) ? damageBonusMapper.getBonus(targetArmor.getHealthClass(), damageType) : 0.0;
         double armorReduction = 1 + ((armorAmount * (1 - armorMultiplier)) / ARMOR_CONSTANT);
 
-        damageModifier = allModifiers / armorReduction;
+        double damageModifier = allModifiers / armorReduction;
 
-        return baseDamage * damageModifier;
+        return damage.getDamageValue() * damageModifier;
     }
 
 
@@ -79,19 +68,20 @@ public class DamageCalculator {
         return targetArmor != null;
     }
 
-    private boolean isTargetCorpus(Enemy.Faction faction) {
-        return faction.equals(Enemy.Faction.CORPUS);
-    }
-
-    private Health findArmor(List<Health> health) {
-        return health.stream().filter(h -> HealthClass.isArmor(h.getHealthClass())).findFirst().orElse(null);
-    }
-
-    private Health findShields(List<Health> health) {
-        return health.stream().filter(hc -> HealthClass.isShield(hc.getHealthClass())).findFirst().orElse(null);
-    }
-
-    private Health findBaseHealth(List<Health> health) {
-        return health.stream().filter(h -> !HealthClass.isArmor(h.getHealthClass()) && !HealthClass.isShield(h.getHealthClass())).findFirst().orElse(null);
-    }
+    //TODO: Caller can use these.
+//    private boolean isTargetCorpus(Enemy.Faction faction) {
+//        return faction.equals(Enemy.Faction.CORPUS);
+//    }
+//
+//    private Health findArmor(List<Health> health) {
+//        return health.stream().filter(h -> HealthClass.isArmor(h.getHealthClass())).findFirst().orElse(null);
+//    }
+//
+//    private Health findShields(List<Health> health) {
+//        return health.stream().filter(hc -> HealthClass.isShield(hc.getHealthClass())).findFirst().orElse(null);
+//    }
+//
+//    private Health findBaseHealth(List<Health> health) {
+//        return health.stream().filter(h -> !HealthClass.isArmor(h.getHealthClass()) && !HealthClass.isShield(h.getHealthClass())).findFirst().orElse(null);
+//    }
 }
