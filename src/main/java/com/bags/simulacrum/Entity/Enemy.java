@@ -4,7 +4,6 @@ import com.bags.simulacrum.Armor.Health;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Map;
 
 @Data
 public class Enemy {
@@ -15,7 +14,7 @@ public class Enemy {
     private List<String> weapons;
     private List<String> abilities;
     private List<Health> health;
-    private Map<String, Double> bodyMultipliers;
+    private double headshotMultiplier;
     private List<StatusProc> procImmunities;
     private int baseLevel;
     private int level;

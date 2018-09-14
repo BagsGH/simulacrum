@@ -102,7 +102,7 @@ public class DamageBonusMapper {
         }};
     }
 
-    public Double getBonus(HealthClass healthClass, DamageType damageType) {
-        return damagehealthMap.getOrDefault(new Pair<>(healthClass, damageType), null);
+    public double getBonus(HealthClass healthClass, DamageType damageType) {
+        return damagehealthMap.getOrDefault(new Pair<>(healthClass, damageType), 0.0);
     }
 }
