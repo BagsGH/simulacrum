@@ -29,7 +29,6 @@ public class DamageCalculator {
         Health baseHealth = findBaseHealth(targetHealths);
         Health targetShield = findShields(targetHealths);//TODO: This should probably be the responsibility of the caller.
         Health targetArmor = findArmor(targetHealths);//TODO: This should probably be the responsibility of the caller.
-        double damageReduction = getDamageReduction(targetArmor);
         double targetShieldValue = targetShield != null ? targetShield.getValue() : 1.0;
 
         boolean isCorpusNoHeadshots = isTargetCorpus(target);
@@ -40,16 +39,9 @@ public class DamageCalculator {
             double damageModifier = 1.0;
             double shieldMultiplier = damagingShields(targetShield, targetShieldValue) ? damageBonusMapper.getBonus(targetShield.getHealthClass(), damageType) : 0.0;
             double healthMultiplier = damagingHealth(baseHealth, targetShieldValue) ? damageBonusMapper.getBonus(baseHealth.getHealthClass(), damageType) : 0.0;
+            double headCritModifier = calculateHeadshotAndCriticalModifier(shotCrit, critLevel, headshot, isCorpusNoHeadshots, target, weapon);
 
-
-            double critModifier = shotCrit ? (critLevel * (weapon.getCriticalDamage() - 1) + 1) : 0.0;
-            double headcritModifier = shotCrit && headshot && !isCorpusNoHeadshots ? critModifier * target.getHeadshotMultiplier() * HEADCRIT_MULTIPLIER : 0.0;
-            double headshotMultiplier = !shotCrit && headshot ? target.getHeadshotMultiplier() : 1.0;
-            if (headcritMakesCritRedundant(headcritModifier)) { //TODO: probably not needed
-                critModifier = 0.0;
-            }
-
-            double allModifiers = (1 + critModifier) * (1 + headcritModifier) * (1 + shieldMultiplier) * (1 + healthMultiplier) * (1 + headshotMultiplier);
+            double allModifiers = headCritModifier * (1 + shieldMultiplier) * (1 + healthMultiplier);
             double armorAmount = targetHasArmor(targetArmor) ? targetArmor.getValue() : 0.0;
             double armorMultiplier = targetHasArmor(targetArmor) ? damageBonusMapper.getBonus(targetArmor.getHealthClass(), damageType) : 0.0;
             double armorReduction = 1 + ((armorAmount * (1 - armorMultiplier)) / 300);
@@ -64,6 +56,21 @@ public class DamageCalculator {
         return damageInflicted;
     }
 
+
+    private double calculateHeadshotAndCriticalModifier(boolean shotCrit, int critLevel, boolean headshot, boolean isCorpusNoHeadshots, Enemy target, Weapon weapon) {
+        if (headshot && !isCorpusNoHeadshots && !shotCrit) {
+            return target.getHeadshotMultiplier();
+        }
+        if (shotCrit) {
+            double critModifier = (critLevel * (weapon.getCriticalDamage() - 1)) + 1;
+            if (headshot && !isCorpusNoHeadshots) {
+                return critModifier * target.getHeadshotMultiplier() * HEADCRIT_MULTIPLIER;
+            }
+            return critModifier;
+        }
+        return 0.0;
+    }
+
     private boolean damagingHealth(Health baseHealth, double targetShieldValue) {
         return baseHealth != null && targetShieldValue <= 0;
     }
@@ -76,16 +83,8 @@ public class DamageCalculator {
         return targetArmor != null;
     }
 
-    private boolean headcritMakesCritRedundant(double headcritModifier) {
-        return headcritModifier > 1.0;
-    }
-
     private boolean isTargetCorpus(Enemy target) {
         return target.getFaction().equals(Enemy.Faction.CORPUS);
-    }
-
-    private double getDamageReduction(Health targetArmor) {
-        return targetHasArmor(targetArmor) ? (targetArmor.getValue() / targetArmor.getValue() + ARMOR_CONSTANT) : 0.0;
     }
 
     private Health findArmor(List<Health> health) {
