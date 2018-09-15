@@ -1,5 +1,6 @@
 package com.bags.simulacrum;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,17 +11,18 @@ import java.util.Arrays;
 
 @SpringBootApplication
 public class Application {
+    @Autowired
+    private Engine engine;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
-        Engine engine = new Engine();
-        engine.start();
     }
 
 
     @Bean
     public CommandLineRunner commandLineRunner(ApplicationContext ctx) {
         return args -> {
+            engine.start();
 
             System.out.println("Let's inspect the beans provided by Spring Boot:");
 

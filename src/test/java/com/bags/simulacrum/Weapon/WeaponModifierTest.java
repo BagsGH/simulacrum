@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,6 +19,9 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public class WeaponModifierTest {
+
+    @Spy
+    private DamageModHelper damageModHelperMock;
 
     @InjectMocks
     private WeaponModifier subject;
@@ -30,7 +34,6 @@ public class WeaponModifierTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        subject = new WeaponModifier();
         fakeWeapon = new Weapon();
         fakeWeapon.setType(Weapon.WeaponType.RIFLE);
 
