@@ -28,10 +28,6 @@ public enum DamageType {
                 damageType.equals(CORROSIVE) || damageType.equals(GAS) || damageType.equals(MAGNETIC) || damageType.equals(RADIATION) || damageType.equals(VIRAL);
     }
 
-    public static boolean isPrimaryElemental(DamageType damageType) {
-        return damageType.equals(ELECTRICITY) || damageType.equals(COLD) || damageType.equals(HEAT) || damageType.equals(TOXIN);
-    }
-
     public static boolean isCombinedElemental(DamageType damageType) {
         return damageType.equals(BLAST) || damageType.equals(CORROSIVE) || damageType.equals(GAS) || damageType.equals(MAGNETIC) || damageType.equals(RADIATION) || damageType.equals(VIRAL);
     }
