@@ -25,8 +25,6 @@ public class WeaponModifier {
         }
         Weapon modifiedWeapon = copyWeaponToMod();
 
-        //damageModHelper = new DamageModHelper();
-
         List<DamageSource> modifiedDamageSources = new ArrayList<>();
         for (DamageSource damageSource : originalWeapon.getDamageSources()) {
             modifiedDamageSources.add(damageModHelper.calculateDamageSources(damageSource, originalWeapon.getMods()));

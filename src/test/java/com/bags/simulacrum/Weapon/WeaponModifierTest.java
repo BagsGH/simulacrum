@@ -7,8 +7,8 @@ import com.bags.simulacrum.Damage.DamageType;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,17 +17,19 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 public class WeaponModifierTest {
 
-    @Spy
+    @Mock
     private DamageModHelper damageModHelperMock;
 
     @InjectMocks
     private WeaponModifier subject;
 
     private Weapon fakeWeapon;
-
     private Mod fakeMod;
     private Mod anotherFakeMod;
 
@@ -39,6 +41,9 @@ public class WeaponModifierTest {
 
         DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.IMPACT, 5.0, 0.0)));
         fakeWeapon.addDamageSource(damageSource);
+
+        DamageSource fakeDamageSourceReturned = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.IMPACT, 5.0, 0.0)));
+        when(damageModHelperMock.calculateDamageSources(eq(damageSource), any())).thenReturn(fakeDamageSourceReturned);
 
         fakeMod = new Mod();
         anotherFakeMod = new Mod();
@@ -411,30 +416,39 @@ public class WeaponModifierTest {
         damageSource2.addDamage(new Damage(DamageType.COLD, 35.0, 0.0));
 
         fakeWeapon.setDamageSources(Arrays.asList(damageSource, damageSource2));
+        List<Mod> fakeModList = Arrays.asList(fakeMod, anotherFakeMod);
+        fakeWeapon.setMods(fakeModList);
 
-        fakeWeapon.setMods(Arrays.asList(fakeMod, anotherFakeMod));
+        DamageSource fakeReturnedDamageSource1 = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.IMPACT, 92.75), new Damage(DamageType.GAS, 259.7)));
+        DamageSource fakeReturnedDamageSource2 = new DamageSource(DamageSourceType.HIT_AOE, Arrays.asList(new Damage(DamageType.PUNCTURE, 92.75), new Damage(DamageType.VIRAL, 259.7)));
+
+        when(damageModHelperMock.calculateDamageSources(eq(damageSource), eq(fakeModList))).thenReturn(fakeReturnedDamageSource1);
+        when(damageModHelperMock.calculateDamageSources(eq(damageSource2), eq(fakeModList))).thenReturn(fakeReturnedDamageSource2);
 
         Weapon actualModifiedWeapon = subject.modWeapon(fakeWeapon);
 
         assertExpectedDamageExists(new Damage(DamageType.IMPACT, 92.75), actualModifiedWeapon.getDamageSources().get(0).getDamages(), 0.001);
         assertExpectedDamageExists(new Damage(DamageType.GAS, 259.7), actualModifiedWeapon.getDamageSources().get(0).getDamages(), 0.001);
+        assertEquals(DamageSourceType.PROJECTILE, actualModifiedWeapon.getDamageSources().get(0).getDamageSourceType());
         assertExpectedDamageExists(new Damage(DamageType.PUNCTURE, 92.75), actualModifiedWeapon.getDamageSources().get(1).getDamages(), 0.001);
         assertExpectedDamageExists(new Damage(DamageType.VIRAL, 259.7), actualModifiedWeapon.getDamageSources().get(1).getDamages(), 0.001);
+        assertEquals(DamageSourceType.HIT_AOE, actualModifiedWeapon.getDamageSources().get(1).getDamageSourceType());
     }
 
     @Test
     public void itCanCorrectlyCalculateLenzWithMultipleDamageSources() {
         setupFakeWeaponAsLenz();
 
+
         Weapon actualModifiedWeapon = subject.modWeapon(fakeWeapon);
 
         assertExpectedDamageExists(new Damage(DamageType.IMPACT, 207.5), actualModifiedWeapon.getDamageSources().get(0).getDamages(), 0.001);
         assertExpectedDamageExists(new Damage(DamageType.BLAST, 373.5), actualModifiedWeapon.getDamageSources().get(0).getDamages(), 0.001);
-
+        assertEquals(DamageSourceType.PROJECTILE, actualModifiedWeapon.getDamageSources().get(0).getDamageSourceType());
         assertExpectedDamageExists(new Damage(DamageType.BLAST, 116.2), actualModifiedWeapon.getDamageSources().get(1).getDamages(), 0.001);
-
+        assertEquals(DamageSourceType.HIT_AOE, actualModifiedWeapon.getDamageSources().get(1).getDamageSourceType());
         assertExpectedDamageExists(new Damage(DamageType.BLAST, 7669.2), actualModifiedWeapon.getDamageSources().get(2).getDamages(), 0.001);
-
+        assertEquals(DamageSourceType.DELAYED_AOE, actualModifiedWeapon.getDamageSources().get(2).getDamageSourceType());
         assertEquals(1.25, actualModifiedWeapon.getCriticalChance(), 0.001);
         assertEquals(4.4, actualModifiedWeapon.getCriticalDamage(), 0.001);
         assertEquals(0.429, actualModifiedWeapon.getChargeTime(), 0.001);
@@ -475,7 +489,16 @@ public class WeaponModifierTest {
         Mod splitChamber = new Mod();
         splitChamber.setMultishotIncrease(0.90);
 
-        fakeWeapon.setMods(Arrays.asList(vileAcceleration, hellfire, heavyCaliber, splitChamber, serration, cryoRounds, vitalSense, pointStrike));
+        List<Mod> fakeModList = Arrays.asList(vileAcceleration, hellfire, heavyCaliber, splitChamber, serration, cryoRounds, vitalSense, pointStrike);
+        fakeWeapon.setMods(fakeModList);
+
+        DamageSource fakeReturnedDamageSource1 = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.IMPACT, 207.5), new Damage(DamageType.BLAST, 373.5)));
+        DamageSource fakeReturnedDamageSource2 = new DamageSource(DamageSourceType.HIT_AOE, Collections.singletonList(new Damage(DamageType.BLAST, 116.2)));
+        DamageSource fakeReturnedDamageSource3 = new DamageSource(DamageSourceType.DELAYED_AOE, Collections.singletonList(new Damage(DamageType.BLAST, 7669.2)));
+
+        when(damageModHelperMock.calculateDamageSources(eq(shotSource), eq(fakeModList))).thenReturn(fakeReturnedDamageSource1);
+        when(damageModHelperMock.calculateDamageSources(eq(impactExplosion), eq(fakeModList))).thenReturn(fakeReturnedDamageSource2);
+        when(damageModHelperMock.calculateDamageSources(eq(delayExplosion), eq(fakeModList))).thenReturn(fakeReturnedDamageSource3);
     }
 
     private void assertExpectedDamageExists(Damage damageExpected, List<Damage> actualDamages, double accuracyThreshold) {
