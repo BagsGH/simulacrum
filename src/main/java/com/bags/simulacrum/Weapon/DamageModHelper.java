@@ -159,7 +159,6 @@ public class DamageModHelper {
         return combinedDamageType != null;
     }
 
-    //TODO: is this necessary?
     private List<Damage> sumIdenticalTypes(List<Damage> combinedElementalDamages) {
         List<Damage> finalizedDamageTypes = new ArrayList<>();
         for (DamageType damageType : DamageType.damageTypes) {
