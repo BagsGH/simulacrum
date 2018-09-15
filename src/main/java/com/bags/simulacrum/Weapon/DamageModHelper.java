@@ -4,6 +4,7 @@ import com.bags.simulacrum.Damage.Damage;
 import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Damage.ElementalDamageMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -15,6 +16,13 @@ import java.util.Map;
 public class DamageModHelper {
 
     private List<Mod> originalWeaponMods;
+
+    private final ElementalDamageMapper elementalDamageMapper;
+
+    @Autowired
+    public DamageModHelper(ElementalDamageMapper elementalDamageMapper) {
+        this.elementalDamageMapper = elementalDamageMapper;
+    }
 
     public DamageSource calculateDamageSources(DamageSource damageSource, List<Mod> mods) {
         this.originalWeaponMods = mods;
@@ -122,7 +130,6 @@ public class DamageModHelper {
     }
 
     private List<Damage> combineElementalDamages(List<Damage> orderedElementalDamages) {
-        ElementalDamageMapper mapper = new ElementalDamageMapper();
         List<Damage> combinedElementalDamages = new ArrayList<>();
         if (orderedElementalDamages.size() < 2) {
             return orderedElementalDamages;
@@ -138,7 +145,7 @@ public class DamageModHelper {
                 combinedElementalDamages.add(damage1);
             } else {
                 Damage damage2 = orderedElementalDamages.get(i + 1);
-                DamageType combinedDamageType = mapper.combineElements(damage1.getType(), damage2.getType());
+                DamageType combinedDamageType = elementalDamageMapper.combineElements(damage1.getType(), damage2.getType());
                 if (validCombination(combinedDamageType)) {
                     Damage combinedDamage = new Damage(combinedDamageType, damage1.getDamageValue() + damage2.getDamageValue(), 0.00);
                     combinedElementalDamages.add(combinedDamage);

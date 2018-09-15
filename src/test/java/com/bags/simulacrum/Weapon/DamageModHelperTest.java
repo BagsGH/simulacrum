@@ -1,11 +1,11 @@
 package com.bags.simulacrum.Weapon;
 
-import com.bags.simulacrum.Damage.Damage;
-import com.bags.simulacrum.Damage.DamageSource;
-import com.bags.simulacrum.Damage.DamageSourceType;
-import com.bags.simulacrum.Damage.DamageType;
+import com.bags.simulacrum.Damage.*;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,7 +17,11 @@ import static org.junit.Assert.assertEquals;
 
 public class DamageModHelperTest {
 
+    @InjectMocks
     private DamageModHelper subject;
+
+    @Spy
+    private ElementalDamageMapper elementalDamageMapperMock;
 
     private Mod fakeMod;
     private Mod anotherFakeMod;
@@ -25,7 +29,7 @@ public class DamageModHelperTest {
 
     @Before
     public void setUp() {
-        subject = new DamageModHelper();
+        MockitoAnnotations.initMocks(this);
         fakeMod = new Mod();
         anotherFakeMod = new Mod();
         fakeModList = new ArrayList<>();

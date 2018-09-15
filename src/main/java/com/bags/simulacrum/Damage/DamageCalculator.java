@@ -2,12 +2,21 @@ package com.bags.simulacrum.Damage;
 
 import com.bags.simulacrum.Armor.DamageBonusMapper;
 import com.bags.simulacrum.Armor.Health;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DamageCalculator {
 
     private static final double ARMOR_CONSTANT = 300;
     private static final double HEADCRIT_MULTIPLIER = 2.0;
-    private DamageBonusMapper damageBonusMapper = new DamageBonusMapper();
+
+    private final DamageBonusMapper damageBonusMapper;
+
+    @Autowired
+    public DamageCalculator(DamageBonusMapper damageBonusMapper) {
+        this.damageBonusMapper = damageBonusMapper;
+    }
 
     public double calculateDamage(Health baseHealth, Health targetShield, Health targetArmor, double targetHeadshotMultiplier, Damage damage, double weaponCriticalDamageMultiplier, int critLevel, double bodyPartModifier) {
         double targetShieldValue = targetShield != null ? targetShield.getValue() : 0.0;

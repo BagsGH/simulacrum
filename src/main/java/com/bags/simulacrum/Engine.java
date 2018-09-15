@@ -18,8 +18,12 @@ import java.util.List;
 @Component
 public class Engine {
 
+    private final WeaponModifier weaponModifier;
+
     @Autowired
-    private WeaponModifier weaponModifier;
+    public Engine(WeaponModifier weaponModifier) {
+        this.weaponModifier = weaponModifier;
+    }
 
     public void start() {
         Weapon ignisWraith = setupIgnis();

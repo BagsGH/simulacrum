@@ -2,10 +2,12 @@ package com.bags.simulacrum.Armor;
 
 import com.bags.simulacrum.Damage.DamageType;
 import javafx.util.Pair;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class DamageBonusMapper {
 
     private static final Map<Pair<HealthClass, DamageType>, Double> damagehealthMap;

@@ -14,8 +14,12 @@ public class WeaponModifier {
     private List<Mod> weaponMods;
     private Weapon originalWeapon;
 
+    private final DamageModHelper damageModHelper;
+
     @Autowired
-    private DamageModHelper damageModHelper;
+    public WeaponModifier(DamageModHelper damageModHelper) {
+        this.damageModHelper = damageModHelper;
+    }
 
     public Weapon modWeapon(Weapon weapon) {
         originalWeapon = weapon;

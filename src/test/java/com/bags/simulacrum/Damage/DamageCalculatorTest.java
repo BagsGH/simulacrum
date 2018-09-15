@@ -1,15 +1,24 @@
 package com.bags.simulacrum.Damage;
 
+import com.bags.simulacrum.Armor.DamageBonusMapper;
 import com.bags.simulacrum.Armor.Health;
 import com.bags.simulacrum.Armor.HealthClass;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
 
 import static org.junit.Assert.assertEquals;
 
 public class DamageCalculatorTest {
 
+    @InjectMocks
     private DamageCalculator subject;
+
+    @Spy
+    private DamageBonusMapper damageBonusMapperMock;
+
     private Damage fakeDamage;
     private Health fakeHealth;
     private Health fakeArmor;
@@ -17,7 +26,7 @@ public class DamageCalculatorTest {
 
     @Before
     public void setup() {
-        subject = new DamageCalculator();
+        MockitoAnnotations.initMocks(this);
         fakeDamage = new Damage(DamageType.HEAT, 50.0);
         fakeHealth = new Health(HealthClass.MACHINERY, 200.0);
         fakeArmor = new Health(HealthClass.FERRITE, 300.0);
