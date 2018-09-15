@@ -28,14 +28,21 @@ public class DamageCalculatorTest {
     public void itCanCalculateDamageWithNoModifiers() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 0.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(50.0, actualDamage, 0.001);
+        assertEquals(50.0, actualDamage, 0.0);
     }
 
     @Test
     public void itCanCalculateDamageWithBodyPartModifier() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 0.0, fakeDamage, 0.0, 0, 3.0);
 
-        assertEquals(150.0, actualDamage, 0.001);
+        assertEquals(150.0, actualDamage, 0.0);
+    }
+
+    @Test
+    public void itCanCalculateDamageWithBodyPartModifier_Shield() {
+        double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, null, 0.0, fakeDamage, 0.0, 0, 2.0);
+
+        assertEquals(50.0, actualDamage, 0.0);
     }
 
     @Test
@@ -43,7 +50,7 @@ public class DamageCalculatorTest {
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, null, 0.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(25.0, actualDamage, 0.001);
+        assertEquals(25.0, actualDamage, 0.0);
     }
 
     @Test
@@ -52,7 +59,7 @@ public class DamageCalculatorTest {
         fakeDamage.setType(DamageType.GAS);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, null, 0.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(75.0, actualDamage, 0.001);
+        assertEquals(75.0, actualDamage, 0.0);
     }
 
     @Test
@@ -60,7 +67,7 @@ public class DamageCalculatorTest {
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 0.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(75.0, actualDamage, 0.001);
+        assertEquals(75.0, actualDamage, 0.0);
     }
 
     @Test
@@ -68,14 +75,14 @@ public class DamageCalculatorTest {
         fakeDamage.setType(DamageType.VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 0.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(25.0, actualDamage, 0.001);
+        assertEquals(25.0, actualDamage, 0.0);
     }
 
     @Test
     public void itCanCalculateDamageWithAHeadshot() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 2.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(100.0, actualDamage, 0.001);
+        assertEquals(100.0, actualDamage, 0.0);
     }
 
     @Test
@@ -83,7 +90,7 @@ public class DamageCalculatorTest {
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 3.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(225.0, actualDamage, 0.001);
+        assertEquals(225.0, actualDamage, 0.0);
     }
 
     @Test
@@ -91,7 +98,7 @@ public class DamageCalculatorTest {
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 3.0, fakeDamage, 3.0, 1, 1.0);
 
-        assertEquals(1350.0, actualDamage, 0.001);
+        assertEquals(1350.0, actualDamage, 0.0);
     }
 
     @Test
@@ -99,7 +106,7 @@ public class DamageCalculatorTest {
         fakeDamage.setType(DamageType.VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 3.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(75.0, actualDamage, 0.001);
+        assertEquals(75.0, actualDamage, 0.0);
     }
 
     @Test
@@ -107,42 +114,49 @@ public class DamageCalculatorTest {
         fakeDamage.setType(DamageType.VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 3.0, fakeDamage, 3.0, 1, 1.0);
 
-        assertEquals(450.0, actualDamage, 0.001);
+        assertEquals(450.0, actualDamage, 0.0);
     }
 
     @Test
     public void itCanCalculateDamageWithACritical() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 0.0, fakeDamage, 2.0, 1, 1.0);
 
-        assertEquals(100.0, actualDamage, 0.001);
+        assertEquals(100.0, actualDamage, 0.0);
     }
 
     @Test
     public void itCanCalculateDamageWithALevel2Critical() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 0.0, fakeDamage, 2.0, 2, 1.0);
 
-        assertEquals(150.0, actualDamage, 0.001);
+        assertEquals(150.0, actualDamage, 0.0);
     }
 
     @Test
     public void itCanCalculateDamageWithALevel5Critical() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 0.0, fakeDamage, 2.0, 5, 1.0);
 
-        assertEquals(300.0, actualDamage, 0.001);
+        assertEquals(300.0, actualDamage, 0.0);
+    }
+
+    @Test
+    public void itCanCalculateDamageWithACriticalAndBodyPartModifier() {
+        double actualDamage = subject.calculateDamage(fakeHealth, null, null, 0.0, fakeDamage, 2.0, 1, 3.0);
+
+        assertEquals(300.0, actualDamage, 0.0);
     }
 
     @Test
     public void itCanCalculateDamageWithACriticalHeadshot() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 2.0, fakeDamage, 2.0, 1, 1.0);
 
-        assertEquals(400.0, actualDamage, 0.001);
+        assertEquals(400.0, actualDamage, 0.0);
     }
 
     @Test
     public void itCanCalculateDamageWithALevel2CriticalHeadshot() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 2.0, fakeDamage, 2.0, 2, 1.0);
 
-        assertEquals(600.0, actualDamage, 0.001);
+        assertEquals(600.0, actualDamage, 0.0);
     }
 
     @Test
@@ -150,21 +164,29 @@ public class DamageCalculatorTest {
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 0.0, fakeDamage, 2.0, 1, 1.0);
 
-        assertEquals(150.0, actualDamage, 0.001);
+        assertEquals(150.0, actualDamage, 0.0);
     }
 
     @Test
     public void itCanCalculateDamageWithNoModifiers_Armor() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 0.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(25.0, actualDamage, 0.001);
+        assertEquals(25.0, actualDamage, 0.0);
     }
 
     @Test
     public void itCanCalculateDamageWithBodyPartModifier_Armor() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 0.0, fakeDamage, 0.0, 0, 3.0);
 
-        assertEquals(75.0, actualDamage, 0.001);
+        assertEquals(75.0, actualDamage, 0.0);
+    }
+
+    @Test
+    public void itCanCalculateDamageWithBodyPartModifier_Shield_Armor() {
+        /* Because of the shields, armor is not taken into account. So we have a 2x modifier from the body part, but 50% reduction from the shield type, so it's still 50.0. */
+        double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, fakeArmor, 0.0, fakeDamage, 0.0, 0, 2.0);
+
+        assertEquals(50.0, actualDamage, 0.0);
     }
 
     @Test
@@ -173,7 +195,7 @@ public class DamageCalculatorTest {
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, fakeArmor, 0.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(25.0, actualDamage, 0.001);
+        assertEquals(25.0, actualDamage, 0.0);
     }
 
     @Test
@@ -183,7 +205,7 @@ public class DamageCalculatorTest {
         fakeDamage.setType(DamageType.GAS);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, fakeArmor, 0.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(38.0, actualDamage, 0.001);
+        assertEquals(38.0, actualDamage, 0.0);
     }
 
     @Test
@@ -191,7 +213,7 @@ public class DamageCalculatorTest {
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 0.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(38.0, actualDamage, 0.001);
+        assertEquals(38.0, actualDamage, 0.0);
     }
 
     @Test
@@ -199,14 +221,14 @@ public class DamageCalculatorTest {
         fakeDamage.setType(DamageType.VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 0.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(13, actualDamage, 0.001);
+        assertEquals(13, actualDamage, 0.0);
     }
 
     @Test
     public void itCanCalculateDamageWithAHeadshot_Armor() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 2.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(50.0, actualDamage, 0.001);
+        assertEquals(50.0, actualDamage, 0.0);
     }
 
     @Test
@@ -214,7 +236,7 @@ public class DamageCalculatorTest {
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 3.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(113, actualDamage, 0.001);
+        assertEquals(113, actualDamage, 0.0);
     }
 
     @Test
@@ -222,7 +244,7 @@ public class DamageCalculatorTest {
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 3.0, fakeDamage, 3.0, 1, 1.0);
 
-        assertEquals(675.0, actualDamage, 0.001);
+        assertEquals(675.0, actualDamage, 0.0);
     }
 
     @Test
@@ -230,7 +252,7 @@ public class DamageCalculatorTest {
         fakeDamage.setType(DamageType.VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 3.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(38, actualDamage, 0.001);
+        assertEquals(38, actualDamage, 0.0);
     }
 
     @Test
@@ -238,42 +260,49 @@ public class DamageCalculatorTest {
         fakeDamage.setType(DamageType.VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 3.0, fakeDamage, 3.0, 1, 1.0);
 
-        assertEquals(225.0, actualDamage, 0.001);
+        assertEquals(225.0, actualDamage, 0.0);
     }
 
     @Test
     public void itCanCalculateDamageWithACritical_Armor() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 0.0, fakeDamage, 2.0, 1, 1.0);
 
-        assertEquals(50.0, actualDamage, 0.001);
+        assertEquals(50.0, actualDamage, 0.0);
     }
 
     @Test
     public void itCanCalculateDamageWithALevel2Critical_Armor() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 0.0, fakeDamage, 2.0, 2, 1.0);
 
-        assertEquals(75.0, actualDamage, 0.001);
+        assertEquals(75.0, actualDamage, 0.0);
     }
 
     @Test
     public void itCanCalculateDamageWithALevel5Critical_Armor() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 0.0, fakeDamage, 2.0, 5, 1.0);
 
-        assertEquals(150.0, actualDamage, 0.001);
+        assertEquals(150.0, actualDamage, 0.0);
+    }
+
+    @Test
+    public void itCanCalculateDamageWithACriticalAndBodyPartModifier_Armor() {
+        double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 0.0, fakeDamage, 2.0, 1, 3.0);
+
+        assertEquals(150.0, actualDamage, 0.0);
     }
 
     @Test
     public void itCanCalculateDamageWithACriticalHeadshot_Armor() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 2.0, fakeDamage, 2.0, 1, 1.0);
 
-        assertEquals(200.0, actualDamage, 0.001);
+        assertEquals(200.0, actualDamage, 0.0);
     }
 
     @Test
     public void itCanCalculateDamageWithALevel2CriticalHeadshot_Armor() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 2.0, fakeDamage, 2.0, 2, 1.0);
 
-        assertEquals(300.0, actualDamage, 0.001);
+        assertEquals(300.0, actualDamage, 0.0);
     }
 
     @Test
@@ -281,7 +310,7 @@ public class DamageCalculatorTest {
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 0.0, fakeDamage, 2.0, 1, 1.0);
 
-        assertEquals(75.0, actualDamage, 0.001);
+        assertEquals(75.0, actualDamage, 0.0);
     }
 
     @Test
@@ -290,7 +319,7 @@ public class DamageCalculatorTest {
         fakeDamage.setType(DamageType.PUNCTURE);
         double actualDamage = subject.calculateDamage(fakeHealth, null, fakeArmor, 0.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(42.0, actualDamage, 0.001);
+        assertEquals(42.0, actualDamage, 0.0);
     }
 
     @Test
@@ -301,7 +330,7 @@ public class DamageCalculatorTest {
         fakeDamage.setType(DamageType.PUNCTURE);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, fakeArmor, 0.0, fakeDamage, 0.0, 0, 1.0);
 
-        assertEquals(25.0, actualDamage, 0.001);
+        assertEquals(25.0, actualDamage, 0.0);
     }
 
 }
