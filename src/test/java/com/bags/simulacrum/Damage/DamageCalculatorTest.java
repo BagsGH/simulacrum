@@ -12,12 +12,16 @@ public class DamageCalculatorTest {
     private DamageCalculator subject;
     private Damage fakeDamage;
     private Health fakeHealth;
+    private Health fakeArmor;
+    private Health fakeShield;
 
     @Before
     public void setup() {
         subject = new DamageCalculator();
         fakeDamage = new Damage(DamageType.HEAT, 50.0);
         fakeHealth = new Health(HealthClass.MACHINERY, 200.0);
+        fakeArmor = new Health(HealthClass.FERRITE, 300.0);
+        fakeShield = new Health(HealthClass.PROTO_SHIELD, 200.0);
     }
 
     @Test
@@ -25,6 +29,23 @@ public class DamageCalculatorTest {
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 0.0, false, fakeDamage, 0.0, 0);
 
         assertEquals(50.0, actualDamage, 0.001);
+    }
+
+    @Test
+    public void itCanCalculateDamage_Shield() {
+        fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
+        double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, null, 0.0, false, fakeDamage, 0.0, 0);
+
+        assertEquals(25.0, actualDamage, 0.001);
+    }
+
+    @Test
+    public void itCanCalculateGasDamageIgnoringShields() {
+        fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
+        fakeDamage.setType(DamageType.GAS);
+        double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, null, 0.0, false, fakeDamage, 0.0, 0);
+
+        assertEquals(75.0, actualDamage, 0.001);
     }
 
     @Test
@@ -113,10 +134,31 @@ public class DamageCalculatorTest {
     }
 
     @Test
+    public void itCanCalculateDamageWithALevel2Critical() {
+        double actualDamage = subject.calculateDamage(fakeHealth, null, null, 0.0, false, fakeDamage, 2.0, 2);
+
+        assertEquals(150.0, actualDamage, 0.001);
+    }
+
+    @Test
+    public void itCanCalculateDamageWithALevel5Critical() {
+        double actualDamage = subject.calculateDamage(fakeHealth, null, null, 0.0, false, fakeDamage, 2.0, 5);
+
+        assertEquals(300.0, actualDamage, 0.001);
+    }
+
+    @Test
     public void itCanCalculateDamageWithACriticalHeadshot() {
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 2.0, false, fakeDamage, 2.0, 1);
 
         assertEquals(400.0, actualDamage, 0.001);
+    }
+
+    @Test
+    public void itCanCalculateDamageWithALevel2CriticalHeadshot() {
+        double actualDamage = subject.calculateDamage(fakeHealth, null, null, 2.0, false, fakeDamage, 2.0, 2);
+
+        assertEquals(600.0, actualDamage, 0.001);
     }
 
     @Test

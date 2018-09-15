@@ -9,21 +9,13 @@ public class DamageCalculator {
     private static final double HEADCRIT_MULTIPLIER = 2.0;
     private DamageBonusMapper damageBonusMapper = new DamageBonusMapper();
 
-    /*
-        1.) Weapon *fires*
-        2.) Calculate damage from instant damage source (based on enemy health types, current armor, current shields
-            a.) Target with shield remaining takes no armor reduction to that damage
-            b.) Damage types have bonuses vs shields
-
-     */
-
     public double calculateDamage(Health baseHealth, Health targetShield, Health targetArmor, double targetHeadshotMultiplier, boolean isCorpus, Damage damage, double weaponCriticalDamageMultiplier, int critLevel) {
         double targetShieldValue = targetShield != null ? targetShield.getValue() : 0.0;
         DamageType damageType = damage.getType();
         boolean damagingShields = damagingShields(targetShield, targetShieldValue, damageType);
 
         double shieldMultiplier = damagingShields ? 1 + damageBonusMapper.getBonus(targetShield.getHealthClass(), damageType) : 1.0;
-        double healthMultiplier = !damagingShields /*damagingHealth(baseHealth, targetShieldValue, damageType)*/ ? 1 + damageBonusMapper.getBonus(baseHealth.getHealthClass(), damageType) : 1.0; //TODO: replace with !damagingShields?
+        double healthMultiplier = !damagingShields /*damagingHealth(baseHealth, targetShieldValue, damageType)*/ ? 1 + damageBonusMapper.getBonus(baseHealth.getHealthClass(), damageType) : 1.0;
         double headCritModifier = calculateHeadshotAndCriticalModifier(critLevel, targetHeadshotMultiplier, isCorpus, weaponCriticalDamageMultiplier);
 
         double baseDamageModifiers = headCritModifier * shieldMultiplier * healthMultiplier;
@@ -42,7 +34,7 @@ public class DamageCalculator {
     }
 
     private double calculateHeadshotAndCriticalModifier(int critLevel, double targetHeadshotMultiplier, boolean isCorpusNoHeadshots, double weaponCriticalDamageMultiplier) {
-        if (isHeadshot(targetHeadshotMultiplier, isCorpusNoHeadshots) && !isCritical(critLevel)) { //TODO: Check that shields do block headshots
+        if (isHeadshot(targetHeadshotMultiplier, isCorpusNoHeadshots) && !isCritical(critLevel)) {
             return targetHeadshotMultiplier;
         }
         if (isCritical(critLevel)) {
@@ -59,10 +51,6 @@ public class DamageCalculator {
     private boolean isHeadshot(double headshotMultiplier, boolean isCorpusNoHeadshots) {
         return headshotMultiplier != 0 && !isCorpusNoHeadshots;
     }
-
-//    private boolean damagingHealth(Health baseHealth, double targetShieldValue, DamageType damageType) {
-//        return baseHealth != null && (targetShieldValue <= 0 || damageType.equals(DamageType.GAS)); //TODO: can health ever be null? There's always one health clas, right?
-//    }
 
     private boolean damagingShields(Health targetShield, double targetShieldValue, DamageType damageType) {
         return targetShield != null && targetShieldValue > 0 && !damageType.equals(DamageType.GAS);
