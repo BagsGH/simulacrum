@@ -339,4 +339,15 @@ public class DamageCalculatorTest {
         assertEquals(42.0, actualDamage, 0.001);
     }
 
+    @Test
+    public void itCanCalculateDamageWithAPositiveBonusAgainstHealthAndArmorClassHittingShields() {
+        /*  Puncture has a 25% bonus against Sinew and a 50% bonus against Ferrite Armor.
+            However, it does 50% less against Proto Shields. Since we have shields, it will do 50% less damage because of the shields and ignore the other bonuses. */
+        fakeHealth.setHealthClass(HealthClass.SINEW);
+        fakeDamage.setType(DamageType.PUNCTURE);
+        double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, fakeArmor, 0.0, false, fakeDamage, 0.0, 0);
+
+        assertEquals(25.0, actualDamage, 0.001);
+    }
+
 }

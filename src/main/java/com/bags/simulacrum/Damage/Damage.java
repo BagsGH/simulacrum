@@ -29,4 +29,8 @@ public class Damage {
         this.damageValue = damage.getDamageValue();
         this.modAddedDamageRatio = damage.getModAddedDamageRatio();
     }
+
+    public Damage() {
+
+    }
 }
