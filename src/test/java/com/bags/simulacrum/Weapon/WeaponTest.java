@@ -1,10 +1,87 @@
 package com.bags.simulacrum.Weapon;
 
+import com.bags.simulacrum.Damage.Damage;
+import com.bags.simulacrum.Damage.DamageSource;
+import com.bags.simulacrum.Damage.DamageType;
 import org.junit.Before;
+import org.junit.Test;
+
+import java.util.Collections;
+
+import static org.junit.Assert.assertEquals;
 
 public class WeaponTest {
 
+    private Weapon subject;
+
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
+        subject = new Weapon();
     }
+
+    @Test
+    public void itCanHaveSetterTestCoverage() {
+        subject.setName("Ignis");
+        subject.setTriggerType(Weapon.TriggerType.CHARGE);
+        subject.setFireRate(1.25);
+        subject.setAccuracy(1.25);
+        subject.setMagazineSize(1);
+        subject.setReloadTime(1.25);
+        subject.setDamageSources(Collections.singletonList(new DamageSource()));
+        subject.setMultishot(1.25);
+        subject.setCriticalChance(1.25);
+        subject.setCriticalDamage(1.25);
+        subject.setStatusChance(1.25);
+        subject.setHeadshotMultiplier(1.25);
+        subject.setAccuracyMultiplier(1.25);
+        subject.setChargeTime(1.25);
+        subject.setMinBonusDamageFromCharging(1.25);
+        subject.setMaxBonusDamageFromCharging(1.25);
+        subject.setMinChargePercentage(1.25);
+        subject.setMods(Collections.singletonList(new Mod()));
+        subject.setMaxAmmo(1);
+        subject.setMasteryRank(1);
+        subject.setSlot(Weapon.Slot.PRIMARY);
+        subject.setType(Weapon.WeaponType.BOW);
+        subject.setNoiseLevel(Weapon.NoiseLevel.SILENT);
+        subject.setRangeLimit(1.25);
+        subject.setDisposition(Weapon.Disposition.NEUTRAL);
+
+        assertEquals("Ignis", subject.getName());
+        assertEquals(1.25, subject.getFireRate(), 0.0);
+        assertEquals(1.25, subject.getAccuracy(), 0.0);
+        assertEquals(1.25, subject.getReloadTime(), 0.0);
+        assertEquals(1.25, subject.getMultishot(), 0.0);
+        assertEquals(1.25, subject.getCriticalChance(), 0.0);
+        assertEquals(1.25, subject.getCriticalDamage(), 0.0);
+        assertEquals(1.25, subject.getStatusChance(), 0.0);
+        assertEquals(1.25, subject.getHeadshotMultiplier(), 0.0);
+        assertEquals(1.25, subject.getAccuracyMultiplier(), 0.0);
+        assertEquals(1.25, subject.getChargeTime(), 0.0);
+        assertEquals(1.25, subject.getMinBonusDamageFromCharging(), 0.0);
+        assertEquals(1.25, subject.getMaxBonusDamageFromCharging(), 0.0);
+        assertEquals(1.25, subject.getMinChargePercentage(), 0.0);
+        assertEquals(1.25, subject.getRangeLimit(), 0.0);
+        assertEquals(1, subject.getMagazineSize());
+        assertEquals(1, subject.getMasteryRank());
+        assertEquals(1, subject.getMaxAmmo());
+        assertEquals(1, subject.getMods().size());
+        assertEquals(1, subject.getDamageSources().size());
+        assertEquals(Weapon.Slot.PRIMARY, subject.getSlot());
+        assertEquals(Weapon.WeaponType.BOW, subject.getType());
+        assertEquals(Weapon.NoiseLevel.SILENT, subject.getNoiseLevel());
+        assertEquals(Weapon.Disposition.NEUTRAL, subject.getDisposition());
+    }
+
+    @Test
+    public void itCanAddAModToWeapon() {
+        subject.addMod(new Mod(new Damage(DamageType.HEAT, 0.0, 0.75)));
+
+        assertEquals(1, subject.getMods().size());
+        assertEquals(DamageType.HEAT, subject.getMods().get(0).getDamage().getType());
+        assertEquals(0.75, subject.getMods().get(0).getDamage().getModAddedDamageRatio(), 0.0);
+        assertEquals(0.0, subject.getMods().get(0).getDamage().getDamageValue(), 0.0);
+    }
+
+
 }

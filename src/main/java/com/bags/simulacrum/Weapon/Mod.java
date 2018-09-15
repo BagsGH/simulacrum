@@ -20,13 +20,13 @@ public class Mod {
     private double criticalChanceIncrease;
     private double criticalDamageIncrease;
     private double statusChanceIncrease;
-    private double headshotMultiplierIncrease;
+    private double headshotMultiplierIncrease; //TODO: no mods increse this I believe, but check.
     private double damageIncrease;
     private Damage damage;
     private double multishotIncrease;
     private int index;
 
-    public enum Polarity {
+    public enum Polarity { //TODO: own class
         DASH,
         D,
         V,
