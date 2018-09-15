@@ -22,7 +22,7 @@ public class DamageCalculator {
         double armorReduction = !damagingShields ? 1 + ((getArmorAmount(targetArmor) * (1 - getArmorDamageMultiplier(targetArmor, damageType))) / ARMOR_CONSTANT) : 1.0;
         double finalDamageModifier = baseDamageModifiers / armorReduction;
 
-        return damage.getDamageValue() * finalDamageModifier;
+        return Math.round(damage.getDamageValue() * finalDamageModifier);
     }
 
     private double getArmorAmount(Health targetArmor) {
