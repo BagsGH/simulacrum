@@ -22,7 +22,6 @@ public class Engine {
     private WeaponModifier weaponModifier;
 
     public void start() {
-        weaponModifier = new WeaponModifier();
         Weapon ignisWraith = setupIgnis();
         Weapon opticor = setupOpticor();
         Weapon lenz = setupLenz();
