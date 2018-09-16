@@ -36,7 +36,7 @@ public class Helper {
                 targetShield.setHealthValue(0.0);
                 double percentDamageAppliedToShields = shieldValue / damageDealt;
                 Damage remainingDamage = new Damage(damage.getType(), Math.round(damage.getDamageValue() * (1 - percentDamageAppliedToShields)));
-                double healthDamageDealt = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, 0.0, remainingDamage, 1.0, 0, 1.0);
+                double healthDamageDealt = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, hitProperties.getHeadshotModifier(), remainingDamage, hitProperties.getWeaponCriticalDamageModifier(), hitProperties.getCritLevel(), hitProperties.getBodyPartModifier());
                 targetHealth.subtractHealthValue(healthDamageDealt);
             } else {
                 targetHealth.subtractHealthValue(damageDealt);
