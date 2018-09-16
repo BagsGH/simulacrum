@@ -57,11 +57,6 @@ public class Helper {
         return targetShield.getHealthValue() <= 0;
     }
 
-
-    private boolean isTargetCorpus(Target.Faction faction) {
-        return faction.equals(Target.Faction.CORPUS);
-    }
-
     private Health findArmor(List<Health> health) {
         return health.stream().filter(h -> HealthClass.isArmor(h.getHealthClass())).findFirst().orElse(null);
     }

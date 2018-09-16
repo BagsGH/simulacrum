@@ -24,7 +24,7 @@ public class DamageCalculator {
 
         double shieldMultiplier = damagingShields ? 1 + damageBonusMapper.getBonus(damageType, targetShield.getHealthClass()) : 1.0;
         double healthMultiplier = !damagingShields ? 1 + damageBonusMapper.getBonus(damageType, baseHealth.getHealthClass()) : 1.0;
-        double headCritModifier = calculateHeadshotAndCriticalModifier(hitProperties.getCritLevel(), hitProperties.getHeadshotModifier(), hitProperties.getWeaponCriticalDamageModifier());
+        double headCritModifier = calculateHeadshotAndCriticalModifier(hitProperties.getCritLevel(), hitProperties.getHeadshotModifier(), hitProperties.getCriticalDamageModifier());
 
         double baseDamageModifiers = headCritModifier * shieldMultiplier * healthMultiplier * hitProperties.getBodyPartModifier();
         double armorReduction = !damagingShields ? 1 + ((getArmorAmount(targetArmor) * (1 - getArmorDamageMultiplier(targetArmor, damageType))) / ARMOR_CONSTANT) : 1.0;

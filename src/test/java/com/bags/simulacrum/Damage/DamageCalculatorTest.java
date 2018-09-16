@@ -31,12 +31,7 @@ public class DamageCalculatorTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        fakeDamage = new Damage(DamageType.HEAT, 50.0);
-        fakeHealth = new Health(HealthClass.MACHINERY, 200.0);
-        fakeArmor = new Health(HealthClass.FERRITE, 300.0);
-        fakeNoArmor = new Health(HealthClass.FERRITE, 0.0);
-        fakeShield = new Health(HealthClass.PROTO_SHIELD, 200.0);
-        fakeNoShield = new Health(HealthClass.PROTO_SHIELD, 0.0);
+        setupDefaultFakeHealth();
         setupDamageBonusMapperMocks();
         fakeHitProperties = new HitProperties(0, 0.0, 0.0, 1.0);
     }
@@ -395,5 +390,14 @@ public class DamageCalculatorTest {
         when(damageBonusMapperMock.getBonus(DamageType.GAS, HealthClass.INFESTED_FLESH)).thenReturn(0.50);
         when(damageBonusMapperMock.getBonus(DamageType.PUNCTURE, HealthClass.SINEW)).thenReturn(0.25);
         when(damageBonusMapperMock.getBonus(DamageType.PUNCTURE, HealthClass.FERRITE)).thenReturn(0.50);
+    }
+
+    private void setupDefaultFakeHealth() {
+        fakeDamage = new Damage(DamageType.HEAT, 50.0);
+        fakeHealth = new Health(HealthClass.MACHINERY, 200.0);
+        fakeArmor = new Health(HealthClass.FERRITE, 300.0);
+        fakeNoArmor = new Health(HealthClass.FERRITE, 0.0);
+        fakeShield = new Health(HealthClass.PROTO_SHIELD, 200.0);
+        fakeNoShield = new Health(HealthClass.PROTO_SHIELD, 0.0);
     }
 }

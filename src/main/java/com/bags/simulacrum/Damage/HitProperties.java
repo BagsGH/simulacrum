@@ -5,13 +5,13 @@ import lombok.Data;
 @Data
 public class HitProperties {
 
-    private double weaponCriticalDamageModifier;
+    private double criticalDamageModifier;
     private double headshotModifier;
     private int critLevel;
     private double bodyPartModifier;
 
-    public HitProperties(int critLevel, double weaponCriticalDamageModifier, double headshotModifier, double bodyPartModifier) {
-        this.weaponCriticalDamageModifier = weaponCriticalDamageModifier;
+    public HitProperties(int critLevel, double criticalDamageModifier, double headshotModifier, double bodyPartModifier) {
+        this.criticalDamageModifier = criticalDamageModifier;
         this.headshotModifier = headshotModifier;
         this.critLevel = critLevel;
         this.bodyPartModifier = bodyPartModifier;
