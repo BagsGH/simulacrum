@@ -4,8 +4,8 @@ import com.bags.simulacrum.Damage.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,13 +14,14 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 public class DamageModHelperTest {
 
     @InjectMocks
     private DamageModHelper subject;
 
-    @Spy
+    @Mock
     private ElementalDamageMapper elementalDamageMapperMock;
 
     private Mod fakeMod;
@@ -33,6 +34,8 @@ public class DamageModHelperTest {
         fakeMod = new Mod();
         anotherFakeMod = new Mod();
         fakeModList = new ArrayList<>();
+        when(elementalDamageMapperMock.combineElements(DamageType.HEAT, DamageType.TOXIN)).thenReturn(DamageType.GAS);
+        when(elementalDamageMapperMock.combineElements(DamageType.TOXIN, DamageType.HEAT)).thenReturn(DamageType.GAS);
     }
 
     @Test
@@ -190,6 +193,9 @@ public class DamageModHelperTest {
         anotherFakeMod.setDamage(new Damage(DamageType.HEAT, 0.0, 0.50));
         fakeModList.add(fakeMod);
         fakeModList.add(anotherFakeMod);
+        when(elementalDamageMapperMock.combineElements(DamageType.ELECTRICITY, DamageType.HEAT)).thenReturn(DamageType.RADIATION);
+        when(elementalDamageMapperMock.combineElements(DamageType.HEAT, DamageType.ELECTRICITY)).thenReturn(DamageType.RADIATION);
+
 
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 

@@ -6,17 +6,18 @@ import com.bags.simulacrum.Armor.HealthClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 public class DamageCalculatorTest {
 
     @InjectMocks
     private DamageCalculator subject;
 
-    @Spy
+    @Mock
     private DamageBonusMapper damageBonusMapperMock;
 
     private Damage fakeDamage;
@@ -31,6 +32,7 @@ public class DamageCalculatorTest {
         fakeHealth = new Health(HealthClass.MACHINERY, 200.0);
         fakeArmor = new Health(HealthClass.FERRITE, 300.0);
         fakeShield = new Health(HealthClass.PROTO_SHIELD, 200.0);
+        setupDamageBonusMapperMocks();
     }
 
     @Test
@@ -64,6 +66,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateGasDamageIgnoringShields() {
+        when(damageBonusMapperMock.getBonus(HealthClass.INFESTED_FLESH, DamageType.GAS)).thenReturn(0.50);
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         fakeDamage.setType(DamageType.GAS);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, null, 0.0, fakeDamage, 0.0, 0, 1.0);
@@ -81,6 +84,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithANegativeBonusAgainstHealthClass() {
+        when(damageBonusMapperMock.getBonus(HealthClass.MACHINERY, DamageType.VOID)).thenReturn(-0.50);
         fakeDamage.setType(DamageType.VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, null, null, 0.0, fakeDamage, 0.0, 0, 1.0);
 
@@ -342,4 +346,14 @@ public class DamageCalculatorTest {
         assertEquals(25.0, actualDamage, 0.0);
     }
 
+    private void setupDamageBonusMapperMocks() {
+        when(damageBonusMapperMock.getBonus(HealthClass.MACHINERY, DamageType.HEAT)).thenReturn(0.0);
+        when(damageBonusMapperMock.getBonus(HealthClass.MACHINERY, DamageType.VOID)).thenReturn(-0.50);
+        when(damageBonusMapperMock.getBonus(HealthClass.PROTO_SHIELD, DamageType.HEAT)).thenReturn(-0.50);
+        when(damageBonusMapperMock.getBonus(HealthClass.PROTO_SHIELD, DamageType.PUNCTURE)).thenReturn(-0.50);
+        when(damageBonusMapperMock.getBonus(HealthClass.INFESTED_FLESH, DamageType.HEAT)).thenReturn(0.50);
+        when(damageBonusMapperMock.getBonus(HealthClass.INFESTED_FLESH, DamageType.GAS)).thenReturn(0.50);
+        when(damageBonusMapperMock.getBonus(HealthClass.SINEW, DamageType.PUNCTURE)).thenReturn(0.25);
+        when(damageBonusMapperMock.getBonus(HealthClass.FERRITE, DamageType.PUNCTURE)).thenReturn(0.50);
+    }
 }
