@@ -5,13 +5,13 @@ import lombok.Data;
 @Data
 public class Health {
 
-    private double valueMax;
-    private double value;
+    private double healthValueMax;
+    private double healthValue;
     private HealthClass healthClass;
 
-    public Health(HealthClass hc, double value) {
-        this.valueMax = value;
-        this.value = value;
+    public Health(HealthClass hc, double healthValue) {
+        this.healthValueMax = healthValue;
+        this.healthValue = healthValue;
         this.healthClass = hc;
     }
 }

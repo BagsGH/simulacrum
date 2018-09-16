@@ -19,7 +19,7 @@ public class DamageCalculator {
     }
 
     public double calculateDamage(Health baseHealth, Health targetShield, Health targetArmor, double targetHeadshotMultiplier, Damage damage, double weaponCriticalDamageMultiplier, int critLevel, double bodyPartModifier) {
-        double targetShieldValue = targetShield != null ? targetShield.getValue() : 0.0;
+        double targetShieldValue = targetShield != null ? targetShield.getHealthValue() : 0.0;
         DamageType damageType = damage.getType();
         boolean damagingShields = damagingShields(targetShield, targetShieldValue, damageType);
 
@@ -35,7 +35,7 @@ public class DamageCalculator {
     }
 
     private double getArmorAmount(Health targetArmor) {
-        return targetArmor != null ? targetArmor.getValue() : 0.0;
+        return targetArmor != null ? targetArmor.getHealthValue() : 0.0;
     }
 
     private double getArmorDamageMultiplier(Health targetArmor, DamageType damageType) {
