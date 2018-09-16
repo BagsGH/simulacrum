@@ -95,7 +95,7 @@ public class HelperTest {
         fakeHeadshotMultiplier = 0.0;
         fakeCritLevel = 1;
         fakeBodyPartModifier = 1.0;
-        fakeHitProperties = new HitProperties(fakeWeaponCriticalDamageModifier, fakeHeadshotMultiplier, fakeCritLevel, fakeBodyPartModifier);
+        fakeHitProperties = new HitProperties(fakeCritLevel, fakeWeaponCriticalDamageModifier, fakeHeadshotMultiplier, fakeBodyPartModifier);
     }
 
     private void setupDefaultFakeDamageSource() {

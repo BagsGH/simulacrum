@@ -10,7 +10,7 @@ public class HitProperties {
     private int critLevel;
     private double bodyPartModifier;
 
-    public HitProperties(double weaponCriticalDamageModifier, double headshotModifier, int critLevel, double bodyPartModifier) {
+    public HitProperties(int critLevel, double weaponCriticalDamageModifier, double headshotModifier, double bodyPartModifier) {
         this.weaponCriticalDamageModifier = weaponCriticalDamageModifier;
         this.headshotModifier = headshotModifier;
         this.critLevel = critLevel;
