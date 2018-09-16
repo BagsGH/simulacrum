@@ -18,8 +18,7 @@ public class Helper {
         this.damageCalculator = damageCalculator;
     }
 
-    //TODO: make this work on one Damage. or the damage source?
-    public Target applyDamageSourceDamageToTarget(DamageSource damageSource, HitProperties hitProperties, Target target) { //TODO: add shot properties for headshot, body shot, etc
+    public Target applyDamageSourceDamageToTarget(DamageSource damageSource, HitProperties hitProperties, Target target) {
         //TODO: calculate metrics to pass to the caller to track total damage, etc.
         List<Health> targetHealthClasses = target.getHealth();
         Health targetHealth = findBaseHealth(targetHealthClasses);
@@ -27,7 +26,7 @@ public class Helper {
         Health targetArmor = findArmor(targetHealthClasses);
 
         for (Damage damage : damageSource.getDamages()) {
-            double damageDealt = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, hitProperties.getHeadshotModifier(), damage, hitProperties.getWeaponCriticalDamageModifier(), hitProperties.getCritLevel(), hitProperties.getBodyPartModifier()); //TODO: make modifier params more consistent. Some are 1.0 for no bonus, some are 0.0.
+            double damageDealt = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, damage, hitProperties); //TODO: make modifier params more consistent. Some are 1.0 for no bonus, some are 0.0.
 
             if (targetHasNoShields(targetShield)) {
                 targetHealth.subtractHealthValue(damageDealt);
@@ -38,7 +37,7 @@ public class Helper {
                 targetShield.setHealthValue(0.0);
                 double percentDamageAppliedToShields = shieldValue / damageDealt;
                 Damage remainingDamage = new Damage(damage.getType(), Math.round(damage.getDamageValue() * (1 - percentDamageAppliedToShields)));
-                double healthDamageDealt = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, hitProperties.getHeadshotModifier(), remainingDamage, hitProperties.getWeaponCriticalDamageModifier(), hitProperties.getCritLevel(), hitProperties.getBodyPartModifier());
+                double healthDamageDealt = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, remainingDamage, hitProperties);
                 targetHealth.subtractHealthValue(healthDamageDealt);
             }
         }

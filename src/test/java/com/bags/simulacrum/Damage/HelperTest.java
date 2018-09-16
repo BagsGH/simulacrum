@@ -45,7 +45,7 @@ public class HelperTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        when(damageCalculatorMock.calculateDamage(any(Health.class), any(Health.class), any(Health.class), anyDouble(), any(Damage.class), anyDouble(), anyInt(), anyDouble())).thenReturn(50.0);
+        when(damageCalculatorMock.calculateDamage(any(Health.class), any(Health.class), any(Health.class), any(Damage.class), any(HitProperties.class))).thenReturn(50.0);
 
         setupDefaultFakeDamageSource();
         setupDefaultFakeTarget();
@@ -61,7 +61,7 @@ public class HelperTest {
         Target modifiedFakeTarget = subject.applyDamageSourceDamageToTarget(fakeDamageSource, fakeHitProperties, fakeTarget);
 
         assertExpectedHealthExists(modifiedFakeTarget.getHealth(), new Health(HealthClass.SHIELD, 150.0), 0.0);
-        verify(damageCalculatorMock).calculateDamage(eq(fakeHealth), eq(fakeShield), eq(fakeArmor), eq(fakeHeadshotMultiplier), eq(fakeDamage), eq(fakeWeaponCriticalDamageModifier), eq(fakeCritLevel), eq(fakeBodyPartModifier));
+        verify(damageCalculatorMock).calculateDamage(eq(fakeHealth), eq(fakeShield), eq(fakeArmor), eq(fakeDamage), eq(fakeHitProperties));
     }
 
     @Test
@@ -69,7 +69,7 @@ public class HelperTest {
         fakeTarget = new Target();
         fakeHealth = new Health(HealthClass.MACHINERY, 200.0);
         fakeTarget.setHealth(Arrays.asList(fakeHealth, new Health(HealthClass.SHIELD, 0.0), new Health(HealthClass.ALLOY, 0.0)));
-        when(damageCalculatorMock.calculateDamage(any(Health.class), argThat(deadShieldsMatcher), argThat(deadArmorMatcher), anyDouble(), any(Damage.class), anyDouble(), anyInt(), anyDouble())).thenReturn(50.0); //TODO: expecting null, or an HealthShield=0?
+        when(damageCalculatorMock.calculateDamage(any(Health.class), argThat(deadShieldsMatcher), argThat(deadArmorMatcher), any(Damage.class), any(HitProperties.class))).thenReturn(50.0); //TODO: expecting null, or an HealthShield=0?
 
         Target modifiedFakeTarget = subject.applyDamageSourceDamageToTarget(fakeDamageSource, fakeHitProperties, fakeTarget);
 
@@ -80,8 +80,8 @@ public class HelperTest {
     public void itCanApplyDamageToShieldsAndHealth() {
 
         ArgumentCaptor<Damage> damageCaptor = ArgumentCaptor.forClass(Damage.class);
-        when(damageCalculatorMock.calculateDamage(eq(fakeHealth), argThat(startingShieldMatcher), eq(fakeArmor), eq(fakeHeadshotMultiplier), eq(fakeDamage), eq(fakeWeaponCriticalDamageModifier), eq(fakeCritLevel), eq(fakeBodyPartModifier))).thenReturn(250.0);
-        when(damageCalculatorMock.calculateDamage(eq(fakeHealth), argThat(deadShieldsMatcher), eq(fakeArmor), eq(fakeHeadshotMultiplier), damageCaptor.capture(), eq(fakeWeaponCriticalDamageModifier), eq(fakeCritLevel), eq(fakeBodyPartModifier))).thenReturn(50.0);
+        when(damageCalculatorMock.calculateDamage(eq(fakeHealth), argThat(startingShieldMatcher), eq(fakeArmor), eq(fakeDamage), eq(fakeHitProperties))).thenReturn(250.0);
+        when(damageCalculatorMock.calculateDamage(eq(fakeHealth), argThat(deadShieldsMatcher), eq(fakeArmor), damageCaptor.capture(), eq(fakeHitProperties))).thenReturn(50.0);
 
         Target modifiedFakeTarget = subject.applyDamageSourceDamageToTarget(fakeDamageSource, fakeHitProperties, fakeTarget);
 
