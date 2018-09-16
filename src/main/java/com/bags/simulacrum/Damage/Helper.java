@@ -33,16 +33,27 @@ public class Helper {
             } else if (damageLessThanTargetShields(targetShield, damageDealt)) {
                 targetShield.subtractHealthValue(damageDealt);
             } else if (damageMoreThanTargetShields(targetShield, damageDealt)) {
-                double shieldValue = targetShield.getHealthValue();
-                targetShield.setHealthValue(0.0);
-                double percentDamageAppliedToShields = shieldValue / damageDealt;
-                Damage remainingDamage = new Damage(damage.getType(), Math.round(damage.getDamageValue() * (1 - percentDamageAppliedToShields)));
-                double healthDamageDealt = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, remainingDamage, hitProperties);
-                targetHealth.subtractHealthValue(healthDamageDealt);
+                handleShieldDamageSpillover(hitProperties, targetHealth, targetShield, targetArmor, damage, damageDealt);
             }
         }
 
         return target;
+    }
+
+    private Health findBaseHealth(List<Health> health) {
+        return health.stream().filter(h -> !HealthClass.isArmor(h.getHealthClass()) && !HealthClass.isShield(h.getHealthClass())).findFirst().orElse(null);
+    }
+
+    private Health findShields(List<Health> health) {
+        return health.stream().filter(hc -> HealthClass.isShield(hc.getHealthClass())).findFirst().orElse(null);
+    }
+
+    private Health findArmor(List<Health> health) {
+        return health.stream().filter(h -> HealthClass.isArmor(h.getHealthClass())).findFirst().orElse(null);
+    }
+
+    private boolean targetHasNoShields(Health targetShield) {
+        return targetShield.getHealthValue() <= 0;
     }
 
     private boolean damageLessThanTargetShields(Health targetShield, double damageDealt) {
@@ -53,19 +64,12 @@ public class Helper {
         return targetShield.getHealthValue() > 0 && damageDealt > targetShield.getHealthValue();
     }
 
-    private boolean targetHasNoShields(Health targetShield) {
-        return targetShield.getHealthValue() <= 0;
-    }
-
-    private Health findArmor(List<Health> health) {
-        return health.stream().filter(h -> HealthClass.isArmor(h.getHealthClass())).findFirst().orElse(null);
-    }
-
-    private Health findShields(List<Health> health) {
-        return health.stream().filter(hc -> HealthClass.isShield(hc.getHealthClass())).findFirst().orElse(null);
-    }
-
-    private Health findBaseHealth(List<Health> health) {
-        return health.stream().filter(h -> !HealthClass.isArmor(h.getHealthClass()) && !HealthClass.isShield(h.getHealthClass())).findFirst().orElse(null);
+    private void handleShieldDamageSpillover(HitProperties hitProperties, Health targetHealth, Health targetShield, Health targetArmor, Damage damage, double damageDealt) {
+        double shieldValue = targetShield.getHealthValue();
+        targetShield.setHealthValue(0.0);
+        double percentSpilloverDamage = 1 - (shieldValue / damageDealt);
+        Damage remainingDamage = new Damage(damage.getType(), Math.round(damage.getDamageValue() * percentSpilloverDamage));
+        double healthDamageDealt = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, remainingDamage, hitProperties);
+        targetHealth.subtractHealthValue(healthDamageDealt);
     }
 }
