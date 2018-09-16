@@ -29,21 +29,33 @@ public class Helper {
         for (Damage damage : damageSource.getDamages()) {
             double damageDealt = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, hitProperties.getHeadshotModifier(), damage, hitProperties.getWeaponCriticalDamageModifier(), hitProperties.getCritLevel(), hitProperties.getBodyPartModifier()); //TODO: make modifier params more consistent. Some are 1.0 for no bonus, some are 0.0.
 
-            if (targetShield != null && targetShield.getHealthValue() > damageDealt) {
+            if (targetHasNoShields(targetShield)) {
+                targetHealth.subtractHealthValue(damageDealt);
+            } else if (damageLessThanTargetShields(targetShield, damageDealt)) {
                 targetShield.subtractHealthValue(damageDealt);
-            } else if (targetShield != null && targetShield.getHealthValue() > 0 && damageDealt > targetShield.getHealthValue()) {
+            } else if (damageMoreThanTargetShields(targetShield, damageDealt)) {
                 double shieldValue = targetShield.getHealthValue();
                 targetShield.setHealthValue(0.0);
                 double percentDamageAppliedToShields = shieldValue / damageDealt;
                 Damage remainingDamage = new Damage(damage.getType(), Math.round(damage.getDamageValue() * (1 - percentDamageAppliedToShields)));
                 double healthDamageDealt = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, hitProperties.getHeadshotModifier(), remainingDamage, hitProperties.getWeaponCriticalDamageModifier(), hitProperties.getCritLevel(), hitProperties.getBodyPartModifier());
                 targetHealth.subtractHealthValue(healthDamageDealt);
-            } else {
-                targetHealth.subtractHealthValue(damageDealt);
             }
         }
 
         return target;
+    }
+
+    private boolean damageLessThanTargetShields(Health targetShield, double damageDealt) {
+        return targetShield.getHealthValue() > damageDealt;
+    }
+
+    private boolean damageMoreThanTargetShields(Health targetShield, double damageDealt) {
+        return targetShield.getHealthValue() > 0 && damageDealt > targetShield.getHealthValue();
+    }
+
+    private boolean targetHasNoShields(Health targetShield) {
+        return targetShield.getHealthValue() <= 0;
     }
 
 
