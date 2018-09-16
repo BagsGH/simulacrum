@@ -23,8 +23,8 @@ public class DamageCalculator {
         DamageType damageType = damage.getType();
         boolean damagingShields = damagingShields(targetShield, targetShieldValue, damageType);
 
-        double shieldMultiplier = damagingShields ? 1 + damageBonusMapper.getBonus(targetShield.getHealthClass(), damageType) : 1.0;
-        double healthMultiplier = !damagingShields /*damagingHealth(baseHealth, targetShieldValue, damageType)*/ ? 1 + damageBonusMapper.getBonus(baseHealth.getHealthClass(), damageType) : 1.0;
+        double shieldMultiplier = damagingShields ? 1 + damageBonusMapper.getBonus(damageType, targetShield.getHealthClass()) : 1.0;
+        double healthMultiplier = !damagingShields /*damagingHealth(baseHealth, targetShieldValue, damageType)*/ ? 1 + damageBonusMapper.getBonus(damageType, baseHealth.getHealthClass()) : 1.0;
         double headCritModifier = calculateHeadshotAndCriticalModifier(critLevel, targetHeadshotMultiplier, weaponCriticalDamageMultiplier);
 
         double baseDamageModifiers = headCritModifier * shieldMultiplier * healthMultiplier * bodyPartModifier;
@@ -39,7 +39,7 @@ public class DamageCalculator {
     }
 
     private double getArmorDamageMultiplier(Health targetArmor, DamageType damageType) {
-        return targetArmor != null ? damageBonusMapper.getBonus(targetArmor.getHealthClass(), damageType) : 0.0;
+        return targetArmor != null ? damageBonusMapper.getBonus(damageType, targetArmor.getHealthClass()) : 0.0;
     }
 
     private double calculateHeadshotAndCriticalModifier(int critLevel, double targetHeadshotMultiplier, double weaponCriticalDamageMultiplier) {

@@ -20,7 +20,7 @@ public class DamageBonusMapperTest {
         HealthClass healthClass = HealthClass.MACHINERY;
         DamageType damageType = DamageType.BLAST;
 
-        double bonus = damageBonusMapper.getBonus(healthClass, damageType);
+        double bonus = damageBonusMapper.getBonus(damageType, healthClass);
 
         assertEquals(0.75, bonus, .001);
     }
@@ -30,7 +30,7 @@ public class DamageBonusMapperTest {
         HealthClass healthClass = HealthClass.SHIELD;
         DamageType damageType = DamageType.RADIATION;
 
-        double bonus = damageBonusMapper.getBonus(healthClass, damageType);
+        double bonus = damageBonusMapper.getBonus(damageType, healthClass);
 
         assertEquals(-0.25, bonus, .001);
     }
@@ -40,7 +40,7 @@ public class DamageBonusMapperTest {
         HealthClass healthClass = HealthClass.ALLOY;
         DamageType damageType = DamageType.MAGNETIC;
 
-        double bonus = damageBonusMapper.getBonus(healthClass, damageType);
+        double bonus = damageBonusMapper.getBonus(damageType, healthClass);
 
         assertEquals(-0.50, bonus, .001);
     }
