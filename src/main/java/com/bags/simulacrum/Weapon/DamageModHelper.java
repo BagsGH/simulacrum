@@ -48,8 +48,8 @@ public class DamageModHelper {
         double rawDamageIncrease = originalWeaponMods.stream().filter(mod -> mod.getDamageIncrease() != 0).mapToDouble(Mod::getDamageIncrease).sum();
 
         List<Damage> moddedBaseDamagesFromSource = new ArrayList<>();
-        damagesFromSource.forEach(damageSource -> {
-            moddedBaseDamagesFromSource.add(new Damage(damageSource.getType(), damageSource.getDamageValue() * (1 + rawDamageIncrease)));
+        damagesFromSource.forEach(damage -> {
+            moddedBaseDamagesFromSource.add(new Damage(damage.getType(), damage.getDamageValue() * (1 + rawDamageIncrease)));
         });
         return moddedBaseDamagesFromSource;
     }
@@ -64,8 +64,8 @@ public class DamageModHelper {
         populateIPSDamageIncreaseMap(ipsDamageIncreaseMap);
 
         for (Damage damage : baseDamagesAfterRawDamageMods) {
-            if (DamageType.isIPS(damage.getType())) {
-                DamageType damageType = damage.getType();
+            DamageType damageType = damage.getType();
+            if (DamageType.isIPS(damageType)) {
                 ipsDamages.add(new Damage(damageType, damage.getDamageValue() * (1 + ipsDamageIncreaseMap.get(damageType)), 0.0));
             }
         }
@@ -189,7 +189,8 @@ public class DamageModHelper {
     }
 
     private List<Damage> mergeElementalAndIPS(List<Damage> combinedElementalDamages, List<Damage> moddedIPSDamages) {
-        List<Damage> finalDamagesList = new ArrayList<>(combinedElementalDamages);
+        List<Damage> finalDamagesList = new ArrayList<>();
+        finalDamagesList.addAll(combinedElementalDamages);
         finalDamagesList.addAll(moddedIPSDamages);
 
         return finalDamagesList;
