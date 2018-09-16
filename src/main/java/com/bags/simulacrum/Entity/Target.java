@@ -27,11 +27,11 @@ public class Target {
         this.health.add(health);
     }
 
-//    public enum Faction {
-//        GRINEER,
-//        CORPUS,
-//        INFESTED
-//    }
+    public enum Faction {
+        GRINEER,
+        CORPUS,
+        INFESTED
+    }
 //
 //    public enum TargetType {
 //        RANGED,

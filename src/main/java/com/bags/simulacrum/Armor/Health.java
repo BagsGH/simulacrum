@@ -14,4 +14,8 @@ public class Health {
         this.healthValue = healthValue;
         this.healthClass = hc;
     }
+
+    public void subtractHealthValue(double value) {
+        healthValue = healthValue - value;
+    }
 }
