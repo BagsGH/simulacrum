@@ -26,7 +26,7 @@ public class DamageCalculator {
         double healthMultiplier = !damagingShields ? 1 + damageBonusMapper.getBonus(damageType, baseHealth.getHealthClass()) : 1.0;
         double headCritModifier = calculateHeadshotAndCriticalModifier(hitProperties.getCritLevel(), hitProperties.getHeadshotModifier(), hitProperties.getCriticalDamageModifier());
 
-        double baseDamageModifiers = headCritModifier * shieldMultiplier * healthMultiplier * hitProperties.getBodyPartModifier();
+        double baseDamageModifiers = headCritModifier * shieldMultiplier * healthMultiplier * (1 + hitProperties.getBodyPartModifier());
         double armorReduction = !damagingShields ? 1 + ((getArmorAmount(targetArmor) * (1 - getArmorDamageMultiplier(targetArmor, damageType))) / ARMOR_CONSTANT) : 1.0;
         double finalDamageModifier = baseDamageModifiers / armorReduction;
 
@@ -64,20 +64,4 @@ public class DamageCalculator {
         return targetShield != null && targetShieldValue > 0 && !damageType.equals(DamageType.GAS);
     }
 
-    //TODO: Caller can use these.
-//    private boolean isTargetCorpus(Target.Faction faction) {
-//        return faction.equals(Target.Faction.CORPUS);
-//    }
-//
-//    private Health findArmor(List<Health> health) {
-//        return health.stream().filter(h -> HealthClass.isArmor(h.getHealthClass())).findFirst().orElse(null);
-//    }
-//
-//    private Health findShields(List<Health> health) {
-//        return health.stream().filter(hc -> HealthClass.isShield(hc.getHealthClass())).findFirst().orElse(null);
-//    }
-//
-//    private Health findBaseHealth(List<Health> health) {
-//        return health.stream().filter(h -> !HealthClass.isArmor(h.getHealthClass()) && !HealthClass.isShield(h.getHealthClass())).findFirst().orElse(null);
-//    }
 }

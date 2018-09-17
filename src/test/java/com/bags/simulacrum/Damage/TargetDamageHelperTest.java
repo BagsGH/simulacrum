@@ -16,10 +16,10 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class HelperTest {
+public class TargetDamageHelperTest {
 
     @InjectMocks
-    private Helper subject;
+    private TargetDamageHelper subject;
 
     @Mock
     private DamageCalculator damageCalculatorMock;

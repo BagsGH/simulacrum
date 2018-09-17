@@ -9,12 +9,12 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class Helper {
+public class TargetDamageHelper {
 
     private final DamageCalculator damageCalculator;
 
     @Autowired
-    public Helper(DamageCalculator damageCalculator) {
+    public TargetDamageHelper(DamageCalculator damageCalculator) {
         this.damageCalculator = damageCalculator;
     }
 
@@ -69,7 +69,7 @@ public class Helper {
         targetShield.setHealthValue(0.0);
         double percentSpilloverDamage = 1 - (shieldValue / damageDealt);
         Damage remainingDamage = new Damage(damage.getType(), Math.round(damage.getDamageValue() * percentSpilloverDamage));
-        double healthDamageDealt = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, remainingDamage, hitProperties);
-        targetHealth.subtractHealthValue(healthDamageDealt);
+        double damageDoneToHealth = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, remainingDamage, hitProperties);
+        targetHealth.subtractHealthValue(damageDoneToHealth);
     }
 }

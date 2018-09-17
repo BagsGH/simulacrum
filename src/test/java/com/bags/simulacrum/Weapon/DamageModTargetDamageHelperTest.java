@@ -16,7 +16,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-public class DamageModHelperTest {
+public class DamageModTargetDamageHelperTest {
 
     @InjectMocks
     private DamageModHelper subject;

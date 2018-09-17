@@ -33,7 +33,7 @@ public class DamageCalculatorTest {
         MockitoAnnotations.initMocks(this);
         setupDefaultFakeHealth();
         setupDamageBonusMapperMocks();
-        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
     }
 
     @Test
@@ -45,7 +45,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithBodyPartModifier() {
-        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 3.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 2.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(150.0, actualDamage, 0.0);
@@ -53,7 +53,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithBodyPartModifier_Shield() {
-        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 2.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 1.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(50.0, actualDamage, 0.0);
@@ -94,7 +94,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithAHeadshot() {
-        fakeHitProperties = new HitProperties(0, 0.0, 2.0, 1.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 2.0, 0.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(100.0, actualDamage, 0.0);
@@ -102,7 +102,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithAPositiveBonusAgainstHealthClassWithAHeadshot() {
-        fakeHitProperties = new HitProperties(0, 0.0, 3.0, 1.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 3.0, 0.0);
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
@@ -112,7 +112,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithAPositiveBonusAgainstHealthClassWithACriticalHeadshot() {
-        fakeHitProperties = new HitProperties(1, 3.0, 3.0, 1.0);
+        fakeHitProperties = new HitProperties(1, 3.0, 3.0, 0.0);
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
@@ -121,7 +121,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithANegativeBonusAgainstHealthClassWithAHeadshot() {
-        fakeHitProperties = new HitProperties(0, 0.0, 3.0, 1.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 3.0, 0.0);
         fakeDamage.setType(DamageType.VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
@@ -130,7 +130,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithANegativeBonusAgainstHealthClassWithACriticalHeadshot() {
-        fakeHitProperties = new HitProperties(1, 3.0, 3.0, 1.0);
+        fakeHitProperties = new HitProperties(1, 3.0, 3.0, 0.0);
         fakeDamage.setType(DamageType.VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
@@ -139,7 +139,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithACritical() {
-        fakeHitProperties = new HitProperties(1, 2.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(1, 2.0, 0.0, 0.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(100.0, actualDamage, 0.0);
@@ -147,7 +147,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithALevel2Critical() {
-        fakeHitProperties = new HitProperties(2, 2.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(2, 2.0, 0.0, 0.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(150.0, actualDamage, 0.0);
@@ -155,7 +155,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithALevel5Critical() {
-        fakeHitProperties = new HitProperties(5, 2.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(5, 2.0, 0.0, 0.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(300.0, actualDamage, 0.0);
@@ -163,7 +163,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithACriticalAndBodyPartModifier() {
-        fakeHitProperties = new HitProperties(1, 2.0, 0.0, 3.0);
+        fakeHitProperties = new HitProperties(1, 2.0, 0.0, 2.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(300.0, actualDamage, 0.0);
@@ -171,7 +171,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithACriticalHeadshot() {
-        fakeHitProperties = new HitProperties(1, 2.0, 2.0, 1.0);
+        fakeHitProperties = new HitProperties(1, 2.0, 2.0, 0.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(400.0, actualDamage, 0.0);
@@ -179,7 +179,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithALevel2CriticalHeadshot() {
-        fakeHitProperties = new HitProperties(2, 2.0, 2.0, 1.0);
+        fakeHitProperties = new HitProperties(2, 2.0, 2.0, 0.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(600.0, actualDamage, 0.0);
@@ -187,7 +187,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithAPositiveBonusAgainstHealthClassWithACritical() {
-        fakeHitProperties = new HitProperties(1, 2.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(1, 2.0, 0.0, 0.0);
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
@@ -196,7 +196,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithNoModifiers_Armor() {
-        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(25.0, actualDamage, 0.0);
@@ -204,7 +204,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithBodyPartModifier_Armor() {
-        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 3.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 2.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(75.0, actualDamage, 0.0);
@@ -213,7 +213,7 @@ public class DamageCalculatorTest {
     @Test
     public void itCanCalculateDamageWithBodyPartModifier_Shield_Armor() {
         /* Because of the shields, armor is not taken into account. So we have a 2x modifier from the body part, but 50% reduction from the shield type, so it's still 50.0. */
-        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 2.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 1.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(50.0, actualDamage, 0.0);
@@ -222,7 +222,7 @@ public class DamageCalculatorTest {
     @Test
     public void itCanCalculateDamage_Shield_Armor() {
         /* Because there are shields, there is no 50% bonus against Infested_Flesh, but there is no 50% reduction from the armor either. Simply a 50% reduction from Heat vs. Proto Shields. */
-        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, fakeArmor, fakeDamage, fakeHitProperties);
 
@@ -232,7 +232,7 @@ public class DamageCalculatorTest {
     @Test
     public void itCanCalculateGasDamageIgnoringShields_Armor() {
         /* Gas has a 50% bonus against Infested Flesh, ignores shields, but there is a 50% reduction from the armor. */
-        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         fakeDamage.setType(DamageType.GAS);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, fakeArmor, fakeDamage, fakeHitProperties);
@@ -242,7 +242,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithAPositiveBonusAgainstHealthClass_Armor() {
-        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
@@ -251,7 +251,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithANegativeBonusAgainstHealthClass_Armor() {
-        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         fakeDamage.setType(DamageType.VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
@@ -260,7 +260,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithAHeadshot_Armor() {
-        fakeHitProperties = new HitProperties(0, 0.0, 2.0, 1.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 2.0, 0.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(50.0, actualDamage, 0.0);
@@ -268,7 +268,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithAPositiveBonusAgainstHealthClassWithAHeadshot_Armor() {
-        fakeHitProperties = new HitProperties(0, 0.0, 3.0, 1.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 3.0, 0.0);
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
@@ -277,7 +277,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithAPositiveBonusAgainstHealthClassWithACriticalHeadshot_Armor() {
-        fakeHitProperties = new HitProperties(1, 3.0, 3.0, 1.0);
+        fakeHitProperties = new HitProperties(1, 3.0, 3.0, 0.0);
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
@@ -286,7 +286,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithANegativeBonusAgainstHealthClassWithAHeadshot_Armor() {
-        fakeHitProperties = new HitProperties(0, 0.0, 3.0, 1.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 3.0, 0.0);
         fakeDamage.setType(DamageType.VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
@@ -295,7 +295,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithANegativeBonusAgainstHealthClassWithACriticalHeadshot_Armor() {
-        fakeHitProperties = new HitProperties(1, 3.0, 3.0, 1.0);
+        fakeHitProperties = new HitProperties(1, 3.0, 3.0, 0.0);
         fakeDamage.setType(DamageType.VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
@@ -304,7 +304,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithACritical_Armor() {
-        fakeHitProperties = new HitProperties(1, 2.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(1, 2.0, 0.0, 0.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(50.0, actualDamage, 0.0);
@@ -312,7 +312,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithALevel2Critical_Armor() {
-        fakeHitProperties = new HitProperties(2, 2.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(2, 2.0, 0.0, 0.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(75.0, actualDamage, 0.0);
@@ -320,7 +320,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithALevel5Critical_Armor() {
-        fakeHitProperties = new HitProperties(5, 2.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(5, 2.0, 0.0, 0.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(150.0, actualDamage, 0.0);
@@ -328,7 +328,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithACriticalAndBodyPartModifier_Armor() {
-        fakeHitProperties = new HitProperties(1, 2.0, 0.0, 3.0);
+        fakeHitProperties = new HitProperties(1, 2.0, 0.0, 2.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(150.0, actualDamage, 0.0);
@@ -336,7 +336,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithACriticalHeadshot_Armor() {
-        fakeHitProperties = new HitProperties(1, 2.0, 2.0, 1.0);
+        fakeHitProperties = new HitProperties(1, 2.0, 2.0, 0.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(200.0, actualDamage, 0.0);
@@ -344,7 +344,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithALevel2CriticalHeadshot_Armor() {
-        fakeHitProperties = new HitProperties(2, 2.0, 2.0, 1.0);
+        fakeHitProperties = new HitProperties(2, 2.0, 2.0, 0.0);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(300.0, actualDamage, 0.0);
@@ -352,7 +352,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithAPositiveBonusAgainstHealthClassWithACritical_Armor() {
-        fakeHitProperties = new HitProperties(1, 2.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(1, 2.0, 0.0, 0.0);
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
@@ -361,7 +361,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithAPositiveBonusAgainstHealthAndArmorClass() {
-        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         fakeHealth.setHealthClass(HealthClass.SINEW);
         fakeDamage.setType(DamageType.PUNCTURE);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
@@ -373,7 +373,7 @@ public class DamageCalculatorTest {
     public void itCanCalculateDamageWithAPositiveBonusAgainstHealthAndArmorClassHittingShields() {
         /*  Puncture has a 25% bonus against Sinew and a 50% bonus against Ferrite Armor.
             However, it does 50% less against Proto Shields. Since we have shields, it will do 50% less damage because of the shields and ignore the other bonuses. */
-        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 1.0);
+        fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         fakeHealth.setHealthClass(HealthClass.SINEW);
         fakeDamage.setType(DamageType.PUNCTURE);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, fakeArmor, fakeDamage, fakeHitProperties);
