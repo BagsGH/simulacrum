@@ -24,13 +24,13 @@ public class DamageCalculator {
 
         double shieldMultiplier = damagingShields ? 1 + damageBonusMapper.getBonus(damageType, targetShield.getHealthClass()) : 1.0;
         double healthMultiplier = !damagingShields ? 1 + damageBonusMapper.getBonus(damageType, baseHealth.getHealthClass()) : 1.0;
-        double headCritModifier = calculateHeadshotAndCriticalModifier(hitProperties.getCritLevel(), hitProperties.getHeadshotModifier(), hitProperties.getCriticalDamageModifier());
+        double headCritMultiplier = calculateHeadshotAndCriticalMultiplier(hitProperties.getCritLevel(), hitProperties.getHeadshotMultiplier(), hitProperties.getCriticalDamageModifier());
 
-        double baseDamageModifiers = headCritModifier * shieldMultiplier * healthMultiplier * (1 + hitProperties.getBodyPartModifier());
+        double damageBonusMultiplier = headCritMultiplier * shieldMultiplier * healthMultiplier * (1 + hitProperties.getBodyPartModifier());
         double armorReduction = !damagingShields ? 1 + ((getArmorAmount(targetArmor) * (1 - getArmorDamageMultiplier(targetArmor, damageType))) / ARMOR_CONSTANT) : 1.0;
-        double finalDamageModifier = baseDamageModifiers / armorReduction;
+        double finalDamageMultiplier = damageBonusMultiplier / armorReduction;
 
-        return Math.round(damage.getDamageValue() * finalDamageModifier);
+        return Math.round(damage.getDamageValue() * finalDamageMultiplier);
     }
 
     private double getArmorAmount(Health targetArmor) {
@@ -41,7 +41,7 @@ public class DamageCalculator {
         return targetArmor != null ? damageBonusMapper.getBonus(damageType, targetArmor.getHealthClass()) : 0.0;
     }
 
-    private double calculateHeadshotAndCriticalModifier(int critLevel, double targetHeadshotMultiplier, double weaponCriticalDamageMultiplier) {
+    private double calculateHeadshotAndCriticalMultiplier(int critLevel, double targetHeadshotMultiplier, double weaponCriticalDamageMultiplier) {
         if (isHeadshot(targetHeadshotMultiplier) && !isCritical(critLevel)) {
             return targetHeadshotMultiplier;
         }
