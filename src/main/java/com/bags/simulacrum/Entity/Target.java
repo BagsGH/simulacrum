@@ -19,14 +19,10 @@ public class Target {
     private int baseLevel;
     private int level;
     private List<BodyModifier> bodyModifiers;
+    private BodyModifier headshotModifier;
 
     public double getHeadshotModifier() {
-        for (BodyModifier bm : bodyModifiers) {
-            if (bm.isHead()) {
-                return bm.getModifierValue();
-            }
-        }
-        return 0.0;
+        return headshotModifier.getModifierValue();
     }
 
     public void addHealth(Health health) {
