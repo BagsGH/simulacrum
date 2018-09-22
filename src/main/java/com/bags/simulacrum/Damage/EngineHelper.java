@@ -6,6 +6,7 @@ import com.bags.simulacrum.Weapon.Weapon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -21,9 +22,10 @@ public class EngineHelper {
         this.random = random;
     }
 
-    public DamageSummary handleFireWeapon(Weapon weapon, Target target, double headshotChance) {
+    public FiredWeaponSummary handleFireWeapon(Weapon weapon, Target target, double headshotChance) {
         Map<DamageType, Double> summedDamageToHealth = DamageSummary.initialDamageMap();
         Map<DamageType, Double> summedDamageToShields = DamageSummary.initialDamageMap();
+
         double headshotRNG = random.getRandom();
         double multishotRNG = random.getRandom();
         double statusProcRNG = random.getRandom();
@@ -32,20 +34,25 @@ public class EngineHelper {
 
         int critLevel = getCritLevel(weapon.getCriticalChance(), criticalHitRNG);
         int multishots = getMultishotLevel(weapon.getMultishot(), multishotRNG);
-
         double headshotModifier = headshotRNG < headshotChance ? target.getHeadshotModifier() : 0.0;
         double bodyModifier = headshotChance == 0.0 ? getBodyModifier(bodyshotRNG, target.getBodyModifiers()) : 0.0;
 
+        HitProperties hitProperties = new HitProperties(critLevel, weapon.getCriticalDamage(), headshotModifier, bodyModifier);
+        List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
+
         for (int i = 0; i < multishots; i++) {
-            HitProperties hitProperties = new HitProperties(critLevel, weapon.getCriticalDamage(), headshotModifier, bodyModifier); //TODO: handle delayed damages
-            for (DamageSource damageSource : weapon.getDamageSources()) { //TODO: handle procs
-                DamageSummary damageSummary = targetDamageHelper.applyDamageSourceDamageToTarget(damageSource, hitProperties, target);
-                updateRunningTotalDamageToHealth(summedDamageToHealth, damageSummary.getDamageToHealth());
-                updateRunningTotalDamageToShields(summedDamageToShields, damageSummary.getDamageToShields());
+            for (DamageSource damageSource : weapon.getDamageSources()) {
+                if (isDelayedDamageSource(damageSource)) {
+                    delayedDamageSources.add(new DelayedDamageSource(damageSource, 2.0)); //TODO: where do delays come from?
+                } else {
+                    DamageSummary damageSummary = targetDamageHelper.applyDamageSourceDamageToTarget(damageSource, hitProperties, target);//TODO: handle procs
+                    updateRunningTotalDamageToHealth(summedDamageToHealth, damageSummary.getDamageToHealth());
+                    updateRunningTotalDamageToShields(summedDamageToShields, damageSummary.getDamageToShields());
+                }
             }
         }
 
-        return new DamageSummary(target, summedDamageToShields, summedDamageToHealth);
+        return new FiredWeaponSummary(hitProperties, new DamageSummary(target, summedDamageToShields, summedDamageToHealth), delayedDamageSources);
     }
 
     private int getCritLevel(double weaponCriticalChance, double criticalRNG) {
@@ -91,5 +98,9 @@ public class EngineHelper {
             double currentDamageToHealthValues = summedDamageToShields.get(damageType);
             summedDamageToShields.put(damageType, currentDamageToHealthValues + damageToShields.get(damageType));
         }
+    }
+
+    private boolean isDelayedDamageSource(DamageSource damageSource) {
+        return damageSource.getDamageSourceType().equals(DamageSourceType.DELAYED) || damageSource.getDamageSourceType().equals(DamageSourceType.DELAYED_AOE);
     }
 }
