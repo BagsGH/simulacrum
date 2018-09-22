@@ -7,13 +7,13 @@ import java.util.List;
 @Data
 public class FiredWeaponSummary {
 
-    private HitProperties hitProperties;
+    private List<HitProperties> hitPropertiesList;
     private DamageSummary damageSummary;
     private List<DelayedDamageSource> delayedDamageSources;
 
 
-    public FiredWeaponSummary(HitProperties hitProperties, DamageSummary damageSummary, List<DelayedDamageSource> delayedDamageSources) {
-        this.hitProperties = hitProperties;
+    public FiredWeaponSummary(List<HitProperties> hitPropertiesList, DamageSummary damageSummary, List<DelayedDamageSource> delayedDamageSources) {
+        this.hitPropertiesList = hitPropertiesList;
         this.damageSummary = damageSummary;
         this.delayedDamageSources = delayedDamageSources;
     }

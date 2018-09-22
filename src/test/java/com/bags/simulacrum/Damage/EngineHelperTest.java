@@ -63,14 +63,38 @@ public class EngineHelperTest {
     }
 
     @Test
-    public void itCallsRandomFiveTimes() {
+    public void itCallsRandomFiveTimesWithoutMultishot() {
         subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
         verify(mockRandom, times(5)).getRandom();
     }
 
     @Test
-    public void itCallsTargetDamageHelperOnce() {
+    public void itCallsRandomMoreThanFiveTimesWithMultishot_1() {
+        fakeWeapon.setMultishot(2.0);
+        subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+
+        verify(mockRandom, times(7)).getRandom();
+    }
+
+    @Test
+    public void itCallsRandomMoreThanFiveTimesWithMultishot_2() {
+        fakeWeapon.setMultishot(2.51);
+        subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+
+        verify(mockRandom, times(9)).getRandom();
+    }
+
+    @Test
+    public void itCallsRandomMoreThanFiveTimesWithMultishot_3() {
+        fakeWeapon.setMultishot(3.0);
+        subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+
+        verify(mockRandom, times(9)).getRandom();
+    }
+
+    @Test
+    public void itCallsTargetDamageHelperOnceWithoutMultishot() {
         subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
         verify(mockTargetDamageHelper, times(1)).applyDamageSourceDamageToTarget(any(), any(), any());

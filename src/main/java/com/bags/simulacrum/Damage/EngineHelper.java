@@ -23,36 +23,39 @@ public class EngineHelper {
     }
 
     public FiredWeaponSummary handleFireWeapon(Weapon weapon, Target target, double headshotChance) {
+        List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         Map<DamageType, Double> summedDamageToHealth = DamageSummary.initialDamageMap();
         Map<DamageType, Double> summedDamageToShields = DamageSummary.initialDamageMap();
+        List<HitProperties> hitPropertiesList = new ArrayList<>();
 
-        double headshotRNG = random.getRandom();
+        double headshotRNG = random.getRandom(); //TODO: maybe if the accuracy is bad, calculate this independently for multishot?
         double multishotRNG = random.getRandom();
-        double statusProcRNG = random.getRandom();
-        double criticalHitRNG = random.getRandom();
-        double bodyshotRNG = random.getRandom();
+        double bodyshotRNG = random.getRandom(); //TODO: maybe if the accuracy is bad, calculate this independently for multishot?
 
-        int critLevel = getCritLevel(weapon.getCriticalChance(), criticalHitRNG);
         int multishots = getMultishotLevel(weapon.getMultishot(), multishotRNG);
         double headshotModifier = headshotRNG < headshotChance ? target.getHeadshotModifier() : 0.0;
         double bodyModifier = headshotChance == 0.0 ? getBodyModifier(bodyshotRNG, target.getBodyModifiers()) : 0.0;
-
-        HitProperties hitProperties = new HitProperties(critLevel, weapon.getCriticalDamage(), headshotModifier, bodyModifier);
-        List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
-
+        
         for (int i = 0; i < multishots; i++) {
             for (DamageSource damageSource : weapon.getDamageSources()) {
-                if (isDelayedDamageSource(damageSource)) {
-                    delayedDamageSources.add(new DelayedDamageSource(damageSource, 2.0)); //TODO: where do delays come from?
-                } else {
+                if (!isDelayedDamageSource(damageSource)) {
+                    double criticalHitRNG = random.getRandom();
+                    double statusProcRNG = random.getRandom();
+                    int critLevel = getCritLevel(weapon.getCriticalChance(), criticalHitRNG);
+                    HitProperties hitProperties = new HitProperties(critLevel, weapon.getCriticalDamage(), headshotModifier, bodyModifier);
+
                     DamageSummary damageSummary = targetDamageHelper.applyDamageSourceDamageToTarget(damageSource, hitProperties, target);//TODO: handle procs
                     updateRunningTotalDamageToHealth(summedDamageToHealth, damageSummary.getDamageToHealth());
                     updateRunningTotalDamageToShields(summedDamageToShields, damageSummary.getDamageToShields());
+
+                    hitPropertiesList.add(hitProperties);
+                } else {
+                    delayedDamageSources.add(new DelayedDamageSource(damageSource, 2.0)); //TODO: where do delays come from?
                 }
             }
         }
 
-        return new FiredWeaponSummary(hitProperties, new DamageSummary(target, summedDamageToShields, summedDamageToHealth), delayedDamageSources);
+        return new FiredWeaponSummary(hitPropertiesList, new DamageSummary(target, summedDamageToShields, summedDamageToHealth), delayedDamageSources);
     }
 
     private int getCritLevel(double weaponCriticalChance, double criticalRNG) {
