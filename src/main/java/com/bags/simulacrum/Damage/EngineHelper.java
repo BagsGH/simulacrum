@@ -28,29 +28,30 @@ public class EngineHelper {
         Map<DamageType, Double> summedDamageToShields = DamageSummary.initialDamageMap();
         List<HitProperties> hitPropertiesList = new ArrayList<>();
 
-        double headshotRNG = random.getRandom(); //TODO: maybe if the accuracy is bad, calculate this independently for multishot?
         double multishotRNG = random.getRandom();
+        double headshotRNG = random.getRandom(); //TODO: maybe if the accuracy is bad, calculate this independently for multishot?
         double bodyshotRNG = random.getRandom(); //TODO: maybe if the accuracy is bad, calculate this independently for multishot?
 
         int multishots = getMultishotLevel(weapon.getMultishot(), multishotRNG);
         double headshotModifier = headshotRNG < headshotChance ? target.getHeadshotModifier() : 0.0;
-        double bodyModifier = headshotChance == 0.0 ? getBodyModifier(bodyshotRNG, target.getBodyModifiers()) : 0.0;
-        
+        double bodyModifier = !(headshotRNG < headshotChance) ? getBodyModifier(bodyshotRNG, target.getBodyModifiers()) : 0.0;
+
         for (int i = 0; i < multishots; i++) {
             for (DamageSource damageSource : weapon.getDamageSources()) {
                 if (!isDelayedDamageSource(damageSource)) {
                     double criticalHitRNG = random.getRandom();
-                    double statusProcRNG = random.getRandom();
+                    double statusProcRNG = random.getRandom(); //TODO: handle procs
                     int critLevel = getCritLevel(weapon.getCriticalChance(), criticalHitRNG);
-                    HitProperties hitProperties = new HitProperties(critLevel, weapon.getCriticalDamage(), headshotModifier, bodyModifier);
+                    double weaponCriticalDamageMultiplier = critLevel > 0 ? weapon.getCriticalDamage() : 0.0;
+                    HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier);
 
-                    DamageSummary damageSummary = targetDamageHelper.applyDamageSourceDamageToTarget(damageSource, hitProperties, target);//TODO: handle procs
+                    DamageSummary damageSummary = targetDamageHelper.applyDamageSourceDamageToTarget(damageSource, hitProperties, target);
                     updateRunningTotalDamageToHealth(summedDamageToHealth, damageSummary.getDamageToHealth());
                     updateRunningTotalDamageToShields(summedDamageToShields, damageSummary.getDamageToShields());
 
                     hitPropertiesList.add(hitProperties);
                 } else {
-                    delayedDamageSources.add(new DelayedDamageSource(damageSource, 2.0)); //TODO: where do delays come from?
+                    delayedDamageSources.add(new DelayedDamageSource(damageSource, damageSource.getDelay()));
                 }
             }
         }

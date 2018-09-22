@@ -16,4 +16,9 @@ public class BodyModifier {
         this.chanceToHit = chanceToHit;
     }
 
+    public BodyModifier(BodyPart bodyPart, double modifierValue) {
+        this.bodyPart = bodyPart;
+        this.modifierValue = modifierValue;
+    }
+
 }

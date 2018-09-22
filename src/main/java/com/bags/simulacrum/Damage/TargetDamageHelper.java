@@ -30,7 +30,7 @@ public class TargetDamageHelper {
 
         for (Damage damage : damageSource.getDamages()) {
             DamageType damageType = damage.getType();
-            double damageDealt = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, damage, hitProperties); //TODO: make modifier params more consistent. Some are 1.0 for no bonus, some are 0.0.
+            double damageDealt = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, damage, hitProperties);
 
             if (targetHasNoShields(targetShield)) {
                 targetHealth.subtractHealthValue(damageDealt);

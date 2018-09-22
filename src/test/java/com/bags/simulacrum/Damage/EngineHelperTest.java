@@ -8,6 +8,7 @@ import com.bags.simulacrum.Entity.Target;
 import com.bags.simulacrum.Weapon.Weapon;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -16,6 +17,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -44,6 +46,7 @@ public class EngineHelperTest {
     private Health fakeArmor;
 
     private BodyModifier fakeBodyModifier;
+    private BodyModifier fakeHeadshotBodyModifier;
 
     private DamageSummary fakeDamageSummary;
 
@@ -124,6 +127,102 @@ public class EngineHelperTest {
         verify(mockTargetDamageHelper, times(3)).applyDamageSourceDamageToTarget(any(), any(), any());
     }
 
+    @Test
+    public void itCallsTargetDamageHelperWithCorrectValues_Headshot() {
+        when(mockRandom.getRandom()).thenReturn(0.14);
+        fakeWeapon.setCriticalChance(0.10);
+        ArgumentCaptor<HitProperties> hitPropertiesCaptor = ArgumentCaptor.forClass(HitProperties.class);
+
+        subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.15);
+
+        verify(mockTargetDamageHelper).applyDamageSourceDamageToTarget(any(), hitPropertiesCaptor.capture(), any());
+        HitProperties actualHitProperties = hitPropertiesCaptor.getValue();
+        assertEquals(1.0, actualHitProperties.getHeadshotModifier(), 0.0);
+        assertEquals(0.0, actualHitProperties.getBodyPartModifier(), 0.0);
+        assertEquals(0, actualHitProperties.getCritLevel());
+        assertEquals(0.0, actualHitProperties.getCriticalDamageMultiplier(), 0.0);
+    }
+
+    @Test
+    public void itCallsTargetDamageHelperWithCorrectValues_NoHeadshot() {
+        when(mockRandom.getRandom()).thenReturn(0.51);
+        fakeWeapon.setCriticalChance(0.10);
+        ArgumentCaptor<HitProperties> hitPropertiesCaptor = ArgumentCaptor.forClass(HitProperties.class);
+
+        subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.15);
+
+        verify(mockTargetDamageHelper).applyDamageSourceDamageToTarget(any(), hitPropertiesCaptor.capture(), any());
+        HitProperties actualHitProperties = hitPropertiesCaptor.getValue();
+        assertEquals(0.0, actualHitProperties.getHeadshotModifier(), 0.0);
+        assertEquals(0.0, actualHitProperties.getBodyPartModifier(), 0.0);
+        assertEquals(0, actualHitProperties.getCritLevel());
+        assertEquals(0.0, actualHitProperties.getCriticalDamageMultiplier(), 0.0);
+    }
+
+    @Test
+    public void itCallsTargetDamageHelperWithCorrectValues_Bodyshot() {
+        when(mockRandom.getRandom()).thenReturn(0.15);
+        fakeWeapon.setCriticalChance(0.10);
+        ArgumentCaptor<HitProperties> hitPropertiesCaptor = ArgumentCaptor.forClass(HitProperties.class);
+
+        subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.10);
+
+        verify(mockTargetDamageHelper).applyDamageSourceDamageToTarget(any(), hitPropertiesCaptor.capture(), any());
+        HitProperties actualHitProperties = hitPropertiesCaptor.getValue();
+        assertEquals(0.0, actualHitProperties.getHeadshotModifier(), 0.0);
+        assertEquals(0.50, actualHitProperties.getBodyPartModifier(), 0.0);
+        assertEquals(0, actualHitProperties.getCritLevel());
+        assertEquals(0.0, actualHitProperties.getCriticalDamageMultiplier(), 0.0);
+    }
+
+    @Test
+    public void itCallsTargetDamageHelperWithCorrectValues_Critical() {
+        when(mockRandom.getRandom()).thenReturn(0.55);
+        fakeWeapon.setCriticalChance(0.56);
+        ArgumentCaptor<HitProperties> hitPropertiesCaptor = ArgumentCaptor.forClass(HitProperties.class);
+
+        subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+
+        verify(mockTargetDamageHelper).applyDamageSourceDamageToTarget(any(), hitPropertiesCaptor.capture(), any());
+        HitProperties actualHitProperties = hitPropertiesCaptor.getValue();
+        assertEquals(0.0, actualHitProperties.getHeadshotModifier(), 0.0);
+        assertEquals(0.0, actualHitProperties.getBodyPartModifier(), 0.0);
+        assertEquals(1, actualHitProperties.getCritLevel());
+        assertEquals(fakeWeapon.getCriticalDamage(), actualHitProperties.getCriticalDamageMultiplier(), 0.0);
+    }
+
+    @Test
+    public void itCallsTargetDamageHelperWithCorrectValues_Critical_Headshot() {
+        when(mockRandom.getRandom()).thenReturn(0.55);
+        fakeWeapon.setCriticalChance(0.56);
+        ArgumentCaptor<HitProperties> hitPropertiesCaptor = ArgumentCaptor.forClass(HitProperties.class);
+
+        subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.60);
+
+        verify(mockTargetDamageHelper).applyDamageSourceDamageToTarget(any(), hitPropertiesCaptor.capture(), any());
+        HitProperties actualHitProperties = hitPropertiesCaptor.getValue();
+        assertEquals(1.0, actualHitProperties.getHeadshotModifier(), 0.0);
+        assertEquals(0.0, actualHitProperties.getBodyPartModifier(), 0.0);
+        assertEquals(1, actualHitProperties.getCritLevel());
+        assertEquals(fakeWeapon.getCriticalDamage(), actualHitProperties.getCriticalDamageMultiplier(), 0.0);
+    }
+
+    @Test
+    public void itCallsTargetDamageHelperWithCorrectValues_Critical_Bodyshot() {
+        when(mockRandom.getRandom()).thenReturn(0.45);
+        fakeWeapon.setCriticalChance(0.46);
+        subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.30);
+
+        ArgumentCaptor<HitProperties> hitPropertiesCaptor = ArgumentCaptor.forClass(HitProperties.class);
+
+        verify(mockTargetDamageHelper).applyDamageSourceDamageToTarget(any(), hitPropertiesCaptor.capture(), any());
+        HitProperties actualHitProperties = hitPropertiesCaptor.getValue();
+        assertEquals(0.0, actualHitProperties.getHeadshotModifier(), 0.0);
+        assertEquals(0.50, actualHitProperties.getBodyPartModifier(), 0.0);
+        assertEquals(1, actualHitProperties.getCritLevel());
+        assertEquals(fakeWeapon.getCriticalDamage(), actualHitProperties.getCriticalDamageMultiplier(), 0.0);
+    }
+
     private void setupDefaultFakeDamageSummary() {
         fakeDamageToHealth = DamageSummary.initialDamageMap();
         fakeDamageToShields = DamageSummary.initialDamageMap();
@@ -137,7 +236,9 @@ public class EngineHelperTest {
         fakeTarget = new Target();
         fakeTarget.setHealth(Arrays.asList(fakeHealth, fakeShields, fakeArmor));
         fakeBodyModifier = new BodyModifier(BodyPart.GUN, 0.50, 0.50);
+        fakeHeadshotBodyModifier = new BodyModifier(BodyPart.HEAD, 1.0);
         fakeTarget.setBodyModifiers(Collections.singletonList(fakeBodyModifier));
+        fakeTarget.setHeadshotModifier(fakeHeadshotBodyModifier);
     }
 
     private void setupDefaultFakeWeapon() {
