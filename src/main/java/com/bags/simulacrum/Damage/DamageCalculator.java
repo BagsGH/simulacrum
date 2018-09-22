@@ -24,7 +24,7 @@ public class DamageCalculator {
 
         double shieldMultiplier = damagingShields ? 1 + damageBonusMapper.getBonus(damageType, targetShield.getHealthClass()) : 1.0;
         double healthMultiplier = !damagingShields ? 1 + damageBonusMapper.getBonus(damageType, baseHealth.getHealthClass()) : 1.0;
-        double headCritMultiplier = calculateHeadshotAndCriticalMultiplier(hitProperties.getCritLevel(), hitProperties.getHeadshotMultiplier(), hitProperties.getCriticalDamageModifier());
+        double headCritMultiplier = calculateHeadshotAndCriticalMultiplier(hitProperties.getCritLevel(), hitProperties.getHeadshotModifier(), hitProperties.getCriticalDamageMultiplier());
 
         double damageBonusMultiplier = headCritMultiplier * shieldMultiplier * healthMultiplier * (1 + hitProperties.getBodyPartModifier());
         double armorReduction = !damagingShields ? 1 + ((getArmorAmount(targetArmor) * (1 - getArmorDamageMultiplier(targetArmor, damageType))) / ARMOR_CONSTANT) : 1.0;
@@ -41,13 +41,13 @@ public class DamageCalculator {
         return targetArmor != null ? damageBonusMapper.getBonus(damageType, targetArmor.getHealthClass()) : 0.0;
     }
 
-    private double calculateHeadshotAndCriticalMultiplier(int critLevel, double headshotMultiplier, double weaponCriticalDamageMultiplier) {
-        if (isHeadshot(headshotMultiplier) && !isCritical(critLevel)) {
-            return headshotMultiplier;
+    private double calculateHeadshotAndCriticalMultiplier(int critLevel, double headshotModifier, double weaponCriticalDamageMultiplier) {
+        if (isHeadshot(headshotModifier) && !isCritical(critLevel)) {
+            return (1 + headshotModifier);
         }
         if (isCritical(critLevel)) {
             double critModifier = (critLevel * (weaponCriticalDamageMultiplier - 1)) + 1;
-            return isHeadshot(headshotMultiplier) ? headshotMultiplier * HEADCRIT_MULTIPLIER * critModifier : critModifier;
+            return isHeadshot(headshotModifier) ? (1 + headshotModifier) * HEADCRIT_MULTIPLIER * critModifier : critModifier;
         }
         return 1.0;
     }
