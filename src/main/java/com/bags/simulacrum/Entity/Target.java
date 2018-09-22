@@ -15,10 +15,19 @@ public class Target {
     private List<String> weapons;
     private List<String> abilities;
     private List<Health> health;
-    private double headshotMultiplier;
     //    private List<StatusProc> procImmunities;
     private int baseLevel;
     private int level;
+    private List<BodyModifier> bodyModifiers;
+
+    public double getHeadshotModifier() {
+        for (BodyModifier bm : bodyModifiers) {
+            if (bm.isHead()) {
+                return bm.getModifierValue();
+            }
+        }
+        return 0.0;
+    }
 
     public void addHealth(Health health) {
         if (this.health == null) {

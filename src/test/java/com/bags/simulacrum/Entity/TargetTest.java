@@ -24,7 +24,6 @@ public class TargetTest {
         subject.setWeapons(Collections.singletonList("Rifle"));
         subject.setHealth(Collections.singletonList(new Health(HealthClass.MACHINERY, 200.0)));
         subject.setName("Moa");
-        subject.setHeadshotMultiplier(2.0);
         subject.setBaseLevel(1);
         subject.setLevel(1);
 
@@ -32,7 +31,6 @@ public class TargetTest {
         assertEquals(1, subject.getWeapons().size());
         assertEquals(1, subject.getHealth().size());
         assertEquals("Moa", subject.getName());
-        assertEquals(2.0, subject.getHeadshotMultiplier(), 0.0);
         assertEquals(1, subject.getBaseLevel());
         assertEquals(1, subject.getLevel());
     }
