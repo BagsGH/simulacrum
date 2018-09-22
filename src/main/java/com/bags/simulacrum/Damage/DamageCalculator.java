@@ -41,13 +41,13 @@ public class DamageCalculator {
         return targetArmor != null ? damageBonusMapper.getBonus(damageType, targetArmor.getHealthClass()) : 0.0;
     }
 
-    private double calculateHeadshotAndCriticalMultiplier(int critLevel, double targetHeadshotMultiplier, double weaponCriticalDamageMultiplier) {
-        if (isHeadshot(targetHeadshotMultiplier) && !isCritical(critLevel)) {
-            return targetHeadshotMultiplier;
+    private double calculateHeadshotAndCriticalMultiplier(int critLevel, double headshotMultiplier, double weaponCriticalDamageMultiplier) {
+        if (isHeadshot(headshotMultiplier) && !isCritical(critLevel)) {
+            return headshotMultiplier;
         }
         if (isCritical(critLevel)) {
             double critModifier = (critLevel * (weaponCriticalDamageMultiplier - 1)) + 1;
-            return isHeadshot(targetHeadshotMultiplier) ? targetHeadshotMultiplier * HEADCRIT_MULTIPLIER * critModifier : critModifier;
+            return isHeadshot(headshotMultiplier) ? headshotMultiplier * HEADCRIT_MULTIPLIER * critModifier : critModifier;
         }
         return 1.0;
     }

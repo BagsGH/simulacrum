@@ -86,14 +86,14 @@ public class TargetDamageHelperTest {
 
         ArgumentCaptor<Damage> damageCaptor = ArgumentCaptor.forClass(Damage.class);
         when(damageCalculatorMock.calculateDamage(eq(fakeHealth), argThat(startingShieldMatcher), eq(fakeArmor), eq(fakeDamage), eq(fakeHitProperties))).thenReturn(250.0);
-        when(damageCalculatorMock.calculateDamage(eq(fakeHealth), argThat(deadShieldsMatcher), eq(fakeArmor), damageCaptor.capture(), eq(fakeHitProperties))).thenReturn(50.0);
+        when(damageCalculatorMock.calculateDamage(eq(fakeHealth), argThat(deadShieldsMatcher), eq(fakeArmor), damageCaptor.capture(), eq(fakeHitProperties))).thenReturn(35.0);
 
         DamageSummary damageSummary = subject.applyDamageSourceDamageToTarget(fakeDamageSource, fakeHitProperties, fakeTarget);
 
         assertExpectedDamageExists(new Damage(DamageType.HEAT, 5.0), damageCaptor.getAllValues(), 0.001);
         assertExpectedHealthExists(damageSummary.getTarget().getHealth(), new Health(HealthClass.SHIELD, 0.0), 0.0);
-        assertExpectedHealthExists(damageSummary.getTarget().getHealth(), new Health(HealthClass.MACHINERY, 150.0), 0.0);
-        assertEquals(50.0, damageSummary.getDamageToHealth().get(DamageType.HEAT), 0.0);
+        assertExpectedHealthExists(damageSummary.getTarget().getHealth(), new Health(HealthClass.MACHINERY, 165.0), 0.0);
+        assertEquals(35.0, damageSummary.getDamageToHealth().get(DamageType.HEAT), 0.0);
         assertEquals(200.0, damageSummary.getDamageToShields().get(DamageType.HEAT), 0.0);
     }
 
