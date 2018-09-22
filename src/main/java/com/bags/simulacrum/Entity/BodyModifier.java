@@ -10,4 +10,10 @@ public class BodyModifier {
     private double modifierValue;
     private double chanceToHit;
 
+    public BodyModifier(BodyPart bodyPart, double modifierValue, double chanceToHit) {
+        this.bodyPart = bodyPart;
+        this.modifierValue = modifierValue;
+        this.chanceToHit = chanceToHit;
+    }
+
 }
