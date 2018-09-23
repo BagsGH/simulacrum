@@ -5,16 +5,16 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class FiredWeaponSummary {
+public class FiredWeaponMetrics {
 
     private List<HitProperties> hitPropertiesList;
-    private DamageSummary damageSummary;
+    private DamageMetrics damageMetrics;
     private List<DelayedDamageSource> delayedDamageSources;
 
 
-    public FiredWeaponSummary(List<HitProperties> hitPropertiesList, DamageSummary damageSummary, List<DelayedDamageSource> delayedDamageSources) {
+    public FiredWeaponMetrics(List<HitProperties> hitPropertiesList, DamageMetrics damageMetrics, List<DelayedDamageSource> delayedDamageSources) {
         this.hitPropertiesList = hitPropertiesList;
-        this.damageSummary = damageSummary;
+        this.damageMetrics = damageMetrics;
         this.delayedDamageSources = delayedDamageSources;
     }
 }

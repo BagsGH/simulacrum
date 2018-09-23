@@ -20,7 +20,7 @@ public class TargetDamageHelper {
         this.damageCalculator = damageCalculator;
     }
 
-    public DamageSummary applyDamageSourceDamageToTarget(DamageSource damageSource, HitProperties hitProperties, Target target) {
+    public DamageMetrics applyDamageSourceDamageToTarget(DamageSource damageSource, HitProperties hitProperties, Target target) {
         Map<DamageType, Double> damageToShields = initialDamageMap();
         Map<DamageType, Double> damageToHealth = initialDamageMap();
         List<Health> targetHealthClasses = target.getHealth();
@@ -45,7 +45,7 @@ public class TargetDamageHelper {
             }
         }
 
-        return new DamageSummary(target, damageToHealth, damageToShields);
+        return new DamageMetrics(target, damageToHealth, damageToShields);
     }
 
     private Map<DamageType, Double> initialDamageMap() {

@@ -7,19 +7,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
-public class DamageSummary {
+public class DamageMetrics {
 
     private Target target;
     private Map<DamageType, Double> damageToShields;
     private Map<DamageType, Double> damageToHealth;
 
-    public DamageSummary(Target target, Map<DamageType, Double> damageToHealth, Map<DamageType, Double> damageToShields) {
+    public DamageMetrics(Target target, Map<DamageType, Double> damageToHealth, Map<DamageType, Double> damageToShields) {
         this.target = target;
         this.damageToShields = damageToShields;
         this.damageToHealth = damageToHealth;
     }
 
-    public DamageSummary() {
+    public DamageMetrics() {
 
     }
 
