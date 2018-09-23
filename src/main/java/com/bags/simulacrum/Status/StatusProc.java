@@ -10,4 +10,6 @@ public interface StatusProc {
     public void applyStatusToTarget(Target target);
 
     public StatusProc withDamageType(DamageType damageType);
+
+    public boolean targetModifier();
 }

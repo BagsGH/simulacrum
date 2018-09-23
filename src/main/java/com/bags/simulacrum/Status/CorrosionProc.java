@@ -47,4 +47,9 @@ public class CorrosionProc implements StatusProc {
     private Health findArmor(List<Health> health) {
         return health.stream().filter(h -> HealthClass.isArmor(h.getHealthClass())).findFirst().orElse(null);
     }
+
+    @Override
+    public boolean targetModifier() {
+        return true;
+    }
 }

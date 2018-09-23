@@ -32,4 +32,9 @@ public class UnimplementedProc implements StatusProc {
     public StatusProc withDamageType(DamageType damageType) {
         return null;
     }
+
+    @Override
+    public boolean targetModifier() {
+        return false;
+    }
 }

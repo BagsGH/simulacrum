@@ -35,4 +35,9 @@ public class ConfusionProc implements StatusProc {
         return new ConfusionProc(damageType, duration, ticks);
     }
 
+    @Override
+    public boolean targetModifier() {
+        return false;
+    }
+
 }

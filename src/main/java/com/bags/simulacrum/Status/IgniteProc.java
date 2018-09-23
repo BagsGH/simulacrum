@@ -34,4 +34,9 @@ public class IgniteProc implements StatusProc {
 
         return new IgniteProc(damageType, duration, ticks);
     }
+
+    @Override
+    public boolean targetModifier() {
+        return false;
+    }
 }

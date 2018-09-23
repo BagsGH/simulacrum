@@ -131,6 +131,7 @@ public class EngineHelperTest {
     public void itCallsTargetDamageHelperWithCorrectValues_Headshot() {
         when(mockRandom.getRandom()).thenReturn(0.14);
         fakeWeapon.setCriticalChance(0.10);
+        fakeWeapon.setStatusChance(0.0);
         ArgumentCaptor<HitProperties> hitPropertiesCaptor = ArgumentCaptor.forClass(HitProperties.class);
 
         subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.15);

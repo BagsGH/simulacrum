@@ -44,6 +44,11 @@ public class BleedProc implements StatusProc {
         return new BleedProc(damageType, duration, ticks);
     }
 
+    @Override
+    public boolean targetModifier() {
+        return false;
+    }
+
     private Health findArmor(List<Health> health) {
         return health.stream().filter(h -> HealthClass.isArmor(h.getHealthClass())).findFirst().orElse(null);
     }

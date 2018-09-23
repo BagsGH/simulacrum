@@ -2,6 +2,7 @@ package com.bags.simulacrum.Damage;
 
 import com.bags.simulacrum.Entity.BodyModifier;
 import com.bags.simulacrum.Entity.Target;
+import com.bags.simulacrum.Status.StatusProc;
 import com.bags.simulacrum.Weapon.Weapon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,7 @@ public class EngineHelper {
 
     public FiredWeaponMetrics handleFireWeapon(Weapon weapon, Target target, double headshotChance) { //tODO: secondary targets for aoe...?
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
+        List<StatusProc> statusProcsApplied = new ArrayList<>();
         Map<DamageType, Double> summedDamageToHealth = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> summedDamageToShields = DamageMetrics.initialDamageMap();
         DamageMetrics finalDamageMetrics = new DamageMetrics(target, summedDamageToHealth, summedDamageToShields);
@@ -42,7 +44,7 @@ public class EngineHelper {
 
         for (int i = 0; i < multishots; i++) {
             double criticalHitRNG = random.getRandom();
-            double statusProcRNG = random.getRandom(); //TODO: handle procs
+            double statusProcRNG = random.getRandom();
             int critLevel = getCritLevel(weapon.getCriticalChance(), criticalHitRNG);
             double weaponCriticalDamageMultiplier = critLevel > 0 ? weapon.getCriticalDamage() : 0.0;
             HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier);
@@ -54,7 +56,7 @@ public class EngineHelper {
                     updateRunningTotalDamageToHealth(finalDamageMetrics, damageMetrics.getDamageToHealth());
                     updateRunningTotalDamageToShields(finalDamageMetrics, damageMetrics.getDamageToShields());
                     if (statusProcRNG < weapon.getStatusChance()) {
-                        //statusPROCHelper.handleStatusProc(damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
+                        statusProcsApplied.add(handleStatusChance(target, damageMetrics));
                     }
                 } else {
                     delayedDamageSources.add(new DelayedDamageSource(damageSource, damageSource.getDelay())); //TODO: calculate crits etc now or later? //TODO: new up a new damageSource?
@@ -63,7 +65,16 @@ public class EngineHelper {
             hitPropertiesList.add(hitProperties);
         }
 
-        return new FiredWeaponMetrics(hitPropertiesList, finalDamageMetrics, delayedDamageSources);
+        return new FiredWeaponMetrics(hitPropertiesList, finalDamageMetrics, statusProcsApplied, delayedDamageSources);
+    }
+
+    private StatusProc handleStatusChance(Target target, DamageMetrics damageMetrics) {
+        StatusProc statusProc = statusPROCHelper.handleStatusProc(damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
+        target.addStatus(statusProc);
+        if (statusProc.targetModifier()) {
+            target.applyStatus();
+        }
+        return statusProc;
     }
 
     private int getMultishotLevel(double weaponMultishotChance, double multishotRNG) {

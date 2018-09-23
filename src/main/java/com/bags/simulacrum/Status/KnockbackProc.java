@@ -34,4 +34,9 @@ public class KnockbackProc implements StatusProc {
         int ticks = STATUS_PROPERTY_MAPPER.getStatusProcTicks(damageType);
         return new KnockbackProc(damageType, duration, ticks);
     }
+
+    @Override
+    public boolean targetModifier() {
+        return false;
+    }
 }

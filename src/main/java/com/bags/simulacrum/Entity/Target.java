@@ -1,6 +1,7 @@
 package com.bags.simulacrum.Entity;
 
 import com.bags.simulacrum.Armor.Health;
+import com.bags.simulacrum.Status.StatusProc;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class Target {
     private int level;
     private List<BodyModifier> bodyModifiers;
     private BodyModifier headshotModifier;
+    private List<StatusProc> statuses;
 
     public double getHeadshotModifier() {
         return headshotModifier.getModifierValue();
@@ -30,6 +32,17 @@ public class Target {
             this.health = new ArrayList<>();
         }
         this.health.add(health);
+    }
+
+    public void addStatus(StatusProc StatusProc) {
+        if (this.statuses == null) {
+            this.statuses = new ArrayList<>();
+        }
+        this.statuses.add(StatusProc);
+    }
+
+    public void applyStatus() {
+        this.statuses.get(this.statuses.size() - 1).applyStatusToTarget(this);
     }
 
     public enum Faction {
