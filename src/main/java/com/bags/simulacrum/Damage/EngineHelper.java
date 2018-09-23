@@ -83,10 +83,6 @@ public class EngineHelper {
         return !(headshotRNG < headshotChance) ? getBodyModifier(bodyshotRNG, target.getBodyModifiers()) : 0.0;
     }
 
-    private boolean isHeadshot(double headshotChance, double headshotRNG) {
-        return headshotRNG < headshotChance;
-    }
-
     private double getBodyModifier(double bodyshotRNG, List<BodyModifier> bodyModifiers) {
         double maxOfRangeForBodyPart = 0.0;
         double minOfRangeForBodyPart = 0.0;

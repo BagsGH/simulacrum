@@ -18,11 +18,7 @@ public class DamageMetrics {
         this.damageToShields = damageToShields;
         this.damageToHealth = damageToHealth;
     }
-
-    public DamageMetrics() {
-
-    }
-
+    
     public void addToShields(DamageType damageType, double value) {
         double currentValueForType = damageToShields.get(damageType);
         damageToShields.put(damageType, currentValueForType + value);
