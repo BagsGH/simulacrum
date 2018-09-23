@@ -7,5 +7,5 @@ public interface StatusProc {
 
     public void applyStatusToTarget(Target target);
 
-    public StatusProc withProperties(DamageType damageType, double damage);
+    public StatusProc withDamageType(DamageType damageType);
 }

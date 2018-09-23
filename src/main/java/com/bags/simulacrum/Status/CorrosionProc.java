@@ -1,21 +1,25 @@
 package com.bags.simulacrum.Status;
 
+import com.bags.simulacrum.Armor.Health;
+import com.bags.simulacrum.Armor.HealthClass;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class CorrosionProc implements StatusProc {
 
     private double duration;
     private int damageTicks;
-    private int stacks;
     private DamageType damageType;
 
-    public CorrosionProc(DamageType damageType, double duration, int stacks, int damageTicks) {
+    private static final double ARMOR_REDUCTION_RATIO = 0.25;
+
+    private CorrosionProc(DamageType damageType, double duration, int damageTicks) {
         this.damageType = damageType;
         this.duration = duration;
-        this.stacks = stacks;
         this.damageTicks = damageTicks;
     }
 
@@ -25,14 +29,22 @@ public class CorrosionProc implements StatusProc {
 
     @Override
     public void applyStatusToTarget(Target target) {
-
+        Health armor = findArmor(target.getHealth());
+        if (armor != null) {
+            double currentArmor = armor.getHealthValue();
+            armor.setHealthValue(currentArmor * (1 - ARMOR_REDUCTION_RATIO));
+        }
     }
 
     @Override
-    public StatusProc withProperties(DamageType damageType, double damage) {
+    public StatusProc withDamageType(DamageType damageType) {
         double duration = StatusProcType.getStatusProcDuration(damageType);
         int ticks = StatusProcType.getStatusProcTicks(damageType);
 
-        return new CorrosionProc(damageType, duration, 1, ticks);
+        return new CorrosionProc(damageType, duration, ticks);
+    }
+
+    private Health findArmor(List<Health> health) {
+        return health.stream().filter(h -> HealthClass.isArmor(h.getHealthClass())).findFirst().orElse(null);
     }
 }

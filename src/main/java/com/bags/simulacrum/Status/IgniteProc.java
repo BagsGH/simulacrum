@@ -5,31 +5,33 @@ import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
 @Data
-public class UnimplementedProc implements StatusProc {
+public class IgniteProc implements StatusProc {
 
     private double duration;
     private int damageTicks;
-    private double value;
     private DamageType damageType;
 
-    public UnimplementedProc(DamageType damageType, double duration, double value, int damageTicks) {
+    private static final double ARMOR_REDUCTION_RATIO = 0.25;
+
+    private IgniteProc(DamageType damageType, double duration, int damageTicks) {
         this.damageType = damageType;
         this.duration = duration;
-        this.value = value;
         this.damageTicks = damageTicks;
     }
 
-    public UnimplementedProc() {
+    public IgniteProc() {
 
     }
 
     @Override
     public void applyStatusToTarget(Target target) {
-
     }
 
     @Override
     public StatusProc withDamageType(DamageType damageType) {
-        return null;
+        double duration = StatusProcType.getStatusProcDuration(damageType);
+        int ticks = StatusProcType.getStatusProcTicks(damageType);
+
+        return new IgniteProc(damageType, duration, ticks);
     }
 }

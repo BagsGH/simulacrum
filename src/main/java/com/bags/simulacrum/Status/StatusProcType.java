@@ -71,12 +71,12 @@ public enum StatusProcType {
 
     static {
         statusTypeMap = new HashMap<DamageType, StatusProc>() {{
-            put(DamageType.IMPACT, new UnimplementedProc());
+            put(DamageType.IMPACT, new KnockbackProc());
             put(DamageType.PUNCTURE, new UnimplementedProc());
             put(DamageType.SLASH, new UnimplementedProc());
             put(DamageType.COLD, new UnimplementedProc());
             put(DamageType.ELECTRICITY, new UnimplementedProc());
-            put(DamageType.HEAT, new UnimplementedProc());
+            put(DamageType.HEAT, new IgniteProc());
             put(DamageType.TOXIN, new UnimplementedProc());
             put(DamageType.VOID, new UnimplementedProc());
             put(DamageType.BLAST, new UnimplementedProc());
@@ -89,7 +89,7 @@ public enum StatusProcType {
     }
 
     public static StatusProc getStatusProcClass(DamageType statusPROCType) {
-        return statusTypeMap.getOrDefault(statusPROCType, new UnimplementedProc());
+        return statusTypeMap.getOrDefault(statusPROCType, new UnimplementedProc()).withDamageType(statusPROCType);
     }
 
     private static final Map<DamageType, Integer> damageTickMap;

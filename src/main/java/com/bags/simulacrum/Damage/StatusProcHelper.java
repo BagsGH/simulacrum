@@ -23,19 +23,8 @@ public class StatusProcHelper {
         Map<DamageType, Double> weightedDamagePerType = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> damagePerType = DamageMetrics.initialDamageMap();
 
-        for (DamageType damageType : damageDoneToHealth.keySet()) {
-            double weightedNewValue = damageDoneToHealth.get(damageType) * (DamageType.isIPS(damageType) ? IPS_STATUS_WEIGHT : 1.0) + weightedDamagePerType.get(damageType);
-            weightedDamagePerType.put(damageType, weightedNewValue);
-            double newValue = damageDoneToHealth.get(damageType) + damagePerType.get(damageType);
-            damagePerType.put(damageType, newValue);
-        }
-
-        for (DamageType damageType : damageDoneToShields.keySet()) {
-            double weightedNewValue = damageDoneToShields.get(damageType) * (DamageType.isIPS(damageType) ? IPS_STATUS_WEIGHT : 1.0) + weightedDamagePerType.get(damageType);
-            weightedDamagePerType.put(damageType, weightedNewValue);
-            double newValue = damageDoneToShields.get(damageType) + damagePerType.get(damageType);
-            damagePerType.put(damageType, newValue);
-        }
+        populateDamageMaps(damageDoneToHealth, weightedDamagePerType, damagePerType);
+        populateDamageMaps(damageDoneToShields, weightedDamagePerType, damagePerType);
 
         double totalDamageWithIPSWeights = 0.0;
         for (DamageType damageType : weightedDamagePerType.keySet()) {
@@ -49,29 +38,38 @@ public class StatusProcHelper {
 
         double statusTypeRNG = random.getRandom();
 
-        DamageType statusProcDamageType = getType(statusPROCChanceMap, statusTypeRNG);
-        return StatusProcType.getStatusProcClass(statusProcDamageType).withProperties(statusProcDamageType, damagePerType.get(statusProcDamageType));
+        DamageType statusProcDamageType = getStatusProcType(statusPROCChanceMap, statusTypeRNG);
+        return StatusProcType.getStatusProcClass(statusProcDamageType);
     }
 
-    private DamageType getType(Map<DamageType, Double> statusPROCChanceMap, double statusTypeRNG) {
-        double min = 0.0;
-        double max = 0.0;
+    private void populateDamageMaps(Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> weightedDamagePerType, Map<DamageType, Double> damagePerType) {
+        for (DamageType damageType : damageDoneToHealth.keySet()) {
+            double weightedNewValue = damageDoneToHealth.get(damageType) * (DamageType.isIPS(damageType) ? IPS_STATUS_WEIGHT : 1.0) + weightedDamagePerType.get(damageType);
+            weightedDamagePerType.put(damageType, weightedNewValue);
+            double newValue = damageDoneToHealth.get(damageType) + damagePerType.get(damageType);
+            damagePerType.put(damageType, newValue);
+        }
+    }
+
+    private DamageType getStatusProcType(Map<DamageType, Double> statusPROCChanceMap, double statusTypeRNG) { //TODO: Really dont need two of these loops..
+        double minOfChanceRangeForStatusType = 0.0;
+        double maxOfChanceRangeForStatusType = 0.0;
         for (DamageType damageType : statusPROCChanceMap.keySet()) {
             if (DamageType.isIPS(damageType)) {
-                max = statusPROCChanceMap.get(damageType) + max;
-                if (statusTypeRNG >= min && statusTypeRNG < max) {
+                maxOfChanceRangeForStatusType = statusPROCChanceMap.get(damageType) + maxOfChanceRangeForStatusType;
+                if (statusTypeRNG >= minOfChanceRangeForStatusType && statusTypeRNG < maxOfChanceRangeForStatusType) {
                     return damageType;
                 }
-                min = max;
+                minOfChanceRangeForStatusType = maxOfChanceRangeForStatusType;
             }
         }
         for (DamageType damageType : statusPROCChanceMap.keySet()) {
             if (DamageType.isElemental(damageType)) {
-                max = statusPROCChanceMap.get(damageType) + max;
-                if (statusTypeRNG >= min && statusTypeRNG < max) {
+                maxOfChanceRangeForStatusType = statusPROCChanceMap.get(damageType) + maxOfChanceRangeForStatusType;
+                if (statusTypeRNG >= minOfChanceRangeForStatusType && statusTypeRNG < maxOfChanceRangeForStatusType) {
                     return damageType;
                 }
-                min = max;
+                minOfChanceRangeForStatusType = maxOfChanceRangeForStatusType;
             }
         }
         return null;
