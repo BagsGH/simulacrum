@@ -16,13 +16,13 @@ public class EngineHelper {
 
     private final TargetDamageHelper targetDamageHelper;
     private final Random random;
-    private final StatusProcHelper statusPROCHelper;
+    private final StatusProcHelper statusProcHelper;
 
     @Autowired
-    public EngineHelper(TargetDamageHelper targetDamageHelper, Random random, StatusProcHelper statusPROCHelper) {
+    public EngineHelper(TargetDamageHelper targetDamageHelper, Random random, StatusProcHelper statusProcHelper) {
         this.targetDamageHelper = targetDamageHelper;
         this.random = random;
-        this.statusPROCHelper = statusPROCHelper;
+        this.statusProcHelper = statusProcHelper;
     }
 
     public FiredWeaponMetrics handleFireWeapon(Weapon weapon, Target target, double headshotChance) { //tODO: secondary targets for aoe...?
@@ -49,7 +49,6 @@ public class EngineHelper {
             double weaponCriticalDamageMultiplier = critLevel > 0 ? weapon.getCriticalDamage() : 0.0;
             HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier);
 
-
             for (DamageSource damageSource : weapon.getDamageSources()) {
                 if (!isDelayedDamageSource(damageSource)) {
                     DamageMetrics damageMetrics = targetDamageHelper.applyDamageSourceDamageToTarget(damageSource, hitProperties, target);
@@ -66,15 +65,6 @@ public class EngineHelper {
         }
 
         return new FiredWeaponMetrics(hitPropertiesList, finalDamageMetrics, statusProcsApplied, delayedDamageSources);
-    }
-
-    private StatusProc handleStatusChance(Target target, DamageMetrics damageMetrics) {
-        StatusProc statusProc = statusPROCHelper.handleStatusProc(damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
-        target.addStatus(statusProc);
-        if (statusProc.targetModifier()) {
-            target.applyStatus();
-        }
-        return statusProc;
     }
 
     private int getMultishotLevel(double weaponMultishotChance, double multishotRNG) {
@@ -130,5 +120,14 @@ public class EngineHelper {
         for (DamageType damageType : damageToShields.keySet()) {
             finalDamageMetrics.addToShields(damageType, damageToShields.get(damageType));
         }
+    }
+
+    private StatusProc handleStatusChance(Target target, DamageMetrics damageMetrics) {
+        StatusProc statusProc = statusProcHelper.handleStatusProc(damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
+        target.addStatus(statusProc);
+        if (statusProc.targetModifier()) {
+            target.applyStatus();
+        }
+        return statusProc;
     }
 }

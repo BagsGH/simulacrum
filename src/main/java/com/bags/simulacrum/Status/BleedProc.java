@@ -28,7 +28,7 @@ public class BleedProc implements StatusProc {
     }
 
     @Override
-    public void applyStatusToTarget(Target target) {
+    public void apply(Target target) {
         Health armor = findArmor(target.getHealth());
         if (armor != null) {
             double currentArmor = armor.getHealthValue();

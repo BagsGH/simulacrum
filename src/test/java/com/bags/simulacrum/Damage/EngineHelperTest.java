@@ -5,6 +5,7 @@ import com.bags.simulacrum.Armor.HealthClass;
 import com.bags.simulacrum.Entity.BodyModifier;
 import com.bags.simulacrum.Entity.BodyPart;
 import com.bags.simulacrum.Entity.Target;
+import com.bags.simulacrum.Status.IgniteProc;
 import com.bags.simulacrum.Weapon.Weapon;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
+import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -31,6 +33,9 @@ public class EngineHelperTest {
 
     @Mock
     private TargetDamageHelper mockTargetDamageHelper;
+
+    @Mock
+    private StatusProcHelper mockStatusProcHelper;
 
     private Map<DamageType, Double> fakeDamageToHealth;
     private Map<DamageType, Double> fakeDamageToShields;
@@ -423,6 +428,31 @@ public class EngineHelperTest {
         assertEquals(fakeWeapon.getCriticalDamage(), firedWeaponMetrics.getHitPropertiesList().get(1).getCriticalDamageMultiplier(), 0.0);
     }
 
+    @Test
+    public void itReturnsStatusProcMetrics() {
+        when(mockStatusProcHelper.handleStatusProc(any(), any())).thenReturn(new IgniteProc());
+        fakeWeapon.setStatusChance(0.75);
+        when(mockRandom.getRandom()).thenReturn(0.74);
+
+        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+
+        assertEquals(1, firedWeaponMetrics.getStatusProcs().size());
+        assertTrue(firedWeaponMetrics.getStatusProcs().get(0) instanceof IgniteProc);
+    }
+
+    @Test
+    public void eachShotOfMultishotCalculatesStatusChanceIndependently() {
+        when(mockRandom.getRandom()).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.04);
+        when(mockStatusProcHelper.handleStatusProc(any(), any())).thenReturn(new IgniteProc());
+        fakeWeapon.setStatusChance(0.05);
+        fakeWeapon.setMultishot(2.0);
+
+        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+
+        assertEquals(1, firedWeaponMetrics.getStatusProcs().size());
+        assertTrue(firedWeaponMetrics.getStatusProcs().get(0) instanceof IgniteProc);
+    }
+
     private void setupDefaultFakeDamageSummary() {
         fakeDamageToHealth = DamageMetrics.initialDamageMap();
         fakeDamageToShields = DamageMetrics.initialDamageMap();
@@ -446,7 +476,7 @@ public class EngineHelperTest {
         fakeWeapon.setMultishot(1.0);
         fakeWeapon.setCriticalChance(0.25);
         fakeWeapon.setCriticalDamage(2.0);
-        fakeWeapon.setStatusChance(0.15);
+        fakeWeapon.setStatusChance(0.05);
         fakeDamage = new Damage(DamageType.HEAT, 25.0);
         fakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(fakeDamage));
         fakeWeapon.setDamageSources(Collections.singletonList(fakeDamageSource));

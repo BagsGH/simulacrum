@@ -7,9 +7,9 @@ public interface StatusProc {
 
     StatusPropertyMapper STATUS_PROPERTY_MAPPER = new StatusPropertyMapper();
 
-    public void applyStatusToTarget(Target target);
+    void apply(Target target);
 
-    public StatusProc withDamageType(DamageType damageType);
+    StatusProc withDamageType(DamageType damageType);
 
-    public boolean targetModifier();
+    boolean targetModifier(); //TODO: Better name
 }

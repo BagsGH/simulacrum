@@ -24,7 +24,7 @@ public class ConfusionProc implements StatusProc {
     }
 
     @Override
-    public void applyStatusToTarget(Target target) {
+    public void apply(Target target) {
     }
 
     @Override

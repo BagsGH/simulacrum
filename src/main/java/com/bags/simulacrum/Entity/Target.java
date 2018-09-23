@@ -42,7 +42,7 @@ public class Target {
     }
 
     public void applyStatus() {
-        this.statuses.get(this.statuses.size() - 1).applyStatusToTarget(this);
+        this.statuses.get(this.statuses.size() - 1).apply(this);
     }
 
     public enum Faction {
