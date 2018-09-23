@@ -5,21 +5,21 @@ import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
 @Data
-public class UnimplementedPROC implements StatusPROC {
+public class UnimplementedProc implements StatusProc {
 
     private double duration;
     private int damageTicks;
     private double value;
     private DamageType damageType;
 
-    public UnimplementedPROC(DamageType damageType, double duration, double value, int damageTicks) {
+    public UnimplementedProc(DamageType damageType, double duration, double value, int damageTicks) {
         this.damageType = damageType;
         this.duration = duration;
         this.value = value;
         this.damageTicks = damageTicks;
     }
 
-    public UnimplementedPROC() {
+    public UnimplementedProc() {
 
     }
 
@@ -29,7 +29,7 @@ public class UnimplementedPROC implements StatusPROC {
     }
 
     @Override
-    public StatusPROC withProperties(DamageType damageType, double damage) {
+    public StatusProc withProperties(DamageType damageType, double damage) {
         return null;
     }
 }

@@ -1,25 +1,25 @@
 package com.bags.simulacrum.Damage;
 
-import com.bags.simulacrum.Status.StatusPROC;
-import com.bags.simulacrum.Status.StatusPROCType;
+import com.bags.simulacrum.Status.StatusProc;
+import com.bags.simulacrum.Status.StatusProcType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 @Component
-public class StatusPROCHelper {
+public class StatusProcHelper {
 
     private static final double IPS_STATUS_WEIGHT = 3.0;
 
     private final Random random;
 
     @Autowired
-    public StatusPROCHelper(Random random) {
+    public StatusProcHelper(Random random) {
         this.random = random;
     }
 
-    public StatusPROC handleStatusPROC(DamageSource damageSource, Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> damageDoneToShields) {
+    public StatusProc handleStatusProc(Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> damageDoneToShields) {
         Map<DamageType, Double> weightedDamagePerType = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> damagePerType = DamageMetrics.initialDamageMap();
 
@@ -49,8 +49,8 @@ public class StatusPROCHelper {
 
         double statusTypeRNG = random.getRandom();
 
-        DamageType statusPROCDamageType = getType(statusPROCChanceMap, statusTypeRNG);
-        return StatusPROCType.getStatusPROCClass(statusPROCDamageType).withProperties(statusPROCDamageType, damagePerType.get(statusPROCDamageType));
+        DamageType statusProcDamageType = getType(statusPROCChanceMap, statusTypeRNG);
+        return StatusProcType.getStatusProcClass(statusProcDamageType).withProperties(statusProcDamageType, damagePerType.get(statusProcDamageType));
     }
 
     private DamageType getType(Map<DamageType, Double> statusPROCChanceMap, double statusTypeRNG) {

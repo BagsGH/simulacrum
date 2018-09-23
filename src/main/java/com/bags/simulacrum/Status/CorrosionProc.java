@@ -5,21 +5,21 @@ import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
 @Data
-public class Corrosion implements StatusPROC {
+public class CorrosionProc implements StatusProc {
 
     private double duration;
     private int damageTicks;
     private int stacks;
     private DamageType damageType;
 
-    public Corrosion(DamageType damageType, double duration, int stacks, int damageTicks) {
+    public CorrosionProc(DamageType damageType, double duration, int stacks, int damageTicks) {
         this.damageType = damageType;
         this.duration = duration;
         this.stacks = stacks;
         this.damageTicks = damageTicks;
     }
 
-    public Corrosion() {
+    public CorrosionProc() {
 
     }
 
@@ -29,10 +29,10 @@ public class Corrosion implements StatusPROC {
     }
 
     @Override
-    public StatusPROC withProperties(DamageType damageType, double damage) {
-        double duration = StatusPROCType.getStatusPROCDuration(damageType);
-        int ticks = StatusPROCType.getStatusPROCTicks(damageType);
+    public StatusProc withProperties(DamageType damageType, double damage) {
+        double duration = StatusProcType.getStatusProcDuration(damageType);
+        int ticks = StatusProcType.getStatusProcTicks(damageType);
 
-        return new Corrosion(damageType, duration, 1, ticks);
+        return new CorrosionProc(damageType, duration, 1, ticks);
     }
 }

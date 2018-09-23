@@ -15,10 +15,10 @@ public class EngineHelper {
 
     private final TargetDamageHelper targetDamageHelper;
     private final Random random;
-    private final StatusPROCHelper statusPROCHelper;
+    private final StatusProcHelper statusPROCHelper;
 
     @Autowired
-    public EngineHelper(TargetDamageHelper targetDamageHelper, Random random, StatusPROCHelper statusPROCHelper) {
+    public EngineHelper(TargetDamageHelper targetDamageHelper, Random random, StatusProcHelper statusPROCHelper) {
         this.targetDamageHelper = targetDamageHelper;
         this.random = random;
         this.statusPROCHelper = statusPROCHelper;
@@ -54,7 +54,7 @@ public class EngineHelper {
                     updateRunningTotalDamageToHealth(finalDamageMetrics, damageMetrics.getDamageToHealth());
                     updateRunningTotalDamageToShields(finalDamageMetrics, damageMetrics.getDamageToShields());
                     if (statusProcRNG < weapon.getStatusChance()) {
-                        statusPROCHelper.handleStatusPROC(damageSource, damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
+                        statusPROCHelper.handleStatusProc(damageSource, damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
                     }
                 } else {
                     delayedDamageSources.add(new DelayedDamageSource(damageSource, damageSource.getDelay())); //TODO: calculate crits etc now or later? //TODO: new up a new damageSource?

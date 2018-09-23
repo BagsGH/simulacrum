@@ -5,7 +5,7 @@ import com.bags.simulacrum.Damage.DamageType;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum StatusPROCType {
+public enum StatusProcType {
     KNOCKBACK,
     WEAKENED,
     BLEED,
@@ -21,10 +21,10 @@ public enum StatusPROCType {
     CONFUSION,
     VIRUS;
 
-    private static final Map<DamageType, Double> statusPROCDurationMap;
+    private static final Map<DamageType, Double> statusProcDurationMap;
 
     static {
-        statusPROCDurationMap = new HashMap<DamageType, Double>() {{
+        statusProcDurationMap = new HashMap<DamageType, Double>() {{
             put(DamageType.IMPACT, 1.0);
             put(DamageType.PUNCTURE, 6.0);
             put(DamageType.SLASH, 6.0);
@@ -42,14 +42,14 @@ public enum StatusPROCType {
         }};
     }
 
-    public static Double getStatusPROCDuration(DamageType statusPROCType) {
-        return statusPROCDurationMap.getOrDefault(statusPROCType, 0.0);
+    public static Double getStatusProcDuration(DamageType statusPROCType) {
+        return statusProcDurationMap.getOrDefault(statusPROCType, 0.0);
     }
 
-    private static final Map<DamageType, Double> statusPROCModifierMap;
+    private static final Map<DamageType, Double> statusProcModifierMap;
 
     static {
-        statusPROCModifierMap = new HashMap<DamageType, Double>() {{
+        statusProcModifierMap = new HashMap<DamageType, Double>() {{
             put(DamageType.PUNCTURE, 0.70);
             put(DamageType.SLASH, 1.45);
             put(DamageType.COLD, -0.50);
@@ -63,33 +63,33 @@ public enum StatusPROCType {
         }};
     }
 
-    public static Double getStatusPROCModifier(DamageType statusPROCType) {
-        return statusPROCModifierMap.getOrDefault(statusPROCType, 0.0);
+    public static Double getStatusProcModifier(DamageType statusPROCType) {
+        return statusProcModifierMap.getOrDefault(statusPROCType, 0.0);
     }
 
-    private static final Map<DamageType, StatusPROC> statusTypeMap;
+    private static final Map<DamageType, StatusProc> statusTypeMap;
 
     static {
-        statusTypeMap = new HashMap<DamageType, StatusPROC>() {{
-            put(DamageType.IMPACT, new UnimplementedPROC());
-            put(DamageType.PUNCTURE, new UnimplementedPROC());
-            put(DamageType.SLASH, new UnimplementedPROC());
-            put(DamageType.COLD, new UnimplementedPROC());
-            put(DamageType.ELECTRICITY, new UnimplementedPROC());
-            put(DamageType.HEAT, new UnimplementedPROC());
-            put(DamageType.TOXIN, new UnimplementedPROC());
-            put(DamageType.VOID, new UnimplementedPROC());
-            put(DamageType.BLAST, new UnimplementedPROC());
-            put(DamageType.CORROSIVE, new Corrosion());
-            put(DamageType.GAS, new UnimplementedPROC());
-            put(DamageType.MAGNETIC, new UnimplementedPROC());
-            put(DamageType.RADIATION, new UnimplementedPROC());
-            put(DamageType.VIRAL, new UnimplementedPROC());
+        statusTypeMap = new HashMap<DamageType, StatusProc>() {{
+            put(DamageType.IMPACT, new UnimplementedProc());
+            put(DamageType.PUNCTURE, new UnimplementedProc());
+            put(DamageType.SLASH, new UnimplementedProc());
+            put(DamageType.COLD, new UnimplementedProc());
+            put(DamageType.ELECTRICITY, new UnimplementedProc());
+            put(DamageType.HEAT, new UnimplementedProc());
+            put(DamageType.TOXIN, new UnimplementedProc());
+            put(DamageType.VOID, new UnimplementedProc());
+            put(DamageType.BLAST, new UnimplementedProc());
+            put(DamageType.CORROSIVE, new CorrosionProc());
+            put(DamageType.GAS, new UnimplementedProc());
+            put(DamageType.MAGNETIC, new UnimplementedProc());
+            put(DamageType.RADIATION, new UnimplementedProc());
+            put(DamageType.VIRAL, new UnimplementedProc());
         }};
     }
 
-    public static StatusPROC getStatusPROCClass(DamageType statusPROCType) {
-        return statusTypeMap.getOrDefault(statusPROCType, new UnimplementedPROC());
+    public static StatusProc getStatusProcClass(DamageType statusPROCType) {
+        return statusTypeMap.getOrDefault(statusPROCType, new UnimplementedProc());
     }
 
     private static final Map<DamageType, Integer> damageTickMap;
@@ -113,7 +113,7 @@ public enum StatusPROCType {
         }};
     }
 
-    public static int getStatusPROCTicks(DamageType statusPROCType) {
+    public static int getStatusProcTicks(DamageType statusPROCType) {
         return damageTickMap.getOrDefault(statusPROCType, 0);
     }
 
