@@ -1,10 +1,10 @@
 package com.bags.simulacrum.Damage;
 
-import com.bags.simulacrum.Entity.StatusPROC;
+import com.bags.simulacrum.Status.StatusPROC;
+import com.bags.simulacrum.Status.StatusPROCType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -19,43 +19,38 @@ public class StatusPROCHelper {
         this.random = random;
     }
 
-    public StatusPROC handleStatusPROC(DamageSource damageSource) {
-        Map<DamageType, Double> statusPROCChanceMap = new HashMap<>();
-        int numberOfDamageTypes = damageSource.getDamages().size();
-        for (Damage damage : damageSource.getDamages()) {
-            statusPROCChanceMap.put(damage.getType(), 1.0 / numberOfDamageTypes);
-        }
-        int numberOfIPSDamageTypes = (int) damageSource.getDamages().stream().filter(damage -> DamageType.isIPS(damage.getType())).count();
-        double totalIPSWeight = 0.0;
-        for (DamageType damageType : statusPROCChanceMap.keySet()) {
-            if (DamageType.isIPS(damageType)) {
-                double weightedIPS = (statusPROCChanceMap.get(damageType) * IPS_STATUS_WEIGHT) / numberOfIPSDamageTypes;
-                statusPROCChanceMap.put(damageType, weightedIPS);
-                totalIPSWeight += weightedIPS;
-            }
-        }
-        int numberOfElementalDamageTypes = damageSource.getDamages().size() - numberOfIPSDamageTypes;
-        double totalElementWeight = damageSource.getDamages().size() - (totalIPSWeight * numberOfElementalDamageTypes);
-        for (DamageType damageType : statusPROCChanceMap.keySet()) {
-            if (DamageType.isElemental(damageType)) {
-                statusPROCChanceMap.put(damageType, totalElementWeight / numberOfElementalDamageTypes);
-            }
+    public StatusPROC handleStatusPROC(DamageSource damageSource, Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> damageDoneToShields) {
+        Map<DamageType, Double> weightedDamagePerType = DamageMetrics.initialDamageMap();
+        Map<DamageType, Double> damagePerType = DamageMetrics.initialDamageMap();
+
+        for (DamageType damageType : damageDoneToHealth.keySet()) {
+            double weightedNewValue = damageDoneToHealth.get(damageType) * (DamageType.isIPS(damageType) ? IPS_STATUS_WEIGHT : 1.0) + weightedDamagePerType.get(damageType);
+            weightedDamagePerType.put(damageType, weightedNewValue);
+            double newValue = damageDoneToHealth.get(damageType) + damagePerType.get(damageType);
+            damagePerType.put(damageType, newValue);
         }
 
-        double totalWeight = 0.0;
-        for (DamageType damageType : statusPROCChanceMap.keySet()) {
-            totalWeight += statusPROCChanceMap.get(damageType);
-        }
-        for (DamageType damageType : statusPROCChanceMap.keySet()) {
-            statusPROCChanceMap.put(damageType, statusPROCChanceMap.get(damageType) / totalWeight);
+        for (DamageType damageType : damageDoneToShields.keySet()) {
+            double weightedNewValue = damageDoneToShields.get(damageType) * (DamageType.isIPS(damageType) ? IPS_STATUS_WEIGHT : 1.0) + weightedDamagePerType.get(damageType);
+            weightedDamagePerType.put(damageType, weightedNewValue);
+            double newValue = damageDoneToShields.get(damageType) + damagePerType.get(damageType);
+            damagePerType.put(damageType, newValue);
         }
 
+        double totalDamageWithIPSWeights = 0.0;
+        for (DamageType damageType : weightedDamagePerType.keySet()) {
+            totalDamageWithIPSWeights += weightedDamagePerType.get(damageType);
+        }
+
+        Map<DamageType, Double> statusPROCChanceMap = DamageMetrics.initialDamageMap();
+        for (DamageType damageType : weightedDamagePerType.keySet()) {
+            statusPROCChanceMap.put(damageType, weightedDamagePerType.get(damageType) / totalDamageWithIPSWeights);
+        }
 
         double statusTypeRNG = random.getRandom();
-        DamageType statusPROCType = getType(statusPROCChanceMap, statusTypeRNG);
 
-
-        return null;
+        DamageType statusPROCDamageType = getType(statusPROCChanceMap, statusTypeRNG);
+        return StatusPROCType.getStatusPROCClass(statusPROCDamageType).withProperties(statusPROCDamageType, damagePerType.get(statusPROCDamageType));
     }
 
     private DamageType getType(Map<DamageType, Double> statusPROCChanceMap, double statusTypeRNG) {

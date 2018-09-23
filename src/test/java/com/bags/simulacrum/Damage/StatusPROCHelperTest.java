@@ -1,5 +1,6 @@
 package com.bags.simulacrum.Damage;
 
+import com.bags.simulacrum.Status.StatusPROC;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -8,6 +9,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.Mockito.when;
 
@@ -27,44 +30,73 @@ public class StatusPROCHelperTest {
 
     @Test
     public void itHandlesSingleElemental() {
+        Map<DamageType, Double> fakeDamageToHealth = new HashMap<>();
+        Map<DamageType, Double> fakeDamageToShields = new HashMap<>();
+        fakeDamageToHealth.put(DamageType.HEAT, 50.0);
+
         DamageSource fakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.HEAT, 25.0)));
 
-        subject.handleStatusPROC(fakeDamageSource);
+        subject.handleStatusPROC(fakeDamageSource, fakeDamageToHealth, fakeDamageToShields);
     }
 
     @Test
     public void itHandlesMultipleElementals() {
+        Map<DamageType, Double> fakeDamageToHealth = new HashMap<>();
+        Map<DamageType, Double> fakeDamageToShields = new HashMap<>();
+        fakeDamageToHealth.put(DamageType.HEAT, 50.0);
+        fakeDamageToHealth.put(DamageType.RADIATION, 25.0);
+
         DamageSource fakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.HEAT, 25.0), new Damage(DamageType.RADIATION, 25.0)));
 
-        subject.handleStatusPROC(fakeDamageSource);
+        subject.handleStatusPROC(fakeDamageSource, fakeDamageToHealth, fakeDamageToShields);
     }
 
     @Test
     public void itHandlesSingleIPS() {
+        Map<DamageType, Double> fakeDamageToHealth = new HashMap<>();
+        Map<DamageType, Double> fakeDamageToShields = new HashMap<>();
+        fakeDamageToHealth.put(DamageType.IMPACT, 50.0);
+
         DamageSource fakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.IMPACT, 25.0)));
 
-        subject.handleStatusPROC(fakeDamageSource);
+        subject.handleStatusPROC(fakeDamageSource, fakeDamageToHealth, fakeDamageToShields);
     }
 
     @Test
     public void itHandlesMultipleIPS() {
+        Map<DamageType, Double> fakeDamageToHealth = new HashMap<>();
+        Map<DamageType, Double> fakeDamageToShields = new HashMap<>();
+        fakeDamageToHealth.put(DamageType.IMPACT, 50.0);
+        fakeDamageToHealth.put(DamageType.PUNCTURE, 25.0);
+
         DamageSource fakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.IMPACT, 25.0), new Damage(DamageType.PUNCTURE, 25.0)));
 
-        subject.handleStatusPROC(fakeDamageSource);
+        subject.handleStatusPROC(fakeDamageSource, fakeDamageToHealth, fakeDamageToShields);
     }
 
     @Test
     public void itHandlesIPSAndElemental() {
-        DamageSource fakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.HEAT, 25.0), new Damage(DamageType.PUNCTURE, 25.0)));
+        Map<DamageType, Double> fakeDamageToHealth = new HashMap<>();
+        Map<DamageType, Double> fakeDamageToShields = new HashMap<>();
+        fakeDamageToHealth.put(DamageType.IMPACT, 50.0);
+        fakeDamageToHealth.put(DamageType.HEAT, 50.0);
 
-        subject.handleStatusPROC(fakeDamageSource);
+        DamageSource fakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.IMPACT, 25.0), new Damage(DamageType.HEAT, 25.0)));
+
+        subject.handleStatusPROC(fakeDamageSource, fakeDamageToHealth, fakeDamageToShields);
     }
 
     @Test
-    public void itHandlesIPSAndElemental_1() {
-        DamageSource fakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.HEAT, 25.0), new Damage(DamageType.RADIATION, 25.0), new Damage(DamageType.BLAST, 25.0), new Damage(DamageType.PUNCTURE, 25.0)));
+    public void itHandlesIPSAndMultipleElementals() {
+        Map<DamageType, Double> fakeDamageToHealth = new HashMap<>();
+        Map<DamageType, Double> fakeDamageToShields = new HashMap<>();
+        fakeDamageToHealth.put(DamageType.IMPACT, 10.0);
+        fakeDamageToHealth.put(DamageType.CORROSIVE, 50.0);
+        fakeDamageToShields.put(DamageType.RADIATION, 50.0);
 
-        subject.handleStatusPROC(fakeDamageSource);
+        DamageSource fakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.IMPACT, 25.0), new Damage(DamageType.RADIATION, 25.0), new Damage(DamageType.CORROSIVE, 25.0)));
+
+        StatusPROC p = subject.handleStatusPROC(fakeDamageSource, fakeDamageToHealth, fakeDamageToShields);
+        System.out.println("");
     }
-
 }

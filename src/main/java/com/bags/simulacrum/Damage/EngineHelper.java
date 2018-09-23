@@ -15,11 +15,13 @@ public class EngineHelper {
 
     private final TargetDamageHelper targetDamageHelper;
     private final Random random;
+    private final StatusPROCHelper statusPROCHelper;
 
     @Autowired
-    public EngineHelper(TargetDamageHelper targetDamageHelper, Random random) {
+    public EngineHelper(TargetDamageHelper targetDamageHelper, Random random, StatusPROCHelper statusPROCHelper) {
         this.targetDamageHelper = targetDamageHelper;
         this.random = random;
+        this.statusPROCHelper = statusPROCHelper;
     }
 
     public FiredWeaponMetrics handleFireWeapon(Weapon weapon, Target target, double headshotChance) { //tODO: secondary targets for aoe...?
@@ -35,8 +37,8 @@ public class EngineHelper {
         double bodyshotRNG = random.getRandom(); //TODO: maybe if the accuracy is bad, calculate this independently for multishot?
 
         int multishots = getMultishotLevel(weapon.getMultishot(), multishotRNG);
-        double headshotModifier = isHeadshot(headshotChance, headshotRNG) ? target.getHeadshotModifier() : 0.0;
-        double bodyModifier = !isHeadshot(headshotChance, headshotRNG) ? getBodyModifier(bodyshotRNG, target.getBodyModifiers()) : 0.0;
+        double headshotModifier = calculateHeadshotModifier(target, headshotChance, headshotRNG);
+        double bodyModifier = calculateBodyModifier(target, headshotChance, headshotRNG, bodyshotRNG);
 
         for (int i = 0; i < multishots; i++) {
             double criticalHitRNG = random.getRandom();
@@ -45,11 +47,15 @@ public class EngineHelper {
             double weaponCriticalDamageMultiplier = critLevel > 0 ? weapon.getCriticalDamage() : 0.0;
             HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier);
 
+
             for (DamageSource damageSource : weapon.getDamageSources()) {
                 if (!isDelayedDamageSource(damageSource)) {
                     DamageMetrics damageMetrics = targetDamageHelper.applyDamageSourceDamageToTarget(damageSource, hitProperties, target);
                     updateRunningTotalDamageToHealth(finalDamageMetrics, damageMetrics.getDamageToHealth());
                     updateRunningTotalDamageToShields(finalDamageMetrics, damageMetrics.getDamageToShields());
+                    if (statusProcRNG < weapon.getStatusChance()) {
+                        statusPROCHelper.handleStatusPROC(damageSource, damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
+                    }
                 } else {
                     delayedDamageSources.add(new DelayedDamageSource(damageSource, damageSource.getDelay())); //TODO: calculate crits etc now or later? //TODO: new up a new damageSource?
                 }
@@ -67,6 +73,14 @@ public class EngineHelper {
             multishot++;
         }
         return multishot;
+    }
+
+    private double calculateHeadshotModifier(Target target, double headshotChance, double headshotRNG) {
+        return headshotRNG < headshotChance ? target.getHeadshotModifier() : 0.0;
+    }
+
+    private double calculateBodyModifier(Target target, double headshotChance, double headshotRNG, double bodyshotRNG) {
+        return !(headshotRNG < headshotChance) ? getBodyModifier(bodyshotRNG, target.getBodyModifiers()) : 0.0;
     }
 
     private boolean isHeadshot(double headshotChance, double headshotRNG) {
