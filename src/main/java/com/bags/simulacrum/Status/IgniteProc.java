@@ -29,8 +29,8 @@ public class IgniteProc implements StatusProc {
 
     @Override
     public StatusProc withDamageType(DamageType damageType) {
-        double duration = StatusProcType.getStatusProcDuration(damageType);
-        int ticks = StatusProcType.getStatusProcTicks(damageType);
+        double duration = STATUS_PROPERTY_MAPPER.getStatusProcDuration(damageType);
+        int ticks = STATUS_PROPERTY_MAPPER.getStatusProcTicks(damageType);
 
         return new IgniteProc(damageType, duration, ticks);
     }

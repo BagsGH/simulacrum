@@ -1,25 +1,13 @@
 package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Damage.DamageType;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public enum StatusProcType {
-    KNOCKBACK,
-    WEAKENED,
-    BLEED,
-    FREEZE,
-    CHAIN_LIGHTNING,
-    IGNITE,
-    POISON,
-    BULLET_ATTRACTOR,
-    KNOCKDOWN,
-    CORROSION,
-    TOXIN_CLOUD,
-    DISRUPT,
-    CONFUSION,
-    VIRUS;
+@Component
+public class StatusPropertyMapper {
 
     private static final Map<DamageType, Double> statusProcDurationMap;
 
@@ -34,7 +22,7 @@ public enum StatusProcType {
             put(DamageType.TOXIN, 8.0);
             put(DamageType.VOID, 3.0);
             put(DamageType.BLAST, 1.0);
-            put(DamageType.CORROSIVE, 99999999.0);
+            put(DamageType.CORROSIVE, -1.0);
             put(DamageType.GAS, 8.0);
             put(DamageType.MAGNETIC, 4.0);
             put(DamageType.RADIATION, 12.0);
@@ -42,7 +30,7 @@ public enum StatusProcType {
         }};
     }
 
-    public static Double getStatusProcDuration(DamageType statusPROCType) {
+    public Double getStatusProcDuration(DamageType statusPROCType) {
         return statusProcDurationMap.getOrDefault(statusPROCType, 0.0);
     }
 
@@ -63,7 +51,7 @@ public enum StatusProcType {
         }};
     }
 
-    public static Double getStatusProcModifier(DamageType statusPROCType) {
+    public Double getStatusProcModifier(DamageType statusPROCType) {
         return statusProcModifierMap.getOrDefault(statusPROCType, 0.0);
     }
 
@@ -73,7 +61,7 @@ public enum StatusProcType {
         statusTypeMap = new HashMap<DamageType, StatusProc>() {{
             put(DamageType.IMPACT, new KnockbackProc());
             put(DamageType.PUNCTURE, new UnimplementedProc());
-            put(DamageType.SLASH, new UnimplementedProc());
+            put(DamageType.SLASH, new BleedProc());
             put(DamageType.COLD, new UnimplementedProc());
             put(DamageType.ELECTRICITY, new UnimplementedProc());
             put(DamageType.HEAT, new IgniteProc());
@@ -85,11 +73,15 @@ public enum StatusProcType {
             put(DamageType.MAGNETIC, new UnimplementedProc());
             put(DamageType.RADIATION, new UnimplementedProc());
             put(DamageType.VIRAL, new UnimplementedProc());
+            put(null, new UnimplementedProc());
         }};
     }
 
-    public static StatusProc getStatusProcClass(DamageType statusPROCType) {
-        return statusTypeMap.getOrDefault(statusPROCType, new UnimplementedProc()).withDamageType(statusPROCType);
+    public StatusProc getStatusProcClass(DamageType statusProcType) { //TODO: should not need this if.
+        if (statusProcType == null) {
+            return new UnimplementedProc();
+        }
+        return statusTypeMap.getOrDefault(statusProcType, new UnimplementedProc()).withDamageType(statusProcType);
     }
 
     private static final Map<DamageType, Integer> damageTickMap;
@@ -113,8 +105,7 @@ public enum StatusProcType {
         }};
     }
 
-    public static int getStatusProcTicks(DamageType statusPROCType) {
+    public int getStatusProcTicks(DamageType statusPROCType) {
         return damageTickMap.getOrDefault(statusPROCType, 0);
     }
-
 }

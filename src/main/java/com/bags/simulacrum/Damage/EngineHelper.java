@@ -54,7 +54,7 @@ public class EngineHelper {
                     updateRunningTotalDamageToHealth(finalDamageMetrics, damageMetrics.getDamageToHealth());
                     updateRunningTotalDamageToShields(finalDamageMetrics, damageMetrics.getDamageToShields());
                     if (statusProcRNG < weapon.getStatusChance()) {
-                        statusPROCHelper.handleStatusProc(damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
+                        //statusPROCHelper.handleStatusProc(damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
                     }
                 } else {
                     delayedDamageSources.add(new DelayedDamageSource(damageSource, damageSource.getDelay())); //TODO: calculate crits etc now or later? //TODO: new up a new damageSource?

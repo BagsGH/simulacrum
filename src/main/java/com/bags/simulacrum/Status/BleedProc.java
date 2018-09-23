@@ -38,8 +38,8 @@ public class BleedProc implements StatusProc {
 
     @Override
     public StatusProc withDamageType(DamageType damageType) {
-        double duration = StatusProcType.getStatusProcDuration(damageType);
-        int ticks = StatusProcType.getStatusProcTicks(damageType);
+        double duration = STATUS_PROPERTY_MAPPER.getStatusProcDuration(damageType);
+        int ticks = STATUS_PROPERTY_MAPPER.getStatusProcTicks(damageType);
 
         return new BleedProc(damageType, duration, ticks);
     }

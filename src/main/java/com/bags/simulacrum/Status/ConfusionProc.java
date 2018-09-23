@@ -1,15 +1,11 @@
 package com.bags.simulacrum.Status;
 
-import com.bags.simulacrum.Armor.Health;
-import com.bags.simulacrum.Armor.HealthClass;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class CorrosionProc implements StatusProc {
+public class ConfusionProc implements StatusProc {
 
     private double duration;
     private int damageTicks;
@@ -17,23 +13,18 @@ public class CorrosionProc implements StatusProc {
 
     private static final double ARMOR_REDUCTION_RATIO = 0.25;
 
-    private CorrosionProc(DamageType damageType, double duration, int damageTicks) {
+    private ConfusionProc(DamageType damageType, double duration, int damageTicks) {
         this.damageType = damageType;
         this.duration = duration;
         this.damageTicks = damageTicks;
     }
 
-    public CorrosionProc() {
+    public ConfusionProc() {
 
     }
 
     @Override
     public void applyStatusToTarget(Target target) {
-        Health armor = findArmor(target.getHealth());
-        if (armor != null) {
-            double currentArmor = armor.getHealthValue();
-            armor.setHealthValue(currentArmor * (1 - ARMOR_REDUCTION_RATIO));
-        }
     }
 
     @Override
@@ -41,10 +32,7 @@ public class CorrosionProc implements StatusProc {
         double duration = STATUS_PROPERTY_MAPPER.getStatusProcDuration(damageType);
         int ticks = STATUS_PROPERTY_MAPPER.getStatusProcTicks(damageType);
 
-        return new CorrosionProc(damageType, duration, ticks);
+        return new ConfusionProc(damageType, duration, ticks);
     }
 
-    private Health findArmor(List<Health> health) {
-        return health.stream().filter(h -> HealthClass.isArmor(h.getHealthClass())).findFirst().orElse(null);
-    }
 }

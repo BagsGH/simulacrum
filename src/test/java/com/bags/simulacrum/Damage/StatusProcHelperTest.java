@@ -1,9 +1,6 @@
 package com.bags.simulacrum.Damage;
 
-import com.bags.simulacrum.Status.CorrosionProc;
-import com.bags.simulacrum.Status.IgniteProc;
-import com.bags.simulacrum.Status.KnockbackProc;
-import com.bags.simulacrum.Status.StatusProc;
+import com.bags.simulacrum.Status.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -15,6 +12,7 @@ import java.util.Map;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 public class StatusProcHelperTest {
@@ -25,17 +23,22 @@ public class StatusProcHelperTest {
     @Mock
     private Random mockRandom;
 
+    @Mock
+    private StatusPropertyMapper mockStatusPropertyMapper;
+
     private Map<DamageType, Double> fakeDamageToHealth;
     private Map<DamageType, Double> fakeDamageToShields;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        
+
         when(mockRandom.getRandom()).thenReturn(0.50);
 
         fakeDamageToHealth = new HashMap<>();
         fakeDamageToShields = new HashMap<>();
+
+        setupMockStatusProcPropertyMapper();
     }
 
     @Test
@@ -49,7 +52,7 @@ public class StatusProcHelperTest {
     }
 
     @Test
-    public void itHandlesMultipleElementals() { //TODO: might need to fix test, order not gaurunteed
+    public void itHandlesMultipleElementals() {
         fakeDamageToHealth.put(DamageType.HEAT, 50.0);
         fakeDamageToHealth.put(DamageType.RADIATION, 25.0);
 
@@ -57,8 +60,13 @@ public class StatusProcHelperTest {
 
         StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
-        assertTrue(returnedProc instanceof IgniteProc);
-        assertEquals(DamageType.HEAT, ((IgniteProc) returnedProc).getDamageType());
+        assertTrue(returnedProc instanceof IgniteProc || returnedProc instanceof ConfusionProc);
+        if (returnedProc instanceof IgniteProc) {
+            assertEquals(DamageType.HEAT, ((IgniteProc) returnedProc).getDamageType());
+        }
+        if (returnedProc instanceof ConfusionProc) {
+            assertEquals(DamageType.RADIATION, ((ConfusionProc) returnedProc).getDamageType());
+        }
     }
 
     @Test
@@ -72,16 +80,21 @@ public class StatusProcHelperTest {
     }
 
     @Test
-    public void itHandlesMultipleIPS() { //TODO: might need to fix test, order not gaurunteed
+    public void itHandlesMultipleIPS() {
         fakeDamageToHealth.put(DamageType.IMPACT, 50.0);
-        fakeDamageToHealth.put(DamageType.PUNCTURE, 25.0);
+        fakeDamageToHealth.put(DamageType.SLASH, 25.0);
 
         when(mockRandom.getRandom()).thenReturn(0.0);
 
         StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
-        assertTrue(returnedProc instanceof KnockbackProc);
-        assertEquals(DamageType.IMPACT, ((KnockbackProc) returnedProc).getDamageType());
+        assertTrue(returnedProc instanceof KnockbackProc || returnedProc instanceof BleedProc);
+        if (returnedProc instanceof KnockbackProc) {
+            assertEquals(DamageType.IMPACT, ((KnockbackProc) returnedProc).getDamageType());
+        }
+        if (returnedProc instanceof BleedProc) {
+            assertEquals(DamageType.SLASH, ((BleedProc) returnedProc).getDamageType());
+        }
     }
 
     @Test
@@ -122,5 +135,27 @@ public class StatusProcHelperTest {
 
         assertTrue(returnedProc instanceof KnockbackProc);
         assertEquals(DamageType.IMPACT, ((KnockbackProc) returnedProc).getDamageType());
+    }
+
+    @Test
+    public void nonsenseTestForCoverage() {
+        fakeDamageToShields.put(DamageType.RADIATION, 50.0);
+        /*
+        TODO: This cannot happen. Find a way to remove this test and keep 100% coverage.
+         */
+        when(mockRandom.getRandom()).thenReturn(1.01);
+
+        StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
+
+        assertTrue(returnedProc instanceof UnimplementedProc);
+    }
+
+    private void setupMockStatusProcPropertyMapper() {
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.HEAT))).thenReturn(new IgniteProc().withDamageType(DamageType.HEAT));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.RADIATION))).thenReturn(new ConfusionProc().withDamageType(DamageType.RADIATION));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.CORROSIVE))).thenReturn(new CorrosionProc().withDamageType(DamageType.CORROSIVE));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.SLASH))).thenReturn(new BleedProc().withDamageType(DamageType.SLASH));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.IMPACT))).thenReturn(new KnockbackProc().withDamageType(DamageType.IMPACT));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(null))).thenReturn(new UnimplementedProc());
     }
 }

@@ -1,7 +1,7 @@
 package com.bags.simulacrum.Damage;
 
 import com.bags.simulacrum.Status.StatusProc;
-import com.bags.simulacrum.Status.StatusProcType;
+import com.bags.simulacrum.Status.StatusPropertyMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,9 +14,12 @@ public class StatusProcHelper {
 
     private final Random random;
 
+    private final StatusPropertyMapper statusPropertyMapper;
+
     @Autowired
-    public StatusProcHelper(Random random) {
+    public StatusProcHelper(Random random, StatusPropertyMapper statusPropertyMapper) {
         this.random = random;
+        this.statusPropertyMapper = statusPropertyMapper;
     }
 
     public StatusProc handleStatusProc(Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> damageDoneToShields) {
@@ -39,7 +42,7 @@ public class StatusProcHelper {
         double statusTypeRNG = random.getRandom();
 
         DamageType statusProcDamageType = getStatusProcType(statusPROCChanceMap, statusTypeRNG);
-        return StatusProcType.getStatusProcClass(statusProcDamageType);
+        return statusPropertyMapper.getStatusProcClass(statusProcDamageType);
     }
 
     private void populateDamageMaps(Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> weightedDamagePerType, Map<DamageType, Double> damagePerType) {
@@ -72,7 +75,7 @@ public class StatusProcHelper {
                 minOfChanceRangeForStatusType = maxOfChanceRangeForStatusType;
             }
         }
-        return null;
+        return null; //TODO: can I get rid of this?!
     }
 
 
