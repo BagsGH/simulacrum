@@ -45,7 +45,7 @@ public class TargetDamageHelper {
             }
         }
 
-        return new DamageSummary(target, damageToShields, damageToHealth);
+        return new DamageSummary(target, damageToHealth, damageToShields);
     }
 
     private Map<DamageType, Double> initialDamageMap() {

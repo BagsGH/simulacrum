@@ -22,7 +22,7 @@ public class EngineHelper {
         this.random = random;
     }
 
-    public FiredWeaponSummary handleFireWeapon(Weapon weapon, Target target, double headshotChance) {
+    public FiredWeaponSummary handleFireWeapon(Weapon weapon, Target target, double headshotChance) { //tODO: secondary targets for aoe...?
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         Map<DamageType, Double> summedDamageToHealth = DamageSummary.initialDamageMap();
         Map<DamageType, Double> summedDamageToShields = DamageSummary.initialDamageMap();
@@ -37,26 +37,28 @@ public class EngineHelper {
         double bodyModifier = !(headshotRNG < headshotChance) ? getBodyModifier(bodyshotRNG, target.getBodyModifiers()) : 0.0;
 
         for (int i = 0; i < multishots; i++) {
+            double criticalHitRNG = random.getRandom();
+            double statusProcRNG = random.getRandom(); //TODO: handle procs
+            int critLevel = getCritLevel(weapon.getCriticalChance(), criticalHitRNG);
+            double weaponCriticalDamageMultiplier = critLevel > 0 ? weapon.getCriticalDamage() : 0.0;
+            HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier);
+
             for (DamageSource damageSource : weapon.getDamageSources()) {
                 if (!isDelayedDamageSource(damageSource)) {
-                    double criticalHitRNG = random.getRandom();
-                    double statusProcRNG = random.getRandom(); //TODO: handle procs
-                    int critLevel = getCritLevel(weapon.getCriticalChance(), criticalHitRNG);
-                    double weaponCriticalDamageMultiplier = critLevel > 0 ? weapon.getCriticalDamage() : 0.0;
-                    HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier);
-
                     DamageSummary damageSummary = targetDamageHelper.applyDamageSourceDamageToTarget(damageSource, hitProperties, target);
                     updateRunningTotalDamageToHealth(summedDamageToHealth, damageSummary.getDamageToHealth());
                     updateRunningTotalDamageToShields(summedDamageToShields, damageSummary.getDamageToShields());
 
-                    hitPropertiesList.add(hitProperties);
                 } else {
-                    delayedDamageSources.add(new DelayedDamageSource(damageSource, damageSource.getDelay()));
+                    delayedDamageSources.add(new DelayedDamageSource(damageSource, damageSource.getDelay())); //TODO: calculate crits etc now or later? //TODO: new up a new damageSource?
                 }
             }
+
+            hitPropertiesList.add(hitProperties);
+
         }
 
-        return new FiredWeaponSummary(hitPropertiesList, new DamageSummary(target, summedDamageToShields, summedDamageToHealth), delayedDamageSources);
+        return new FiredWeaponSummary(hitPropertiesList, new DamageSummary(target, summedDamageToHealth, summedDamageToShields), delayedDamageSources);
     }
 
     private int getCritLevel(double weaponCriticalChance, double criticalRNG) {
@@ -99,8 +101,8 @@ public class EngineHelper {
 
     private void updateRunningTotalDamageToShields(Map<DamageType, Double> summedDamageToShields, Map<DamageType, Double> damageToShields) {
         for (DamageType damageType : damageToShields.keySet()) {
-            double currentDamageToHealthValues = summedDamageToShields.get(damageType);
-            summedDamageToShields.put(damageType, currentDamageToHealthValues + damageToShields.get(damageType));
+            double currentDamageToShieldValues = summedDamageToShields.get(damageType);
+            summedDamageToShields.put(damageType, currentDamageToShieldValues + damageToShields.get(damageType));
         }
     }
 

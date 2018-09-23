@@ -13,7 +13,7 @@ public class DamageSummary {
     private Map<DamageType, Double> damageToShields;
     private Map<DamageType, Double> damageToHealth;
 
-    public DamageSummary(Target target, Map<DamageType, Double> damageToShields, Map<DamageType, Double> damageToHealth) {
+    public DamageSummary(Target target, Map<DamageType, Double> damageToHealth, Map<DamageType, Double> damageToShields) {
         this.target = target;
         this.damageToShields = damageToShields;
         this.damageToHealth = damageToHealth;

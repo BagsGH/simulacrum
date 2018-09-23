@@ -223,6 +223,94 @@ public class EngineHelperTest {
         assertEquals(fakeWeapon.getCriticalDamage(), actualHitProperties.getCriticalDamageMultiplier(), 0.0);
     }
 
+    @Test
+    public void itReturnsADelayedDamageSource() {
+        fakeDamageSource.setDamageSourceType(DamageSourceType.DELAYED_AOE);
+
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+
+        assertEquals(1, firedWeaponSummary.getDelayedDamageSources().size());
+        assertEquals(fakeDamageSource, firedWeaponSummary.getDelayedDamageSources().get(0).getDamageSource());
+    }
+
+    @Test
+    public void itReturnsDelayedDamageSources() {
+        fakeDamageSource.setDamageSourceType(DamageSourceType.DELAYED_AOE);
+        DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.DELAYED, Collections.singletonList(new Damage(DamageType.IMPACT, 50.0)));
+        fakeWeapon.setDamageSources(Arrays.asList(fakeDamageSource, anotherFakeDamageSource));
+
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+
+        assertEquals(2, firedWeaponSummary.getDelayedDamageSources().size());
+        assertEquals(fakeDamageSource, firedWeaponSummary.getDelayedDamageSources().get(0).getDamageSource());
+        assertEquals(anotherFakeDamageSource, firedWeaponSummary.getDelayedDamageSources().get(1).getDamageSource()); //TODO: don't assume order?
+    }
+
+    @Test
+    public void itReturnsADamageSummary() {
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+
+        assertEquals(fakeDamageToHealth, firedWeaponSummary.getDamageSummary().getDamageToHealth());
+        assertEquals(fakeDamageToShields, firedWeaponSummary.getDamageSummary().getDamageToShields());
+    }
+
+    @Test
+    public void itReturnsADamageSummaryWithValuesReturnedByHelpers_Health() {
+        fakeDamageToHealth.put(DamageType.HEAT, 50.0);
+
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+
+        assertEquals(fakeDamageToHealth, firedWeaponSummary.getDamageSummary().getDamageToHealth());
+        assertEquals(fakeDamageToShields, firedWeaponSummary.getDamageSummary().getDamageToShields());
+
+        assertEquals(50.0, firedWeaponSummary.getDamageSummary().getDamageToHealth().get(DamageType.HEAT), 0.0);
+    }
+
+    @Test
+    public void itSumsDamageSummariesFromMultipleDamageSources_Health() {
+        fakeDamageToHealth.put(DamageType.HEAT, 50.0);
+        Map<DamageType, Double> anotherFakeDamageToHealth = DamageSummary.initialDamageMap();
+        Map<DamageType, Double> anotherFakeDamageToShields = DamageSummary.initialDamageMap();
+        anotherFakeDamageToHealth.put(DamageType.HEAT, 75.0);
+        DamageSummary anotherFakeDamageSummary = new DamageSummary(fakeTarget, anotherFakeDamageToHealth, anotherFakeDamageToShields);
+        when(mockTargetDamageHelper.applyDamageSourceDamageToTarget(any(), any(), any())).thenReturn(fakeDamageSummary).thenReturn(anotherFakeDamageSummary);
+        DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.HEAT, 1234.0)));
+        fakeWeapon.setDamageSources(Arrays.asList(fakeDamageSource, anotherFakeDamageSource));
+
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+
+        assertEquals(125.0, firedWeaponSummary.getDamageSummary().getDamageToHealth().get(DamageType.HEAT), 0.0);
+    }
+
+    @Test
+    public void itReturnsADamageSummaryWithValuesReturnedByHelpers_Shields() {
+        fakeDamageToShields.put(DamageType.HEAT, 50.0);
+
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+
+        assertEquals(fakeDamageToHealth, firedWeaponSummary.getDamageSummary().getDamageToHealth());
+        assertEquals(fakeDamageToShields, firedWeaponSummary.getDamageSummary().getDamageToShields());
+
+        assertEquals(50.0, firedWeaponSummary.getDamageSummary().getDamageToShields().get(DamageType.HEAT), 0.0);
+    }
+
+    @Test
+    public void itSumsDamageSummariesFromMultipleDamageSources_Shields() {
+        fakeDamageToShields.put(DamageType.HEAT, 50.0);
+        Map<DamageType, Double> anotherFakeDamageToHealth = DamageSummary.initialDamageMap();
+        Map<DamageType, Double> anotherFakeDamageToShields = DamageSummary.initialDamageMap();
+        anotherFakeDamageToShields.put(DamageType.HEAT, 75.0);
+        DamageSummary anotherFakeDamageSummary = new DamageSummary(fakeTarget, anotherFakeDamageToHealth, anotherFakeDamageToShields);
+        when(mockTargetDamageHelper.applyDamageSourceDamageToTarget(any(), any(), any())).thenReturn(fakeDamageSummary).thenReturn(anotherFakeDamageSummary);
+        DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.HEAT, 1234.0)));
+        fakeWeapon.setDamageSources(Arrays.asList(fakeDamageSource, anotherFakeDamageSource));
+
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+
+        assertEquals(125.0, firedWeaponSummary.getDamageSummary().getDamageToShields().get(DamageType.HEAT), 0.0);
+    }
+
+
     private void setupDefaultFakeDamageSummary() {
         fakeDamageToHealth = DamageSummary.initialDamageMap();
         fakeDamageToShields = DamageSummary.initialDamageMap();
