@@ -48,7 +48,7 @@ public class EngineHelper {
             int critLevel = getCritLevel(weapon.getCriticalChance(), criticalHitRNG);
             double weaponCriticalDamageMultiplier = critLevel > 0 ? weapon.getCriticalDamage() : 0.0;
             HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier);
-
+            // TODO: roll status procs applied into hit properties?
             for (DamageSource damageSource : weapon.getDamageSources()) {
                 if (!isDelayedDamageSource(damageSource)) {
                     DamageMetrics damageMetrics = targetDamageHelper.applyDamageSourceDamageToTarget(damageSource, hitProperties, target);

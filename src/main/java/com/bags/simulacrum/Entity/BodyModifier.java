@@ -6,7 +6,6 @@ import lombok.Data;
 public class BodyModifier {
 
     private BodyPart bodyPart;
-    private boolean isHead;
     private double modifierValue;
     private double chanceToHit;
 
