@@ -1,7 +1,11 @@
-package com.bags.simulacrum.Damage;
+package com.bags.simulacrum.Simulation;
 
 import com.bags.simulacrum.Armor.Health;
 import com.bags.simulacrum.Armor.HealthClass;
+import com.bags.simulacrum.Damage.Damage;
+import com.bags.simulacrum.Damage.DamageCalculator;
+import com.bags.simulacrum.Damage.DamageSource;
+import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
 import org.junit.Before;
 import org.junit.Test;

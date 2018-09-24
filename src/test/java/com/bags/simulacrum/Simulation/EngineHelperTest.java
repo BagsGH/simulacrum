@@ -1,12 +1,17 @@
-package com.bags.simulacrum.Damage;
+package com.bags.simulacrum.Simulation;
 
 import com.bags.simulacrum.Armor.Health;
 import com.bags.simulacrum.Armor.HealthClass;
+import com.bags.simulacrum.Damage.Damage;
+import com.bags.simulacrum.Damage.DamageSource;
+import com.bags.simulacrum.Damage.DamageSourceType;
+import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.BodyModifier;
 import com.bags.simulacrum.Entity.BodyPart;
 import com.bags.simulacrum.Entity.Target;
 import com.bags.simulacrum.Status.CorrosionProc;
 import com.bags.simulacrum.Status.IgniteProc;
+import com.bags.simulacrum.Status.StatusProcHelper;
 import com.bags.simulacrum.Weapon.Weapon;
 import org.junit.Before;
 import org.junit.Test;

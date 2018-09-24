@@ -49,7 +49,7 @@ public class CorrosionProc implements StatusProc {
     }
 
     @Override
-    public boolean targetModifier() {
+    public boolean applyInstantly() {
         return true;
     }
 }

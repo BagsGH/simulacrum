@@ -45,7 +45,7 @@ public class BleedProc implements StatusProc {
     }
 
     @Override
-    public boolean targetModifier() {
+    public boolean applyInstantly() {
         return false;
     }
 

@@ -3,6 +3,7 @@ package com.bags.simulacrum.Damage;
 import com.bags.simulacrum.Armor.DamageBonusMapper;
 import com.bags.simulacrum.Armor.Health;
 import com.bags.simulacrum.Armor.HealthClass;
+import com.bags.simulacrum.Simulation.HitProperties;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

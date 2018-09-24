@@ -11,5 +11,5 @@ public interface StatusProc {
 
     StatusProc withDamageType(DamageType damageType);
 
-    boolean targetModifier(); //TODO: Better name
+    boolean applyInstantly(); //TODO: Better name
 }

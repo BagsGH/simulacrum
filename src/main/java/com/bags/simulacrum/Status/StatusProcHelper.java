@@ -1,7 +1,8 @@
-package com.bags.simulacrum.Damage;
+package com.bags.simulacrum.Status;
 
-import com.bags.simulacrum.Status.StatusProc;
-import com.bags.simulacrum.Status.StatusPropertyMapper;
+import com.bags.simulacrum.Damage.DamageType;
+import com.bags.simulacrum.Simulation.DamageMetrics;
+import com.bags.simulacrum.Simulation.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

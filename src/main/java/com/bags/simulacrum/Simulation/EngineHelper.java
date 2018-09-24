@@ -1,8 +1,13 @@
-package com.bags.simulacrum.Damage;
+package com.bags.simulacrum.Simulation;
 
+import com.bags.simulacrum.Damage.DamageSource;
+import com.bags.simulacrum.Damage.DamageSourceType;
+import com.bags.simulacrum.Damage.DamageType;
+import com.bags.simulacrum.Damage.DelayedDamageSource;
 import com.bags.simulacrum.Entity.BodyModifier;
 import com.bags.simulacrum.Entity.Target;
 import com.bags.simulacrum.Status.StatusProc;
+import com.bags.simulacrum.Status.StatusProcHelper;
 import com.bags.simulacrum.Weapon.Weapon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -126,7 +131,7 @@ public class EngineHelper {
     private StatusProc handleStatusChance(Target target, DamageMetrics damageMetrics) {
         StatusProc statusProc = statusProcHelper.handleStatusProc(damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
         target.addStatus(statusProc);
-        if (statusProc.targetModifier()) {
+        if (statusProc.applyInstantly()) {
             target.applyStatus();
         }
         return statusProc;

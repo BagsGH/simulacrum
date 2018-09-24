@@ -36,7 +36,7 @@ public class IgniteProc implements StatusProc {
     }
 
     @Override
-    public boolean targetModifier() {
+    public boolean applyInstantly() {
         return false;
     }
 }

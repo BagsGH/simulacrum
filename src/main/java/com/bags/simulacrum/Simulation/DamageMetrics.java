@@ -1,5 +1,6 @@
-package com.bags.simulacrum.Damage;
+package com.bags.simulacrum.Simulation;
 
+import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
@@ -18,7 +19,7 @@ public class DamageMetrics {
         this.damageToShields = damageToShields;
         this.damageToHealth = damageToHealth;
     }
-    
+
     public void addToShields(DamageType damageType, double value) {
         double currentValueForType = damageToShields.get(damageType);
         damageToShields.put(damageType, currentValueForType + value);

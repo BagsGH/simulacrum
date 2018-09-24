@@ -1,6 +1,7 @@
-package com.bags.simulacrum.Damage;
+package com.bags.simulacrum.Status;
 
-import com.bags.simulacrum.Status.*;
+import com.bags.simulacrum.Damage.DamageType;
+import com.bags.simulacrum.Simulation.Random;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;

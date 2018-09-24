@@ -1,5 +1,6 @@
-package com.bags.simulacrum.Damage;
+package com.bags.simulacrum.Simulation;
 
+import com.bags.simulacrum.Damage.DelayedDamageSource;
 import com.bags.simulacrum.Status.StatusProc;
 import lombok.Data;
 

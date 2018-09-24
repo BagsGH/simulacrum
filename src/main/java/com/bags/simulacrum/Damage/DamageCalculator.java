@@ -2,6 +2,7 @@ package com.bags.simulacrum.Damage;
 
 import com.bags.simulacrum.Armor.DamageBonusMapper;
 import com.bags.simulacrum.Armor.Health;
+import com.bags.simulacrum.Simulation.HitProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
