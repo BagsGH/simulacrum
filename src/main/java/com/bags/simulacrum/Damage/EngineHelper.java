@@ -48,8 +48,9 @@ public class EngineHelper {
             int critLevel = getCritLevel(weapon.getCriticalChance(), criticalHitRNG);
             double weaponCriticalDamageMultiplier = critLevel > 0 ? weapon.getCriticalDamage() : 0.0;
             HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier);
-            // TODO: roll status procs applied into hit properties?
+
             for (DamageSource damageSource : weapon.getDamageSources()) {
+                //TODO: for now, each damage source will get a status proc. Not sure how to handle Opticor, but for now this is how it works.
                 if (!isDelayedDamageSource(damageSource)) {
                     DamageMetrics damageMetrics = targetDamageHelper.applyDamageSourceDamageToTarget(damageSource, hitProperties, target);
                     updateRunningTotalDamageToHealth(finalDamageMetrics, damageMetrics.getDamageToHealth());
@@ -58,7 +59,7 @@ public class EngineHelper {
                         statusProcsApplied.add(handleStatusChance(target, damageMetrics));
                     }
                 } else {
-                    delayedDamageSources.add(new DelayedDamageSource(damageSource, damageSource.getDelay())); //TODO: calculate crits etc now or later? //TODO: new up a new damageSource?
+                    delayedDamageSources.add(new DelayedDamageSource(damageSource.deepCopy(), damageSource.getDelay())); //TODO: calculate crits etc now or later?
                 }
             }
             hitPropertiesList.add(hitProperties);
@@ -77,7 +78,7 @@ public class EngineHelper {
     }
 
     private double calculateHeadshotModifier(Target target, double headshotChance, double headshotRNG) {
-        return headshotRNG < headshotChance ? target.getHeadshotModifier() : 0.0;
+        return headshotRNG < headshotChance ? target.getHeadModifierValue() : 0.0;
     }
 
     private double calculateBodyModifier(Target target, double headshotChance, double headshotRNG, double bodyshotRNG) {

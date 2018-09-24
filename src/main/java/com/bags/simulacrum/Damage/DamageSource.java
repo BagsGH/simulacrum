@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class DamageSource {
@@ -25,10 +26,18 @@ public class DamageSource {
         this.aoe = aoe;
     }
 
-    public DamageSource(DamageSource damageSourceToCopy) {
-        this.damageSourceType = damageSourceToCopy.getDamageSourceType();
-        this.delay = damageSourceToCopy.getDelay();
-        this.aoe = damageSourceToCopy.getAoe();
+    public DamageSource copyWithoutDamages() {
+        DamageSource copiedDamageSource = new DamageSource();
+        copiedDamageSource.setDamageSourceType(this.damageSourceType);
+        copiedDamageSource.setAoe(this.aoe);
+        copiedDamageSource.setDelay(this.delay);
+        return copiedDamageSource;
+    }
+
+    public DamageSource deepCopy() {
+        DamageSource copiedDamageSource = this.copyWithoutDamages();
+        copiedDamageSource.setDamages(damages.stream().map(Damage::new).collect(Collectors.toList()));
+        return copiedDamageSource;
     }
 
     public DamageSource() {

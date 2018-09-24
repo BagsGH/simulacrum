@@ -26,7 +26,7 @@ public class DamageModHelper {
 
     public DamageSource calculateDamageSources(DamageSource damageSource, List<Mod> mods) {
         this.originalWeaponMods = mods;
-        DamageSource modifiedDamageSource = new DamageSource(damageSource);
+        DamageSource modifiedDamageSource = damageSource.copyWithoutDamages();
 
         List<Damage> baseDamagesFromSourceAfterRawDamageMods = calculateRawDamageModIncreases(damageSource.getDamages());
         double sumOfAllDamages = sumAllDamageTypes(baseDamagesFromSourceAfterRawDamageMods);

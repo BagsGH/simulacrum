@@ -469,7 +469,7 @@ public class EngineHelperTest {
         fakeBodyModifier = new BodyModifier(BodyPart.GUN, -0.50, 0.50);
         fakeHeadshotBodyModifier = new BodyModifier(BodyPart.HEAD, 1.0);
         fakeTarget.setBodyModifiers(Collections.singletonList(fakeBodyModifier));
-        fakeTarget.setHeadshotModifier(fakeHeadshotBodyModifier);
+        fakeTarget.setHeadBodyModifier(fakeHeadshotBodyModifier);
     }
 
     private void setupDefaultFakeWeapon() {

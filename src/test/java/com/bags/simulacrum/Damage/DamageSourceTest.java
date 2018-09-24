@@ -51,7 +51,7 @@ public class DamageSourceTest {
     public void itCanHaveCopyConstructorTestCoverage() {
         DamageSource copy = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.PUNCTURE)), 2.0, 75.0);
 
-        subject = new DamageSource(copy);
+        subject = copy.copyWithoutDamages();
 
         assertEquals(DamageSourceType.PROJECTILE, subject.getDamageSourceType());
         assertEquals(75.0, subject.getAoe(), 0.0);

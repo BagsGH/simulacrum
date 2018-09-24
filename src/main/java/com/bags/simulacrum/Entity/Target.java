@@ -19,12 +19,16 @@ public class Target {
     //    private List<StatusProc> procImmunities;
     private int baseLevel;
     private int level;
+    /*
+        How headshot vs body shot works... if there's no headshot, 100% chance is split across the other body modifiers.
+        TODO: Decide if I want to work heads body part into the list. Could remove it at run time when needed. Dunno.
+     */
     private List<BodyModifier> bodyModifiers;
-    private BodyModifier headshotModifier;
+    private BodyModifier headBodyModifier;
     private List<StatusProc> statuses;
 
-    public double getHeadshotModifier() {
-        return headshotModifier.getModifierValue();
+    public double getHeadModifierValue() {
+        return headBodyModifier.getModifierValue();
     }
 
     public void addHealth(Health health) {
