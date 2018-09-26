@@ -19,6 +19,7 @@ public class Auto implements FiringStatus {
 
     @Override
     public FiringStatus progressTime(double deltaTime) {
+        timeBetweenShots += deltaTime;
         if (freshMagazine()) {
             timeBetweenShots = 0.0;
             firingProperties.expendAmmo();
@@ -31,9 +32,6 @@ public class Auto implements FiringStatus {
             firingProperties.expendAmmo();
             timeBetweenShots = 0.0;
             return new Fired(this.firingProperties, this);
-        }
-        if (timeBetweenShots < refireTime) {
-            timeBetweenShots += deltaTime;
         }
         return this;
     }

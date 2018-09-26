@@ -3,6 +3,8 @@ package com.bags.simulacrum.Weapon;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.text.DecimalFormat;
+
 import static org.junit.Assert.assertEquals;
 
 public class WeaponStatusTest {
@@ -73,13 +75,15 @@ public class WeaponStatusTest {
 
     @Test
     public void test() {
-        subject = new WeaponStatus(setupFiringProperties(FiringProperties.TriggerType.AUTO, fakeAutoFireRate, 2.5, 200, 0.0, 5));
+        subject = new WeaponStatus(setupFiringProperties(FiringProperties.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 0.0, 8));
+
+        DecimalFormat df = new DecimalFormat("0.00");
 
         double runningTime = 0.0;
         for (int i = 0; i < 6000; i++) {
             FiringStatus status = subject.progressTime(0.01);
             runningTime += 0.01;
-            System.out.println(/*"Current time: " + runningTime + ". Current status: " + */ status.getClass());
+            System.out.println("Current time: " + df.format(runningTime) + " Current status: " + status.getClass());
         }
 
     }

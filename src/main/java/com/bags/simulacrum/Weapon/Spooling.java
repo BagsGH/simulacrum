@@ -4,39 +4,40 @@ public class Spooling implements FiringStatus {
     private FiringProperties firingProperties;
     private double refireTime;
     private double timeBetweenShots;
-    private int spoolThreshold;
+    private int spoolingThreshold;
     private int spoolingProgress;
+    private double spoolingSpeedStepUp;
+    private double spoolingProgressBonus;
 
     public Spooling(FiringProperties firingProperties) {
         this.firingProperties = firingProperties;
         this.refireTime = (1 / firingProperties.getFireRate()) * 2;
         this.timeBetweenShots = -1.0;
-        this.spoolThreshold = firingProperties.getSpoolThreshold();
+        this.spoolingThreshold = firingProperties.getSpoolThreshold();
+        this.spoolingSpeedStepUp = (1 / firingProperties.getFireRate()) / this.spoolingThreshold;
     }
 
     @Override
     public FiringStatus progressTime(double deltaTime) {
+        timeBetweenShots += deltaTime;
         if (freshMagazine()) {
             timeBetweenShots = 0.0;
-            spoolingProgress++;
             firingProperties.expendAmmo();
             return new Fired(this.firingProperties, this);
         }
-        if (spoolingProgress >= spoolThreshold) {
+        if (spoolingProgress >= spoolingThreshold) {
             FiringStatus status = new Auto(this.firingProperties, timeBetweenShots);
-            return status.progressTime(deltaTime);// maybe also immediately step up time? idk
+            return status.progressTime(deltaTime);
         }
         if (firingProperties.getCurrentMagazineSize() <= 0) {
             return new Reloading(firingProperties);
         }
-        if (timeBetweenShots >= refireTime) {
+        if (timeBetweenShots + (spoolingProgressBonus) >= refireTime) {
             firingProperties.expendAmmo();
             timeBetweenShots = 0.0;
             spoolingProgress++;
+            spoolingProgressBonus = spoolingProgress * spoolingSpeedStepUp;
             return new Fired(this.firingProperties, this);
-        }
-        if (timeBetweenShots < refireTime) {
-            timeBetweenShots += deltaTime;
         }
         return this;
     }
