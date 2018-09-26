@@ -11,6 +11,12 @@ public class Auto implements FiringStatus {
         this.timeBetweenShots = -1.0;
     }
 
+    public Auto(FiringProperties firingProperties, double timeBetweenShots) {
+        this.firingProperties = firingProperties;
+        this.refireTime = 1 / firingProperties.getFireRate();
+        this.timeBetweenShots = timeBetweenShots;
+    }
+
     @Override
     public FiringStatus progressTime(double deltaTime) {
         if (freshMagazine()) {

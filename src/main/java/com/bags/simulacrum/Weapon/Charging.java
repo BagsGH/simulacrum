@@ -12,12 +12,14 @@ public class Charging implements FiringStatus {
     @Override
     public FiringStatus progressTime(double deltaTime) {
         chargingProgress += deltaTime;
-        if (chargingProgress == firingProperties.getReloadTime()) {
-            //if charging, return charging
-            // if spooling, return spooling
-            return new Fired(firingProperties, this); //if it returns this to the caller, the caller knows it just fired
+        if (firingProperties.getCurrentMagazineSize() <= 0) {
+            return new Reloading(firingProperties);
         }
-
+        if (chargingProgress >= firingProperties.getChargeTime()) {
+            chargingProgress = 0.0;
+            firingProperties.expendAmmo();
+            return new Fired(firingProperties, this);
+        }
         return this;
     }
 }

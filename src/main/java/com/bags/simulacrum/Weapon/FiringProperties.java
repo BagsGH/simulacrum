@@ -12,6 +12,7 @@ public class FiringProperties {
     private int magazineSize;
     private double reloadTime;
     private int maxAmmo;
+    private int spoolThreshold;
 
     private double chargeTime;
     private double minBonusDamageFromCharging;
