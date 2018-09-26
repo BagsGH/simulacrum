@@ -68,8 +68,8 @@ public class Engine {
         Mod ps = new Mod();
         ps.setCriticalDamageIncrease(1.20);
 
-//        ignisWraith.setMods(Arrays.asList(heavyCalibre, serration, splitChamber, maligForce, vileAccel, hellFire, vs, ps));
-        ignisWraith.setMods(Arrays.asList(heavyCalibre, serration));
+        ignisWraith.setMods(Arrays.asList(heavyCalibre, serration, splitChamber, maligForce, vileAccel, hellFire, vs, ps));
+        //ignisWraith.setMods(Arrays.asList(heavyCalibre, serration));
 
         Mod heatdmg = new Mod();
         heatdmg.setDamage(new Damage(DamageType.HEAT, 0.0, 0.15));
@@ -102,13 +102,13 @@ public class Engine {
 
         plasmor.setMods(Arrays.asList(frigid, charged, blaze, toxicBarrage));
 
-        //Weapon ignisWraithModded = weaponModifier.modWeapon(ignisWraith);
+        Weapon ignisWraithModded = weaponModifier.modWeapon(ignisWraith);
         //Weapon opticorModded = weaponModifier.modWeapon(opticor);
         Weapon lenzModded = weaponModifier.modWeapon(lenz);
         //Weapon plasmorModded = weaponModifier.modWeapon(plasmor);
 
         System.out.println("===Modded weapons===");
-        //System.out.println(ignisWraithModded);
+        System.out.println(ignisWraithModded);
         //System.out.println(opticorModded);
         System.out.println(lenzModded);
         //System.out.println(plasmorModded);
@@ -204,6 +204,8 @@ public class Engine {
         List<Damage> ignisDamageTypes = new ArrayList<>();
         Damage heat = new Damage(DamageType.HEAT, 35.0);
         ignisDamageTypes.add(heat);
+        DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, ignisDamageTypes);
+        ignisWraith.setDamageSources(Arrays.asList(damageSource));
 
         ignisWraith.setReloadTime(1.7);
         ignisWraith.setStatusChance(.29);
