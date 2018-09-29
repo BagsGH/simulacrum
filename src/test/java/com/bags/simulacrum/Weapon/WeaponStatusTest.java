@@ -14,6 +14,7 @@ public class WeaponStatusTest {
     private double fakeDeltaT;
     private double fakeSpoolSlowdownRatio;
     private double fakeAutoFireRate;
+    private double fakeBurstFireRate;
 
     @Before
     public void before() {
@@ -22,6 +23,7 @@ public class WeaponStatusTest {
         fakeDeltaT = 0.01;
         fakeSpoolSlowdownRatio = 2.0;
         fakeAutoFireRate = 15.0;
+        fakeBurstFireRate = 7.83;
     }
 
     @Test
@@ -51,6 +53,36 @@ public class WeaponStatusTest {
     }
 
     @Test
+    public void weaponStatusIsFiredImmediatelyAfterReload() {
+        subject = new WeaponStatus(setupAutoWeapon(FiringProperties.TriggerType.AUTO, fakeAutoFireRate, 0.01, 1));
+
+        int autoCount = 0;
+        int firedCount = 0;
+        int reloadCount = 0;
+
+        for (int i = 0; i < 3; i++) {
+            FiringStatus status = subject.progressTime(fakeDeltaT);
+
+            System.out.println(status.getClass());
+
+            if (status instanceof Auto) {
+                autoCount++;
+            }
+            if (status instanceof Fired) {
+                firedCount++;
+            }
+
+            if (status instanceof Reloading) {
+                reloadCount++;
+            }
+        }
+
+        assertEquals(0, autoCount);
+        assertEquals(1, reloadCount);
+        assertEquals(2, firedCount);
+    }
+
+    @Test
     public void itSlowsDownFireRateForSpoolingWeapons() {
         subject = new WeaponStatus(setupSpoolWeapon(FiringProperties.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 5, 1.0));
 
@@ -76,6 +108,32 @@ public class WeaponStatusTest {
     }
 
     @Test
+    public void burstingFiresWeirdly() {
+        subject = new WeaponStatus(setupBurstWeapon(FiringProperties.TriggerType.BURST, 1, 2.5, 45, 3, fakeBurstFireRate));
+
+        int burstTime = 0;
+        int firedCount = 0;
+
+
+        for (int i = 0; i < 127; i++) {
+            FiringStatus status = subject.progressTime(fakeDeltaT);
+
+            if (status instanceof Bursting) {
+                burstTime++;
+            }
+            if (status instanceof Fired) {
+                firedCount++;
+            }
+        }
+
+        int expectedBurstingTimePerShot = (int) Math.floor((1 / fakeBurstFireRate) / fakeDeltaT);
+        int expectedBurstingTimeBetweenBursts = (int) Math.floor(1 / fakeDeltaT) - 1;
+
+        assertEquals((expectedBurstingTimePerShot * 2) + expectedBurstingTimeBetweenBursts, burstTime);
+        assertEquals(4, firedCount);
+    }
+
+    @Test
     public void test() {
         subject = new WeaponStatus(setupSpoolWeapon(FiringProperties.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 8, 1.0));
 
@@ -93,32 +151,6 @@ public class WeaponStatusTest {
 
         // System.out.println(System.currentTimeMillis() - startTime);
 
-    }
-
-    @Test
-    public void burstingFiresWeirdly() {
-        subject = new WeaponStatus(setupBurstWeapon(FiringProperties.TriggerType.BURST, 1, 2.5, 45, 3, 7.83));
-
-        int burstTime = 0;
-        int firedCount = 0;
-
-
-        for (int i = 0; i < 127; i++) {
-            FiringStatus status = subject.progressTime(fakeDeltaT);
-
-            if (status instanceof Bursting) {
-                burstTime++;
-            }
-            if (status instanceof Fired) {
-                firedCount++;
-            }
-        }
-
-        int expectedBurstingTimePerShot = (int) Math.floor((1 / 7.83) / fakeDeltaT);
-        int expectedBurstingTimeBetweenBursts = (int) Math.floor(1 / fakeDeltaT) - 1;
-
-        assertEquals((expectedBurstingTimePerShot * 2) + expectedBurstingTimeBetweenBursts, burstTime);
-        assertEquals(4, firedCount);
     }
 
     private FiringProperties setupSpoolWeapon(FiringProperties.TriggerType triggerType, double fireRate, double reloadTime, int magazineSize, int spoolThreshold, double spoolingDecrease) {

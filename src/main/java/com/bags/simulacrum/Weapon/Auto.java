@@ -1,5 +1,10 @@
 package com.bags.simulacrum.Weapon;
 
+/**
+ * This status is used for more than just (full) Auto weapons.
+ * While the name is Auto, it's actually used for any weapon that is not a Charging,
+ * Spooling, or Burst Weapon for modeling simplicity.
+ */
 public class Auto implements FiringStatus {
     private FiringProperties firingProperties;
     private double refireTime;

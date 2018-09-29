@@ -1,5 +1,11 @@
 package com.bags.simulacrum.Weapon;
 
+/**
+ * This status basically exists as a reset/starting point for each 'clip' fired by the Weapon.
+ * This status is entered after reloading or at the creation of a WeaponStatus. Classes using
+ * WeaponStatus will be unaware of this status as it's 'skipped' over whenever initiated by the
+ * creator of it usually (if not always) immediately calling progressTime on it.
+ */
 public class Ready implements FiringStatus {
     private FiringProperties firingProperties;
 

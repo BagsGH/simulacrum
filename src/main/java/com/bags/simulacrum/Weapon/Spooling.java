@@ -1,5 +1,11 @@
 package com.bags.simulacrum.Weapon;
 
+/**
+ * The status for a Weapon while it is in the spooling part of its fire pattern.
+ * Weapons that are spooling fire at a reduced rate until they fire enough shots.
+ * With each shot while spooling the weapon gains a portion of speed. After firing enough
+ * it will transition to the (full) Auto state.
+ */
 public class Spooling implements FiringStatus {
     private FiringProperties firingProperties;
     private double refireTime;

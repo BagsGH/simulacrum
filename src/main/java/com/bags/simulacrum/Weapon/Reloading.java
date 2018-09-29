@@ -14,7 +14,7 @@ public class Reloading implements FiringStatus {
         reloadingProgress += deltaTime;
         if (reloadingProgress >= firingProperties.getReloadTime()) {
             firingProperties.reloadMagazine();
-            return new Ready(firingProperties);
+            return new Ready(firingProperties).progressTime(deltaTime);
         }
         return this;
     }
