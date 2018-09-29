@@ -1,4 +1,6 @@
-package com.bags.simulacrum.Weapon;
+package com.bags.simulacrum.Weapon.Status;
+
+import com.bags.simulacrum.Weapon.FiringProperties;
 
 /**
  * The status for a Weapon while it is in the spooling part of its fire pattern.

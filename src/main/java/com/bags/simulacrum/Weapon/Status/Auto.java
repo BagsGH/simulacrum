@@ -1,4 +1,6 @@
-package com.bags.simulacrum.Weapon;
+package com.bags.simulacrum.Weapon.Status;
+
+import com.bags.simulacrum.Weapon.FiringProperties;
 
 /**
  * This status is used for more than just (full) Auto weapons.

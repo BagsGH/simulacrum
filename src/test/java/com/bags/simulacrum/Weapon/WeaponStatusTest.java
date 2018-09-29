@@ -1,5 +1,6 @@
 package com.bags.simulacrum.Weapon;
 
+import com.bags.simulacrum.Weapon.Status.*;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -127,7 +128,7 @@ public class WeaponStatusTest {
 
 //    @Test
 //    public void test() {
-//        subject = new WeaponStatus(setupSpoolWeapon(FiringProperties.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 8, 1.0));
+//        subject = new Status(setupSpoolWeapon(FiringProperties.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 8, 1.0));
 //
 //        DecimalFormat df = new DecimalFormat("0.00");
 //
@@ -152,7 +153,7 @@ public class WeaponStatusTest {
         props.setMagazineSize(magazineSize);
         props.setSpoolThreshold(spoolThreshold);
         props.setTriggerType(triggerType);
-        props.loadMagazine(); //TODO: get rid of this
+        props.loadMagazine();
         props.setSpoolingSpeedDecreaseModifier(spoolingDecrease);
 
         return props;
@@ -164,7 +165,7 @@ public class WeaponStatusTest {
         props.setReloadTime(reloadTime);
         props.setMagazineSize(magazineSize);
         props.setTriggerType(triggerType);
-        props.loadMagazine(); //TODO: get rid of this
+        props.loadMagazine();
 
         return props;
     }
@@ -176,7 +177,7 @@ public class WeaponStatusTest {
         props.setMagazineSize(magazineSize);
         props.setTriggerType(triggerType);
         props.setBurstCount(burstCount);
-        props.loadMagazine(); //TODO: get rid of this
+        props.loadMagazine();
 
         return props;
     }

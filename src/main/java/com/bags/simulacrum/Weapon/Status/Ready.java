@@ -1,4 +1,6 @@
-package com.bags.simulacrum.Weapon;
+package com.bags.simulacrum.Weapon.Status;
+
+import com.bags.simulacrum.Weapon.FiringProperties;
 
 /**
  * This status basically exists as a reset/starting point for each 'clip' fired by the Weapon.

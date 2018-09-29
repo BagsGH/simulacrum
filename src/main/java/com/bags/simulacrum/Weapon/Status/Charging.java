@@ -1,4 +1,6 @@
-package com.bags.simulacrum.Weapon;
+package com.bags.simulacrum.Weapon.Status;
+
+import com.bags.simulacrum.Weapon.FiringProperties;
 
 public class Charging implements FiringStatus {
     private FiringProperties firingProperties;
