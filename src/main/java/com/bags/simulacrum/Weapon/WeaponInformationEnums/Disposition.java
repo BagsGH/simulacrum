@@ -1,4 +1,4 @@
-package com.bags.simulacrum.Weapon.WeaponMetaDataEnums;
+package com.bags.simulacrum.Weapon.WeaponInformationEnums;
 
 public enum Disposition {
     FAINT,

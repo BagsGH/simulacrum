@@ -1,10 +1,10 @@
 package com.bags.simulacrum.Weapon;
 
-import com.bags.simulacrum.Weapon.WeaponMetaDataEnums.*;
+import com.bags.simulacrum.Weapon.WeaponInformationEnums.*;
 import lombok.Data;
 
 @Data
-public class WeaponMetaData {
+public class WeaponInformation {
 
     private int masteryRank;
     private WeaponSlot slot;
@@ -13,7 +13,7 @@ public class WeaponMetaData {
     private NoiseLevel noiseLevel;
     private Disposition disposition;
 
-    public WeaponMetaData(WeaponClass weaponClass, WeaponSlot slot, int masteryRank, AmmoType ammoType, NoiseLevel noiseLevel, Disposition disposition) {
+    public WeaponInformation(WeaponClass weaponClass, WeaponSlot slot, int masteryRank, AmmoType ammoType, NoiseLevel noiseLevel, Disposition disposition) {
         this.masteryRank = masteryRank;
         this.slot = slot;
         this.weaponClass = weaponClass;
@@ -22,7 +22,7 @@ public class WeaponMetaData {
         this.disposition = disposition;
     }
 
-    public WeaponMetaData copy() {
-        return new WeaponMetaData(this.weaponClass, this.slot, this.masteryRank, this.ammoType, this.noiseLevel, this.disposition);
+    public WeaponInformation copy() {
+        return new WeaponInformation(this.weaponClass, this.slot, this.masteryRank, this.ammoType, this.noiseLevel, this.disposition);
     }
 }
