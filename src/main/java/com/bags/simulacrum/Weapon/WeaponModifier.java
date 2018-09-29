@@ -1,7 +1,7 @@
 package com.bags.simulacrum.Weapon;
 
 import com.bags.simulacrum.Damage.DamageSource;
-import com.bags.simulacrum.Weapon.WeaponMetaDataEnums.WeaponClass;
+import com.bags.simulacrum.Weapon.WeaponInformationEnums.WeaponClass;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -55,7 +55,7 @@ public class WeaponModifier {
     }
 
     private Weapon copyWeaponToMod() {
-        return new Weapon(originalWeapon.getName(), originalWeapon.getWeaponMetaData().copy(), originalWeapon.getTriggerType(), originalWeapon.getRangeLimit(), originalWeapon.getMaxAmmo(), weaponMods);
+        return new Weapon(originalWeapon.getName(), originalWeapon.getWeaponInformation().copy(), originalWeapon.getTriggerType(), originalWeapon.getRangeLimit(), originalWeapon.getMaxAmmo(), weaponMods);
     }
 
     private double calculateModdedFireRate() {
@@ -101,7 +101,7 @@ public class WeaponModifier {
      * @return A multiplier to use when calculating an individual mod's affect on the fire rate.
      */
     private double weaponTypeFireRateBonusMultiplier(double fireRateIncrease) {
-        return fireRateIncrease > 0 && originalWeapon.getWeaponMetaData().getWeaponClass().equals(WeaponClass.BOW) ? 2.0 : 1.0;
+        return fireRateIncrease > 0 && originalWeapon.getWeaponInformation().getWeaponClass().equals(WeaponClass.BOW) ? 2.0 : 1.0;
     }
 
     private double calculateModdedCriticalDamage() {

@@ -11,7 +11,7 @@ public class Weapon {
 
     private String name; //TODO: eventually move to fluff
     private TriggerType triggerType;
-    
+
     private double fireRate;
     private double accuracy;
     private int magazineSize;
@@ -40,16 +40,16 @@ public class Weapon {
 
     private List<Mod> mods;
 
-    private WeaponMetaData weaponMetaData;
+    private WeaponInformation weaponInformation;
 
     public Weapon() {
 
     }
 
-    public Weapon(String name, WeaponMetaData weaponMetaData, TriggerType triggerType, double rangeLimit, int maxAmmo, List<Mod> mods) {
+    public Weapon(String name, WeaponInformation weaponInformation, TriggerType triggerType, double rangeLimit, int maxAmmo, List<Mod> mods) {
         this.triggerType = triggerType;
         this.maxAmmo = maxAmmo;
-        this.weaponMetaData = weaponMetaData;
+        this.weaponInformation = weaponInformation;
         this.name = name;
         this.rangeLimit = rangeLimit;
         this.mods = mods;

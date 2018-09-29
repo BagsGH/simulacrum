@@ -7,8 +7,8 @@ import com.bags.simulacrum.Damage.DamageSourceType;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Weapon.Mod;
 import com.bags.simulacrum.Weapon.Weapon;
-import com.bags.simulacrum.Weapon.WeaponMetaData;
-import com.bags.simulacrum.Weapon.WeaponMetaDataEnums.*;
+import com.bags.simulacrum.Weapon.WeaponInformation;
+import com.bags.simulacrum.Weapon.WeaponInformationEnums.*;
 import com.bags.simulacrum.Weapon.WeaponModifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -213,8 +213,8 @@ public class Engine {
         ignisWraith.setStatusChance(.29);
 
         /* Fluff weapon information. **/
-        WeaponMetaData weaponMetaData = new WeaponMetaData(WeaponClass.RIFLE, WeaponSlot.PRIMARY, 9, AmmoType.RIFLE, NoiseLevel.ALARMING, Disposition.MILD);
-        ignisWraith.setWeaponMetaData(weaponMetaData);
+        WeaponInformation weaponInformation = new WeaponInformation(WeaponClass.RIFLE, WeaponSlot.PRIMARY, 9, AmmoType.RIFLE, NoiseLevel.ALARMING, Disposition.MILD);
+        ignisWraith.setWeaponInformation(weaponInformation);
 
         ignisWraith.setTriggerType(Weapon.TriggerType.HELD);
         ignisWraith.setRangeLimit(27.0);
