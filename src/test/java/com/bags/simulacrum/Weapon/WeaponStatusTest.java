@@ -36,8 +36,6 @@ public class WeaponStatusTest {
         for (int i = 0; i < 8; i++) {
             FiringStatus status = subject.progressTime(fakeDeltaT);
 
-            System.out.println(status.getClass());
-
             if (status instanceof Auto) {
                 autoTime++;
             }
@@ -62,8 +60,6 @@ public class WeaponStatusTest {
 
         for (int i = 0; i < 3; i++) {
             FiringStatus status = subject.progressTime(fakeDeltaT);
-
-            System.out.println(status.getClass());
 
             if (status instanceof Auto) {
                 autoCount++;
@@ -92,7 +88,6 @@ public class WeaponStatusTest {
         for (int i = 0; i < 15; i++) {
             FiringStatus status = subject.progressTime(fakeDeltaT);
 
-            System.out.println(status.getClass());
             if (status instanceof Spooling) {
                 spoolTime++;
             }
@@ -108,14 +103,14 @@ public class WeaponStatusTest {
     }
 
     @Test
-    public void burstingFiresWeirdly() {
-        subject = new WeaponStatus(setupBurstWeapon(FiringProperties.TriggerType.BURST, 1, 2.5, 45, 3, fakeBurstFireRate));
+    public void burstFiresInBursts() {
+        subject = new WeaponStatus(setupBurstWeapon(FiringProperties.TriggerType.BURST, fakeBurstFireRate, 2.5, 45, 3));
 
         int burstTime = 0;
         int firedCount = 0;
 
-
-        for (int i = 0; i < 127; i++) {
+        DecimalFormat df = new DecimalFormat("0.00");
+        for (int i = 0; i < 93; i++) {
             FiringStatus status = subject.progressTime(fakeDeltaT);
 
             if (status instanceof Bursting) {
@@ -126,32 +121,29 @@ public class WeaponStatusTest {
             }
         }
 
-        int expectedBurstingTimePerShot = (int) Math.floor((1 / fakeBurstFireRate) / fakeDeltaT);
-        int expectedBurstingTimeBetweenBursts = (int) Math.floor(1 / fakeDeltaT) - 1;
-
-        assertEquals((expectedBurstingTimePerShot * 2) + expectedBurstingTimeBetweenBursts, burstTime);
-        assertEquals(4, firedCount);
+        assertEquals(9, firedCount);
+        assertEquals(84, burstTime);
     }
 
-    @Test
-    public void test() {
-        subject = new WeaponStatus(setupSpoolWeapon(FiringProperties.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 8, 1.0));
-
-        DecimalFormat df = new DecimalFormat("0.00");
-
-        double runningTime = 0.0;
-        long startTime = System.currentTimeMillis();
-        //for (int j = 0; j < 30000; j++) {
-        for (int i = 0; i < 6000; i++) {
-            FiringStatus status = subject.progressTime(0.01);
-            runningTime += 0.01;
-            System.out.println("Current time: " + df.format(runningTime) + " Current status: " + status.getClass());
-        }
-        //}
-
-        // System.out.println(System.currentTimeMillis() - startTime);
-
-    }
+//    @Test
+//    public void test() {
+//        subject = new WeaponStatus(setupSpoolWeapon(FiringProperties.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 8, 1.0));
+//
+//        DecimalFormat df = new DecimalFormat("0.00");
+//
+//        double runningTime = 0.0;
+//        long startTime = System.currentTimeMillis();
+//        //for (int j = 0; j < 30000; j++) {
+//        for (int i = 0; i < 6000; i++) {
+//            FiringStatus status = subject.progressTime(0.01);
+//            runningTime += 0.01;
+//            System.out.println("Current time: " + df.format(runningTime) + " Current status: " + status.getClass());
+//        }
+//        //}
+//
+//        // System.out.println(System.currentTimeMillis() - startTime);
+//
+//    }
 
     private FiringProperties setupSpoolWeapon(FiringProperties.TriggerType triggerType, double fireRate, double reloadTime, int magazineSize, int spoolThreshold, double spoolingDecrease) {
         FiringProperties props = new FiringProperties();
@@ -160,7 +152,7 @@ public class WeaponStatusTest {
         props.setMagazineSize(magazineSize);
         props.setSpoolThreshold(spoolThreshold);
         props.setTriggerType(triggerType);
-        props.reloadMagazine(); //TODO: get rid of this
+        props.loadMagazine(); //TODO: get rid of this
         props.setSpoolingSpeedDecreaseModifier(spoolingDecrease);
 
         return props;
@@ -172,20 +164,19 @@ public class WeaponStatusTest {
         props.setReloadTime(reloadTime);
         props.setMagazineSize(magazineSize);
         props.setTriggerType(triggerType);
-        props.reloadMagazine(); //TODO: get rid of this
+        props.loadMagazine(); //TODO: get rid of this
 
         return props;
     }
 
-    private FiringProperties setupBurstWeapon(FiringProperties.TriggerType triggerType, double fireRate, double reloadTime, int magazineSize, int burstCount, double burstFireRate) {
+    private FiringProperties setupBurstWeapon(FiringProperties.TriggerType triggerType, double fireRate, double reloadTime, int magazineSize, int burstCount) {
         FiringProperties props = new FiringProperties();
         props.setFireRate(fireRate);
         props.setReloadTime(reloadTime);
         props.setMagazineSize(magazineSize);
         props.setTriggerType(triggerType);
         props.setBurstCount(burstCount);
-        props.setBurstFireRate(burstFireRate);
-        props.reloadMagazine(); //TODO: get rid of this
+        props.loadMagazine(); //TODO: get rid of this
 
         return props;
     }

@@ -37,7 +37,7 @@ public class FiringProperties {
         this.currentMagazineSize--;
     }
 
-    public void reloadMagazine() {
+    public void loadMagazine() {
         this.currentMagazineSize = magazineSize;
     }
 

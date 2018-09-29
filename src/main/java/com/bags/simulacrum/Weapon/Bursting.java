@@ -2,22 +2,22 @@ package com.bags.simulacrum.Weapon;
 
 public class Bursting implements FiringStatus {
     private FiringProperties firingProperties;
-    private double reBurstTime;
+    private double interBurstFireTime;
     private double timeBetweenBursts;
     private double timeBetweenShots;
-    private double burstFireTime;
+    private double intraBurstFireTime;
     private int burstShotProgress;
     private int burstCount;
 
 
     public Bursting(FiringProperties firingProperties) {
         this.firingProperties = firingProperties;
-        this.reBurstTime = (1 / firingProperties.getFireRate());
-        this.burstFireTime = (1 / firingProperties.getBurstFireRate());
+        this.burstCount = firingProperties.getBurstCount();
+        this.intraBurstFireTime = ((1.25 / this.firingProperties.getFireRate()) / this.burstCount);
+        this.interBurstFireTime = (1.075 / this.firingProperties.getFireRate()) * 2;
         this.timeBetweenBursts = -1.0;
         this.timeBetweenShots = 0.0;
         this.burstShotProgress = -1;
-        this.burstCount = firingProperties.getBurstCount();
     }
 
     @Override
@@ -27,8 +27,7 @@ public class Bursting implements FiringStatus {
         } else {
             timeBetweenBursts += deltaTime;
         }
-
-        if (timeBetweenShots >= burstFireTime) {
+        if (timeBetweenShots >= intraBurstFireTime) {
             handleBurstFire();
             return new Fired(this.firingProperties, this);
         }
@@ -36,7 +35,7 @@ public class Bursting implements FiringStatus {
             handleFirstShot();
             return new Fired(this.firingProperties, this);
         }
-        if (timeBetweenBursts >= reBurstTime) {
+        if (timeBetweenBursts >= interBurstFireTime) {
             burstShotProgress = 1;
             timeBetweenBursts = 0.0;
             return new Fired(this.firingProperties, this);
