@@ -40,12 +40,7 @@ public class WeaponTest {
         subject.setMinChargePercentage(1.25);
         subject.setMods(Collections.singletonList(new Mod()));
         subject.setMaxAmmo(1);
-        subject.setMasteryRank(1);
-        subject.setSlot(Weapon.Slot.PRIMARY);
-        subject.setType(Weapon.WeaponType.BOW);
-        subject.setNoiseLevel(Weapon.NoiseLevel.SILENT);
         subject.setRangeLimit(1.25);
-        subject.setDisposition(Weapon.Disposition.NEUTRAL);
 
         assertEquals("Ignis", subject.getName());
         assertEquals(1.25, subject.getFireRate(), 0.0);
@@ -63,14 +58,9 @@ public class WeaponTest {
         assertEquals(1.25, subject.getMinChargePercentage(), 0.0);
         assertEquals(1.25, subject.getRangeLimit(), 0.0);
         assertEquals(1, subject.getMagazineSize());
-        assertEquals(1, subject.getMasteryRank());
         assertEquals(1, subject.getMaxAmmo());
         assertEquals(1, subject.getMods().size());
         assertEquals(1, subject.getDamageSources().size());
-        assertEquals(Weapon.Slot.PRIMARY, subject.getSlot());
-        assertEquals(Weapon.WeaponType.BOW, subject.getType());
-        assertEquals(Weapon.NoiseLevel.SILENT, subject.getNoiseLevel());
-        assertEquals(Weapon.Disposition.NEUTRAL, subject.getDisposition());
     }
 
     @Test

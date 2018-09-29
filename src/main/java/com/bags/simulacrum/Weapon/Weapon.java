@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 public class Weapon {
 
-    private String name;
+    private String name; //TODO: eventually move to fluff
     private TriggerType triggerType;
     private double fireRate;
     private double accuracy;
@@ -26,6 +26,8 @@ public class Weapon {
     private double burstSpeed;
     private double burstCooldown;
 
+    private double rangeLimit;
+
     /*TODO: Make this into a class */
     private double chargeTime;
     private double minBonusDamageFromCharging;
@@ -34,31 +36,20 @@ public class Weapon {
     /*                              */
 
     private List<Mod> mods;
-
     private int maxAmmo;
-    private int masteryRank;
-    private Slot slot;
-    private WeaponType type;
-    private AmmoType ammoType;
-    private NoiseLevel noiseLevel;
-    private double rangeLimit;
-    private Disposition disposition;
+
+    private WeaponMetaData weaponMetaData;
 
     public Weapon() {
 
     }
 
-    public Weapon(String name, int masteryRank, Slot slot, WeaponType weaponType, TriggerType triggerType, AmmoType ammoType, double rangeLimit, NoiseLevel noiseLevel, int maxAmmo, Disposition disposition, List<Mod> mods) {
-        this.name = name;
-        this.masteryRank = masteryRank;
-        this.slot = slot;
-        this.type = weaponType;
+    public Weapon(String name, WeaponMetaData weaponMetaData, TriggerType triggerType, double rangeLimit, int maxAmmo, List<Mod> mods) {
         this.triggerType = triggerType;
-        this.ammoType = ammoType;
-        this.rangeLimit = rangeLimit;
-        this.noiseLevel = noiseLevel;
         this.maxAmmo = maxAmmo;
-        this.disposition = disposition;
+        this.weaponMetaData = weaponMetaData;
+        this.name = name;
+        this.rangeLimit = rangeLimit;
         this.mods = mods;
     }
 

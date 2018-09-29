@@ -4,6 +4,7 @@ import com.bags.simulacrum.Damage.Damage;
 import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageSourceType;
 import com.bags.simulacrum.Damage.DamageType;
+import com.bags.simulacrum.Weapon.WeaponFluffEnums.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -33,11 +34,15 @@ public class WeaponModifierTest {
     private Mod fakeMod;
     private Mod anotherFakeMod;
 
+    private WeaponMetaData fakeWeaponMetaData;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+
+        fakeWeaponMetaData = new WeaponMetaData(WeaponClass.RIFLE, WeaponSlot.PRIMARY, 9, AmmoType.RIFLE, NoiseLevel.ALARMING, Disposition.MILD);
         fakeWeapon = new Weapon();
-        fakeWeapon.setType(Weapon.WeaponType.RIFLE);
+        fakeWeapon.setWeaponMetaData(fakeWeaponMetaData);
 
         DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.IMPACT, 5.0, 0.0)));
         fakeWeapon.addDamageSource(damageSource);
@@ -51,15 +56,11 @@ public class WeaponModifierTest {
 
     @Test
     public void itCopiesTheStaticDataFromOriginalWeaponToModifiedWeapon() {
+        WeaponMetaData fakeWeaponMetaData = new WeaponMetaData(WeaponClass.RIFLE, WeaponSlot.PRIMARY, 57, AmmoType.RIFLE, NoiseLevel.SILENT, Disposition.STRONG);
         fakeWeapon.setName("someWeaponName");
-        fakeWeapon.setMasteryRank(57);
-        fakeWeapon.setSlot(Weapon.Slot.PRIMARY);
-        fakeWeapon.setType(Weapon.WeaponType.RIFLE);
-        fakeWeapon.setAmmoType(Weapon.AmmoType.RIFLE);
+        fakeWeapon.setWeaponMetaData(fakeWeaponMetaData);
         fakeWeapon.setRangeLimit(2375.0);
-        fakeWeapon.setNoiseLevel(Weapon.NoiseLevel.SILENT);
         fakeWeapon.setMaxAmmo(1234);
-        fakeWeapon.setDisposition(Weapon.Disposition.STRONG);
         fakeWeapon.setMods(new ArrayList<>());
         fakeWeapon.setTriggerType(Weapon.TriggerType.HELD);
 
@@ -149,7 +150,7 @@ public class WeaponModifierTest {
         fakeMod.setFireRateIncrease(0.90);
         fakeWeapon.setChargeTime(0.5);
         fakeWeapon.setMods(Collections.singletonList(fakeMod));
-        fakeWeapon.setType(Weapon.WeaponType.BOW);
+        fakeWeapon.getWeaponMetaData().setWeaponClass(WeaponClass.BOW);
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
@@ -161,7 +162,7 @@ public class WeaponModifierTest {
         fakeMod.setFireRateIncrease(0.90);
         fakeWeapon.setChargeTime(2.0);
         fakeWeapon.setMods(Collections.singletonList(fakeMod));
-        fakeWeapon.setType(Weapon.WeaponType.RIFLE);
+        fakeWeapon.getWeaponMetaData().setWeaponClass(WeaponClass.RIFLE);
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
@@ -173,7 +174,7 @@ public class WeaponModifierTest {
         fakeMod.setFireRateIncrease(-0.36);
         fakeWeapon.setChargeTime(0.50);
         fakeWeapon.setMods(Collections.singletonList(fakeMod));
-        fakeWeapon.setType(Weapon.WeaponType.BOW);
+        fakeWeapon.getWeaponMetaData().setWeaponClass(WeaponClass.BOW);
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
@@ -185,7 +186,7 @@ public class WeaponModifierTest {
         fakeMod.setFireRateIncrease(-0.36);
         fakeWeapon.setChargeTime(2.0);
         fakeWeapon.setMods(Collections.singletonList(fakeMod));
-        fakeWeapon.setType(Weapon.WeaponType.RIFLE);
+        fakeWeapon.getWeaponMetaData().setWeaponClass(WeaponClass.RIFLE);
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
@@ -198,7 +199,7 @@ public class WeaponModifierTest {
         anotherFakeMod.setFireRateIncrease(0.90);
         fakeWeapon.setChargeTime(1.20);
         fakeWeapon.setMods(Arrays.asList(fakeMod, anotherFakeMod));
-        fakeWeapon.setType(Weapon.WeaponType.BOW);
+        fakeWeapon.getWeaponMetaData().setWeaponClass(WeaponClass.BOW);
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
@@ -211,7 +212,7 @@ public class WeaponModifierTest {
         anotherFakeMod.setFireRateIncrease(0.90);
         fakeWeapon.setChargeTime(2.0);
         fakeWeapon.setMods(Arrays.asList(fakeMod, anotherFakeMod));
-        fakeWeapon.setType(Weapon.WeaponType.RIFLE);
+        fakeWeapon.getWeaponMetaData().setWeaponClass(WeaponClass.RIFLE);
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 
@@ -465,7 +466,7 @@ public class WeaponModifierTest {
         fakeWeapon.setCriticalDamage(2.0);
         fakeWeapon.setChargeTime(1.2);
         fakeWeapon.setMultishot(1.0);
-        fakeWeapon.setType(Weapon.WeaponType.BOW);
+        fakeWeapon.getWeaponMetaData().setWeaponClass(WeaponClass.BOW);
 
         Mod vileAcceleration = new Mod();
         vileAcceleration.setDamageIncrease(-0.15);
