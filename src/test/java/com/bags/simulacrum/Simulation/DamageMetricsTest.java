@@ -6,8 +6,8 @@ import org.junit.Test;
 
 import java.util.HashMap;
 
-import static junit.framework.Assert.assertNotNull;
 import static junit.framework.TestCase.assertNull;
+import static org.junit.Assert.assertNotNull;
 
 public class DamageMetricsTest {
 

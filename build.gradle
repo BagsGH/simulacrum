@@ -29,6 +29,8 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
 //    compile('org.springframework.boot:spring-boot-starter-data-jpa')
 //    compile('org.springframework.boot:spring-boot-starter-security')
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
     compile('org.apache.kafka:kafka-streams')
     compile('org.springframework.kafka:spring-kafka')
     compile('org.springframework.session:spring-session-core')

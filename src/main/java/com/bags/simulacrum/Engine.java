@@ -10,6 +10,8 @@ import com.bags.simulacrum.Weapon.Weapon;
 import com.bags.simulacrum.Weapon.WeaponInformation;
 import com.bags.simulacrum.Weapon.WeaponInformationEnums.*;
 import com.bags.simulacrum.Weapon.WeaponModifier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +19,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
 @Component
 public class Engine {
+
+    private static Logger logger = LoggerFactory.getLogger(Engine.class);
 
     private final WeaponModifier weaponModifier;
 
@@ -28,6 +33,9 @@ public class Engine {
     }
 
     public void start() {
+        logger.info("Test");
+
+
         Weapon ignisWraith = setupIgnis();
 //        Weapon opticor = setupOpticor();
 //        Weapon lenz = setupLenz();
@@ -111,6 +119,8 @@ public class Engine {
 
         System.out.println("===Modded weapons===");
         System.out.println(ignisWraithModded);
+        logger.info("End");
+
         //System.out.println(opticorModded);
 //        System.out.println(lenzModded);
         //System.out.println(plasmorModded);
