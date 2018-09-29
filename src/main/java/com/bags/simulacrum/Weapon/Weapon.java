@@ -11,6 +11,7 @@ public class Weapon {
 
     private String name; //TODO: eventually move to fluff
     private TriggerType triggerType;
+    
     private double fireRate;
     private double accuracy;
     private int magazineSize;
@@ -22,11 +23,13 @@ public class Weapon {
     private double statusChance;
     private double headshotMultiplier;
     private double accuracyMultiplier;
+
     private int burstCount;
     private double burstSpeed;
     private double burstCooldown;
-
     private double rangeLimit;
+    private int maxAmmo;
+
 
     /*TODO: Make this into a class */
     private double chargeTime;
@@ -36,7 +39,6 @@ public class Weapon {
     /*                              */
 
     private List<Mod> mods;
-    private int maxAmmo;
 
     private WeaponMetaData weaponMetaData;
 
@@ -58,42 +60,6 @@ public class Weapon {
             mods = new ArrayList<>();
         }
         mods.add(mod);
-    }
-
-    public enum AmmoType {
-        RIFLE,
-        SNIPER,
-        PISTOL,
-        SHOTGUN,
-        BOW
-    }
-
-    public enum NoiseLevel {
-        ALARMING,
-        SILENT
-    }
-
-    public enum Disposition {
-        FAINT,
-        MILD,
-        NEUTRAL,
-        STRONG,
-        COMPETENT
-    }
-
-    public enum Slot {
-        PRIMARY,
-        SECONDARY,
-        MELEE
-    }
-
-    public enum WeaponType {
-        RIFLE,
-        SNIPER,
-        PISTOL,
-        SHOTGUN,
-        MELEE,
-        BOW
     }
 
     public enum TriggerType {

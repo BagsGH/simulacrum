@@ -1,7 +1,7 @@
 package com.bags.simulacrum.Weapon;
 
 import com.bags.simulacrum.Damage.DamageSource;
-import com.bags.simulacrum.Weapon.WeaponFluffEnums.WeaponClass;
+import com.bags.simulacrum.Weapon.WeaponMetaDataEnums.WeaponClass;
 import org.decimal4j.util.DoubleRounder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -56,8 +56,6 @@ public class WeaponModifier {
 
     private Weapon copyWeaponToMod() {
         return new Weapon(originalWeapon.getName(), originalWeapon.getWeaponMetaData().copy(), originalWeapon.getTriggerType(), originalWeapon.getRangeLimit(), originalWeapon.getMaxAmmo(), weaponMods);
-//        return new Weapon(originalWeapon.getName(), originalWeapon.getMasteryRank(), originalWeapon.getSlot(), originalWeapon.getType(), originalWeapon.getTriggerType(), originalWeapon.getAmmoType(),
-//                originalWeapon.getRangeLimit(), originalWeapon.getNoiseLevel(), originalWeapon.getMaxAmmo(), originalWeapon.getDisposition(), weaponMods);
     }
 
     private double calculateModdedFireRate() {

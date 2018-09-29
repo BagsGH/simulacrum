@@ -1,6 +1,6 @@
 package com.bags.simulacrum.Weapon;
 
-import com.bags.simulacrum.Weapon.WeaponFluffEnums.*;
+import com.bags.simulacrum.Weapon.WeaponMetaDataEnums.*;
 import lombok.Data;
 
 @Data
