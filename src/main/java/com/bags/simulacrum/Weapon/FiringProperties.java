@@ -13,11 +13,15 @@ public class FiringProperties {
     private double reloadTime;
     private int maxAmmo;
     private int spoolThreshold;
+    private double spoolingSpeedDecreaseModifier;
 
     private double chargeTime;
     private double minBonusDamageFromCharging;
     private double maxBonusDamageFromCharging;
     private double minChargePercentage;
+
+    private int burstCount;
+    private double burstFireRate;
 
     private boolean fullySpooled;
 
@@ -26,7 +30,7 @@ public class FiringProperties {
         CHARGE,
         DUPLEXAUTO,
         AUTOSPOOL,
-        AUTO, SEMIAUTO;
+        AUTO, SEMIAUTO, BURST;
     }
 
     public void expendAmmo() {

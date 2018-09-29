@@ -11,7 +11,7 @@ public class Spooling implements FiringStatus {
 
     public Spooling(FiringProperties firingProperties) {
         this.firingProperties = firingProperties;
-        this.refireTime = (1 / firingProperties.getFireRate()) * 2;
+        this.refireTime = (1 / firingProperties.getFireRate()) * (1 + firingProperties.getSpoolingSpeedDecreaseModifier());
         this.timeBetweenShots = -1.0;
         this.spoolingThreshold = firingProperties.getSpoolThreshold();
         this.spoolingSpeedStepUp = (1 / firingProperties.getFireRate()) / this.spoolingThreshold;

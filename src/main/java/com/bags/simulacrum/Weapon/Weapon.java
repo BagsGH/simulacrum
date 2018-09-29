@@ -22,6 +22,9 @@ public class Weapon {
     private double statusChance;
     private double headshotMultiplier;
     private double accuracyMultiplier;
+    private int burstCount;
+    private double burstSpeed;
+    private double burstCooldown;
 
     /*TODO: Make this into a class */
     private double chargeTime;

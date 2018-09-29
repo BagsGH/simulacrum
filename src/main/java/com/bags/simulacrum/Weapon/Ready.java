@@ -14,6 +14,8 @@ public class Ready implements FiringStatus {
             status = new Charging(firingProperties);
         } else if (firingProperties.getTriggerType().equals(FiringProperties.TriggerType.AUTOSPOOL)) {
             status = new Spooling(firingProperties);
+        } else if (firingProperties.getTriggerType().equals(FiringProperties.TriggerType.BURST)) {
+            status = new Bursting(firingProperties);
         } else {
             status = new Auto(firingProperties);
         }

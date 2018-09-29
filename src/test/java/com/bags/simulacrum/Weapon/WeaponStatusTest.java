@@ -26,15 +26,15 @@ public class WeaponStatusTest {
 
     @Test
     public void itDoesNotSlowDownFireRateForAutoWeapons() {
-        subject = new WeaponStatus(setupFiringProperties(FiringProperties.TriggerType.AUTO, fakeAutoFireRate, 2.5, 200, 0.0, 5));
+        subject = new WeaponStatus(setupAutoWeapon(FiringProperties.TriggerType.AUTO, fakeAutoFireRate, 2.5, 200));
 
         int autoTime = 0;
         int firedCount = 0;
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 8; i++) {
             FiringStatus status = subject.progressTime(fakeDeltaT);
 
-            System.out.println(status.getClass()); //TODO: is it doing one too many auto / spools?
+            System.out.println(status.getClass());
 
             if (status instanceof Auto) {
                 autoTime++;
@@ -44,7 +44,7 @@ public class WeaponStatusTest {
             }
         }
 
-        int expectedAutoTime = (int) Math.ceil((1 / fakeAutoFireRate) / fakeDeltaT);
+        int expectedAutoTime = (int) Math.floor((1 / fakeAutoFireRate) / fakeDeltaT);
 
         assertEquals(expectedAutoTime, autoTime);
         assertEquals(2, firedCount);
@@ -52,13 +52,15 @@ public class WeaponStatusTest {
 
     @Test
     public void itSlowsDownFireRateForSpoolingWeapons() {
-        subject = new WeaponStatus(setupFiringProperties(FiringProperties.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 0.0, 5));
+        subject = new WeaponStatus(setupSpoolWeapon(FiringProperties.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 5, 1.0));
 
         int spoolTime = 0;
         int firedCount = 0;
 
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 15; i++) {
             FiringStatus status = subject.progressTime(fakeDeltaT);
+
+            System.out.println(status.getClass());
             if (status instanceof Spooling) {
                 spoolTime++;
             }
@@ -67,7 +69,7 @@ public class WeaponStatusTest {
             }
         }
 
-        int expectedSpoolingTime = (int) Math.ceil((1 / fakeAutoFireRate * fakeSpoolSlowdownRatio) / fakeDeltaT);
+        int expectedSpoolingTime = (int) Math.floor((1 / fakeAutoFireRate * fakeSpoolSlowdownRatio) / fakeDeltaT);
 
         assertEquals(expectedSpoolingTime, spoolTime);
         assertEquals(2, firedCount);
@@ -75,27 +77,82 @@ public class WeaponStatusTest {
 
     @Test
     public void test() {
-        subject = new WeaponStatus(setupFiringProperties(FiringProperties.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 0.0, 8));
+        subject = new WeaponStatus(setupSpoolWeapon(FiringProperties.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 8, 1.0));
 
         DecimalFormat df = new DecimalFormat("0.00");
 
         double runningTime = 0.0;
+        long startTime = System.currentTimeMillis();
+        //for (int j = 0; j < 30000; j++) {
         for (int i = 0; i < 6000; i++) {
             FiringStatus status = subject.progressTime(0.01);
             runningTime += 0.01;
             System.out.println("Current time: " + df.format(runningTime) + " Current status: " + status.getClass());
         }
+        //}
+
+        // System.out.println(System.currentTimeMillis() - startTime);
 
     }
 
-    private FiringProperties setupFiringProperties(FiringProperties.TriggerType triggerType, double fireRate, double reloadTime, int magazineSize, double chargeTime, int spoolThreshold) {
+    @Test
+    public void burstingFiresWeirdly() {
+        subject = new WeaponStatus(setupBurstWeapon(FiringProperties.TriggerType.BURST, 1, 2.5, 45, 3, 7.83));
+
+        int burstTime = 0;
+        int firedCount = 0;
+
+
+        for (int i = 0; i < 127; i++) {
+            FiringStatus status = subject.progressTime(fakeDeltaT);
+
+            if (status instanceof Bursting) {
+                burstTime++;
+            }
+            if (status instanceof Fired) {
+                firedCount++;
+            }
+        }
+
+        int expectedBurstingTimePerShot = (int) Math.floor((1 / 7.83) / fakeDeltaT);
+        int expectedBurstingTimeBetweenBursts = (int) Math.floor(1 / fakeDeltaT) - 1;
+
+        assertEquals((expectedBurstingTimePerShot * 2) + expectedBurstingTimeBetweenBursts, burstTime);
+        assertEquals(4, firedCount);
+    }
+
+    private FiringProperties setupSpoolWeapon(FiringProperties.TriggerType triggerType, double fireRate, double reloadTime, int magazineSize, int spoolThreshold, double spoolingDecrease) {
         FiringProperties props = new FiringProperties();
         props.setFireRate(fireRate);
-        props.setChargeTime(chargeTime);
         props.setReloadTime(reloadTime);
         props.setMagazineSize(magazineSize);
         props.setSpoolThreshold(spoolThreshold);
         props.setTriggerType(triggerType);
+        props.reloadMagazine(); //TODO: get rid of this
+        props.setSpoolingSpeedDecreaseModifier(spoolingDecrease);
+
+        return props;
+    }
+
+    private FiringProperties setupAutoWeapon(FiringProperties.TriggerType triggerType, double fireRate, double reloadTime, int magazineSize) {
+        FiringProperties props = new FiringProperties();
+        props.setFireRate(fireRate);
+        props.setReloadTime(reloadTime);
+        props.setMagazineSize(magazineSize);
+        props.setTriggerType(triggerType);
+        props.reloadMagazine(); //TODO: get rid of this
+
+        return props;
+    }
+
+    private FiringProperties setupBurstWeapon(FiringProperties.TriggerType triggerType, double fireRate, double reloadTime, int magazineSize, int burstCount, double burstFireRate) {
+        FiringProperties props = new FiringProperties();
+        props.setFireRate(fireRate);
+        props.setReloadTime(reloadTime);
+        props.setMagazineSize(magazineSize);
+        props.setTriggerType(triggerType);
+        props.setBurstCount(burstCount);
+        props.setBurstFireRate(burstFireRate);
         props.reloadMagazine(); //TODO: get rid of this
 
         return props;
