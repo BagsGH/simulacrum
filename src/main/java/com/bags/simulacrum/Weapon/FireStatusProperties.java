@@ -1,5 +1,6 @@
 package com.bags.simulacrum.Weapon;
 
+import com.bags.simulacrum.Weapon.WeaponInformationEnums.ChargingProperties;
 import lombok.Data;
 
 @Data
@@ -13,12 +14,12 @@ public class FireStatusProperties {
     private int spoolThreshold;
     private double spoolingSpeedDecreaseModifier;
     private double chargeTime;
+    private int burstCount;
 
     private int currentMagazineSize;
     private double percentToCharge;
-    private double minChargePercentage;
 
-    private int burstCount;
+    private ChargingProperties chargingProperties;
 
     public enum TriggerType {
         HELD,

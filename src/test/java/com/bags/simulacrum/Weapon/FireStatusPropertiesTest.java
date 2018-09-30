@@ -37,9 +37,7 @@ public class FireStatusPropertiesTest {
     public void itCanHaveTestCoverage() {
         subject.setMagazineSize(55);
         subject.setMaxAmmo(110);
-        subject.setMinChargePercentage(.75);
 
-        assertEquals(.75, subject.getMinChargePercentage(), 0.0);
         assertEquals(55, subject.getMagazineSize());
         assertEquals(110, subject.getMaxAmmo());
     }

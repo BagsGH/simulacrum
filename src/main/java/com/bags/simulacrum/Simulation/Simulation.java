@@ -5,7 +5,6 @@ import com.bags.simulacrum.Entity.Target;
 import com.bags.simulacrum.Weapon.Status.Fired;
 import com.bags.simulacrum.Weapon.Status.FiringStatus;
 import com.bags.simulacrum.Weapon.Weapon;
-import com.bags.simulacrum.Weapon.WeaponStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -15,14 +14,18 @@ import java.util.List;
 @Component
 public class Simulation {
 
-    @Autowired
-    private SimulationConfig config;
+    private final SimulationConfig config;
+
+    private final RandomNumberGenerator randomNumberGenerator;
+
+    private final EngineHelper engineHelper;
 
     @Autowired
-    private RandomNumberGenerator randomNumberGenerator;
-
-    @Autowired
-    private EngineHelper engineHelper;
+    public Simulation(SimulationConfig config, RandomNumberGenerator randomNumberGenerator, EngineHelper engineHelper) {
+        this.config = config;
+        this.randomNumberGenerator = randomNumberGenerator;
+        this.engineHelper = engineHelper;
+    }
 
     @PostConstruct
     public void test() {
@@ -47,10 +50,10 @@ public class Simulation {
         Setup metrics tracking.
          */
 
-        WeaponStatus weaponStatus = new WeaponStatus(null);
+        weapon.resetWeaponStatus();
 
         for (int i = 1; i < timeTicks; i++) {
-            FiringStatus firingStatus = weaponStatus.progressTime(config.getDeltaTime());
+            FiringStatus firingStatus = weapon.getWeaponStatus().progressTime(config.getDeltaTime());
             if (firingStatus instanceof Fired) {
                 engineHelper.handleFireWeapon(weapon, targetList.get(0), simulationParameters.getHeadshotChance());
             }

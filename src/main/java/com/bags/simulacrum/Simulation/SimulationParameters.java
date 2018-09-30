@@ -7,5 +7,6 @@ public class SimulationParameters {
 
     private double duration;
     private double headshotChance;
+    private boolean limitAmmo;
 
 }

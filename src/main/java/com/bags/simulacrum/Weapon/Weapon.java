@@ -28,17 +28,20 @@ public class Weapon {
     private double reloadTime;
     private int burstCount;
     private int maxAmmo;
-
-    private 
-
     private double chargeTime;
-    /*TODO: Make this into a class */
 
+    private FireStatusProperties fireStatusProperties;
     private ChargingProperties chargingProperties;
 
     private List<Mod> mods;
 
     private WeaponInformation weaponInformation;
+
+    private WeaponStatus weaponStatus;
+
+    public void resetWeaponStatus() {
+        this.weaponStatus = new WeaponStatus(this.fireStatusProperties);
+    }
 
     public Weapon() {
 
