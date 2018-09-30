@@ -2,7 +2,7 @@ package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Simulation.DamageMetrics;
-import com.bags.simulacrum.Simulation.Random;
+import com.bags.simulacrum.Simulation.RandomNumberGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,13 +13,13 @@ public class StatusProcHelper {
 
     private static final double IPS_STATUS_WEIGHT = 3.0;
 
-    private final Random random;
+    private final RandomNumberGenerator randomNumberGenerator;
 
     private final StatusPropertyMapper statusPropertyMapper;
 
     @Autowired
-    public StatusProcHelper(Random random, StatusPropertyMapper statusPropertyMapper) {
-        this.random = random;
+    public StatusProcHelper(RandomNumberGenerator randomNumberGenerator, StatusPropertyMapper statusPropertyMapper) {
+        this.randomNumberGenerator = randomNumberGenerator;
         this.statusPropertyMapper = statusPropertyMapper;
     }
 
@@ -40,7 +40,7 @@ public class StatusProcHelper {
             statusPROCChanceMap.put(damageType, weightedDamagePerType.get(damageType) / totalDamageWithIPSWeights);
         }
 
-        double statusTypeRNG = random.getRandom();
+        double statusTypeRNG = randomNumberGenerator.getRandomPercentage();
 
         DamageType statusProcDamageType = getStatusProcType(statusPROCChanceMap, statusTypeRNG);
         return statusPropertyMapper.getStatusProcClass(statusProcDamageType);

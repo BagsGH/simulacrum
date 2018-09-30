@@ -20,13 +20,13 @@ import java.util.Map;
 public class EngineHelper {
 
     private final TargetDamageHelper targetDamageHelper;
-    private final Random random;
+    private final RandomNumberGenerator randomNumberGenerator;
     private final StatusProcHelper statusProcHelper;
 
     @Autowired
-    public EngineHelper(TargetDamageHelper targetDamageHelper, Random random, StatusProcHelper statusProcHelper) {
+    public EngineHelper(TargetDamageHelper targetDamageHelper, RandomNumberGenerator randomNumberGenerator, StatusProcHelper statusProcHelper) {
         this.targetDamageHelper = targetDamageHelper;
-        this.random = random;
+        this.randomNumberGenerator = randomNumberGenerator;
         this.statusProcHelper = statusProcHelper;
     }
 
@@ -39,17 +39,17 @@ public class EngineHelper {
 
         List<HitProperties> hitPropertiesList = new ArrayList<>();
 
-        double multishotRNG = random.getRandom();
-        double headshotRNG = random.getRandom(); //TODO: maybe if the accuracy is bad, calculate this independently for multishot?
-        double bodyshotRNG = random.getRandom(); //TODO: maybe if the accuracy is bad, calculate this independently for multishot?
+        double multishotRNG = randomNumberGenerator.getRandomPercentage();
+        double headshotRNG = randomNumberGenerator.getRandomPercentage(); //TODO: maybe if the accuracy is bad, calculate this independently for multishot?
+        double bodyshotRNG = randomNumberGenerator.getRandomPercentage(); //TODO: maybe if the accuracy is bad, calculate this independently for multishot?
 
         int multishots = getMultishotLevel(weapon.getMultishot(), multishotRNG);
         double headshotModifier = calculateHeadshotModifier(target, headshotChance, headshotRNG);
         double bodyModifier = calculateBodyModifier(target, headshotChance, headshotRNG, bodyshotRNG);
 
         for (int i = 0; i < multishots; i++) {
-            double criticalHitRNG = random.getRandom();
-            double statusProcRNG = random.getRandom();
+            double criticalHitRNG = randomNumberGenerator.getRandomPercentage();
+            double statusProcRNG = randomNumberGenerator.getRandomPercentage();
             int critLevel = getCritLevel(weapon.getCriticalChance(), criticalHitRNG);
             double weaponCriticalDamageMultiplier = critLevel > 0 ? weapon.getCriticalDamage() : 0.0;
             HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier);

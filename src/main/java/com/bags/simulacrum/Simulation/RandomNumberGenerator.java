@@ -3,9 +3,9 @@ package com.bags.simulacrum.Simulation;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Random {
+public class RandomNumberGenerator {
 
-    public double getRandom() {
+    public double getRandomPercentage() {
         return Math.random();
     }
 }

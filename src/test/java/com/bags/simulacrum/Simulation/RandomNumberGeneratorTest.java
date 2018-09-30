@@ -7,10 +7,10 @@ import org.mockito.MockitoAnnotations;
 
 import static org.junit.Assert.assertTrue;
 
-public class RandomTest {
+public class RandomNumberGeneratorTest {
 
     @InjectMocks
-    private Random subject;
+    private RandomNumberGenerator subject;
 
     @Before
     public void setup() {
@@ -20,7 +20,7 @@ public class RandomTest {
     @Test
     public void itAlwaysGeneratesValidNumbers() {
         for (int i = 0; i < 1000000; i++) {
-            double generatedRandom = subject.getRandom();
+            double generatedRandom = subject.getRandomPercentage();
             assertTrue(generatedRandom >= 0.0 && generatedRandom < 1.0);
         }
     }

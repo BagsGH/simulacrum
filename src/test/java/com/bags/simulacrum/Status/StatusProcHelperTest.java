@@ -1,7 +1,7 @@
 package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Damage.DamageType;
-import com.bags.simulacrum.Simulation.Random;
+import com.bags.simulacrum.Simulation.RandomNumberGenerator;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -22,7 +22,7 @@ public class StatusProcHelperTest {
     private StatusProcHelper subject;
 
     @Mock
-    private Random mockRandom;
+    private RandomNumberGenerator mockRandomNumberGenerator;
 
     @Mock
     private StatusPropertyMapper mockStatusPropertyMapper;
@@ -34,7 +34,7 @@ public class StatusProcHelperTest {
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        when(mockRandom.getRandom()).thenReturn(0.50);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.50);
 
         fakeDamageToHealth = new HashMap<>();
         fakeDamageToShields = new HashMap<>();
@@ -57,7 +57,7 @@ public class StatusProcHelperTest {
         fakeDamageToHealth.put(DamageType.HEAT, 50.0);
         fakeDamageToHealth.put(DamageType.RADIATION, 25.0);
 
-        when(mockRandom.getRandom()).thenReturn(0.0);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.0);
 
         StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
@@ -85,7 +85,7 @@ public class StatusProcHelperTest {
         fakeDamageToHealth.put(DamageType.IMPACT, 50.0);
         fakeDamageToHealth.put(DamageType.SLASH, 25.0);
 
-        when(mockRandom.getRandom()).thenReturn(0.0);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.0);
 
         StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
@@ -103,7 +103,7 @@ public class StatusProcHelperTest {
         fakeDamageToHealth.put(DamageType.IMPACT, 50.0);
         fakeDamageToHealth.put(DamageType.HEAT, 50.0);
 
-        when(mockRandom.getRandom()).thenReturn(0.74);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.74);
 
         StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
@@ -116,7 +116,7 @@ public class StatusProcHelperTest {
         fakeDamageToHealth.put(DamageType.IMPACT, 50.0);
         fakeDamageToHealth.put(DamageType.CORROSIVE, 50.0);
 
-        when(mockRandom.getRandom()).thenReturn(0.76);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.76);
 
         StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
@@ -130,7 +130,7 @@ public class StatusProcHelperTest {
         fakeDamageToHealth.put(DamageType.CORROSIVE, 50.0);
         fakeDamageToShields.put(DamageType.RADIATION, 50.0);
 
-        when(mockRandom.getRandom()).thenReturn(0.0);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.0);
 
         StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
@@ -144,7 +144,7 @@ public class StatusProcHelperTest {
         /*
         TODO: This cannot happen. Find a way to remove this test and keep 100% coverage.
          */
-        when(mockRandom.getRandom()).thenReturn(1.01);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(1.01);
 
         StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 

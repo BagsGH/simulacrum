@@ -1,23 +1,37 @@
 package com.bags.simulacrum.Simulation;
 
+import com.bags.simulacrum.Configuration.SimulationConfig;
 import com.bags.simulacrum.Entity.Target;
+import com.bags.simulacrum.Weapon.Status.Fired;
+import com.bags.simulacrum.Weapon.Status.FiringStatus;
 import com.bags.simulacrum.Weapon.Weapon;
+import com.bags.simulacrum.Weapon.WeaponStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Component
 public class Simulation {
 
-    private static final double TIME_STEP = 0.01;
+    @Autowired
+    private SimulationConfig config;
 
     @Autowired
-    private Random random;
+    private RandomNumberGenerator randomNumberGenerator;
+
+    @Autowired
+    private EngineHelper engineHelper;
+
+    @PostConstruct
+    public void test() {
+        System.out.println("config.getDeltaTime(): " + config.getDeltaTime());
+    }
 
     public void runSimulation(SimulationParameters simulationParameters, Weapon weapon, List<Target> targetList) {
         double simulationDuration = simulationParameters.getDuration(); //60s //.01s == 6000
-        int timeTicks = (int) (simulationDuration / TIME_STEP);
+        int timeTicks = (int) (simulationDuration / config.getDeltaTime());
         /*
         Handle first shot.
          */
@@ -33,14 +47,20 @@ public class Simulation {
         Setup metrics tracking.
          */
 
+        WeaponStatus weaponStatus = new WeaponStatus(null);
+
         for (int i = 1; i < timeTicks; i++) {
+            FiringStatus firingStatus = weaponStatus.progressTime(config.getDeltaTime());
+            if (firingStatus instanceof Fired) {
+                engineHelper.handleFireWeapon(weapon, targetList.get(0), simulationParameters.getHeadshotChance());
+            }
             //TODO:Firing mechanism class?
             /*
-            boolean fire = firingMechanism.progressTime(TIME_STEP); //maybe return wepaon status instead of boolean? ie reloading, charging, firing for metrics?
+            boolean fire = firingMechanism.progressTime(DELTA_TIME); //maybe return wepaon status instead of boolean? ie reloading, charging, firing for metrics?
            // if returns start_reload, calculate metrics per the reload.
             if(fire) { metrics = engineHelper.fireGun(Weapon, target);}
 
-            List<proc> procsDealingDamageThisTick = target.procs.progressTime(TIME_STEP);
+            List<proc> procsDealingDamageThisTick = target.procs.progressTime(DELTA_TIME);
             for(proc : procsDealingDamage)
             {
                 proc.apply(target) // store these metrics

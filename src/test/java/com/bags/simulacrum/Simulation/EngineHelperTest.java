@@ -35,7 +35,7 @@ public class EngineHelperTest {
     private EngineHelper subject;
 
     @Mock
-    private Random mockRandom;
+    private RandomNumberGenerator mockRandomNumberGenerator;
 
     @Mock
     private TargetDamageHelper mockTargetDamageHelper;
@@ -67,7 +67,7 @@ public class EngineHelperTest {
         MockitoAnnotations.initMocks(this);
 
 
-        when(mockRandom.getRandom()).thenReturn(0.50);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.50);
 
         setupDefaultFakeWeapon();
         setupDefaultFakeTarget();
@@ -80,7 +80,7 @@ public class EngineHelperTest {
     public void itCallsRandomFiveTimesWithoutMultishot() {
         subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        verify(mockRandom, times(5)).getRandom();
+        verify(mockRandomNumberGenerator, times(5)).getRandomPercentage();
     }
 
     @Test
@@ -88,7 +88,7 @@ public class EngineHelperTest {
         fakeWeapon.setMultishot(2.0);
         subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        verify(mockRandom, times(7)).getRandom();
+        verify(mockRandomNumberGenerator, times(7)).getRandomPercentage();
     }
 
     @Test
@@ -96,7 +96,7 @@ public class EngineHelperTest {
         fakeWeapon.setMultishot(2.51);
         subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        verify(mockRandom, times(9)).getRandom();
+        verify(mockRandomNumberGenerator, times(9)).getRandomPercentage();
     }
 
     @Test
@@ -104,7 +104,7 @@ public class EngineHelperTest {
         fakeWeapon.setMultishot(3.0);
         subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        verify(mockRandom, times(9)).getRandom();
+        verify(mockRandomNumberGenerator, times(9)).getRandomPercentage();
     }
 
     @Test
@@ -140,7 +140,7 @@ public class EngineHelperTest {
 
     @Test
     public void itCallsTargetDamageHelperWithCorrectValues_Headshot() {
-        when(mockRandom.getRandom()).thenReturn(0.14);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.14);
         fakeWeapon.setCriticalChance(0.10);
         fakeWeapon.setStatusChance(0.0);
         ArgumentCaptor<HitProperties> hitPropertiesCaptor = ArgumentCaptor.forClass(HitProperties.class);
@@ -157,7 +157,7 @@ public class EngineHelperTest {
 
     @Test
     public void itCallsTargetDamageHelperWithCorrectValues_NoHeadshot() {
-        when(mockRandom.getRandom()).thenReturn(0.51);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.51);
         fakeWeapon.setCriticalChance(0.10);
         ArgumentCaptor<HitProperties> hitPropertiesCaptor = ArgumentCaptor.forClass(HitProperties.class);
 
@@ -173,7 +173,7 @@ public class EngineHelperTest {
 
     @Test
     public void itCallsTargetDamageHelperWithCorrectValues_Bodyshot() {
-        when(mockRandom.getRandom()).thenReturn(0.15);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.15);
         fakeWeapon.setCriticalChance(0.10);
         ArgumentCaptor<HitProperties> hitPropertiesCaptor = ArgumentCaptor.forClass(HitProperties.class);
 
@@ -189,7 +189,7 @@ public class EngineHelperTest {
 
     @Test
     public void itCallsTargetDamageHelperWithCorrectValues_Critical() {
-        when(mockRandom.getRandom()).thenReturn(0.55);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.55);
         fakeWeapon.setCriticalChance(0.56);
         ArgumentCaptor<HitProperties> hitPropertiesCaptor = ArgumentCaptor.forClass(HitProperties.class);
 
@@ -205,7 +205,7 @@ public class EngineHelperTest {
 
     @Test
     public void itCallsTargetDamageHelperWithCorrectValues_Critical_Headshot() {
-        when(mockRandom.getRandom()).thenReturn(0.55);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.55);
         fakeWeapon.setCriticalChance(0.56);
         ArgumentCaptor<HitProperties> hitPropertiesCaptor = ArgumentCaptor.forClass(HitProperties.class);
 
@@ -221,7 +221,7 @@ public class EngineHelperTest {
 
     @Test
     public void itCallsTargetDamageHelperWithCorrectValues_Critical_Bodyshot() {
-        when(mockRandom.getRandom()).thenReturn(0.45);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.45);
         fakeWeapon.setCriticalChance(0.46);
         subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.30);
 
@@ -346,7 +346,7 @@ public class EngineHelperTest {
 
     @Test
     public void itReturnsMetrics_Bodyshot() {
-        when(mockRandom.getRandom()).thenReturn(0.40);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.40);
 
         FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
@@ -385,7 +385,7 @@ public class EngineHelperTest {
 
     @Test
     public void itReturnsMetrics_Critical_Bodyshot() {
-        when(mockRandom.getRandom()).thenReturn(0.40);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.40);
         fakeWeapon.setCriticalChance(0.70);
 
         FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
@@ -417,7 +417,7 @@ public class EngineHelperTest {
 
     @Test
     public void eachShotOfMultishotCalculatesMetricsIndependently() {
-        when(mockRandom.getRandom()).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.10).thenReturn(0.50);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.10).thenReturn(0.50);
         fakeWeapon.setMultishot(2.0);
 
         FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
@@ -438,7 +438,7 @@ public class EngineHelperTest {
     public void itReturnsStatusProcMetrics() {
         when(mockStatusProcHelper.handleStatusProc(any(), any())).thenReturn(new IgniteProc());
         fakeWeapon.setStatusChance(0.75);
-        when(mockRandom.getRandom()).thenReturn(0.74);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.74);
 
         FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
@@ -448,7 +448,7 @@ public class EngineHelperTest {
 
     @Test
     public void eachShotOfMultishotCalculatesStatusChanceIndependently() {
-        when(mockRandom.getRandom()).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.04);
+        when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.04);
         when(mockStatusProcHelper.handleStatusProc(any(), any())).thenReturn(new CorrosionProc());
         fakeWeapon.setStatusChance(0.05);
         fakeWeapon.setMultishot(2.0);

@@ -3,6 +3,7 @@ package com.bags.simulacrum.Damage;
 import com.bags.simulacrum.Armor.DamageBonusMapper;
 import com.bags.simulacrum.Armor.Health;
 import com.bags.simulacrum.Armor.HealthClass;
+import com.bags.simulacrum.Configuration.DamageConfig;
 import com.bags.simulacrum.Simulation.HitProperties;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +22,9 @@ public class DamageCalculatorTest {
     @Mock
     private DamageBonusMapper damageBonusMapperMock;
 
+    @Mock
+    private DamageConfig mockDamageConfig;
+
     private Damage fakeDamage;
     private Health fakeHealth;
     private Health fakeArmor;
@@ -32,6 +36,8 @@ public class DamageCalculatorTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+
+        setupConfigMocks();
         setupDefaultFakeHealth();
         setupDamageBonusMapperMocks();
         fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
@@ -383,14 +389,14 @@ public class DamageCalculatorTest {
     }
 
     private void setupDamageBonusMapperMocks() {
-        when(damageBonusMapperMock.getBonus(DamageType.HEAT, HealthClass.MACHINERY)).thenReturn(0.0);
-        when(damageBonusMapperMock.getBonus(DamageType.VOID, HealthClass.MACHINERY)).thenReturn(-0.50);
-        when(damageBonusMapperMock.getBonus(DamageType.HEAT, HealthClass.PROTO_SHIELD)).thenReturn(-0.50);
-        when(damageBonusMapperMock.getBonus(DamageType.PUNCTURE, HealthClass.PROTO_SHIELD)).thenReturn(-0.50);
-        when(damageBonusMapperMock.getBonus(DamageType.HEAT, HealthClass.INFESTED_FLESH)).thenReturn(0.50);
-        when(damageBonusMapperMock.getBonus(DamageType.GAS, HealthClass.INFESTED_FLESH)).thenReturn(0.50);
-        when(damageBonusMapperMock.getBonus(DamageType.PUNCTURE, HealthClass.SINEW)).thenReturn(0.25);
-        when(damageBonusMapperMock.getBonus(DamageType.PUNCTURE, HealthClass.FERRITE)).thenReturn(0.50);
+        when(damageBonusMapperMock.getBonusModifier(DamageType.HEAT, HealthClass.MACHINERY)).thenReturn(0.0);
+        when(damageBonusMapperMock.getBonusModifier(DamageType.VOID, HealthClass.MACHINERY)).thenReturn(-0.50);
+        when(damageBonusMapperMock.getBonusModifier(DamageType.HEAT, HealthClass.PROTO_SHIELD)).thenReturn(-0.50);
+        when(damageBonusMapperMock.getBonusModifier(DamageType.PUNCTURE, HealthClass.PROTO_SHIELD)).thenReturn(-0.50);
+        when(damageBonusMapperMock.getBonusModifier(DamageType.HEAT, HealthClass.INFESTED_FLESH)).thenReturn(0.50);
+        when(damageBonusMapperMock.getBonusModifier(DamageType.GAS, HealthClass.INFESTED_FLESH)).thenReturn(0.50);
+        when(damageBonusMapperMock.getBonusModifier(DamageType.PUNCTURE, HealthClass.SINEW)).thenReturn(0.25);
+        when(damageBonusMapperMock.getBonusModifier(DamageType.PUNCTURE, HealthClass.FERRITE)).thenReturn(0.50);
     }
 
     private void setupDefaultFakeHealth() {
@@ -400,5 +406,10 @@ public class DamageCalculatorTest {
         fakeNoArmor = new Health(HealthClass.FERRITE, 0.0);
         fakeShield = new Health(HealthClass.PROTO_SHIELD, 200.0);
         fakeNoShield = new Health(HealthClass.PROTO_SHIELD, 0.0);
+    }
+
+    private void setupConfigMocks() {
+        when(mockDamageConfig.getArmorConstant()).thenReturn(300.0);
+        when(mockDamageConfig.getHeadcritMultiplier()).thenReturn(2.0);
     }
 }
