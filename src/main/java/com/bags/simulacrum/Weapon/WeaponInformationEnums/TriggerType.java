@@ -1,4 +1,4 @@
-package com.bags.simulacrum.Weapon;
+package com.bags.simulacrum.Weapon.WeaponInformationEnums;
 
 public enum TriggerType {
     HELD,

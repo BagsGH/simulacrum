@@ -2,6 +2,7 @@ package com.bags.simulacrum.Weapon;
 
 import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Weapon.WeaponInformationEnums.ChargingProperties;
+import com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType;
 import lombok.Data;
 
 import java.util.ArrayList;

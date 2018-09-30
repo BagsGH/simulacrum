@@ -3,6 +3,7 @@ package com.bags.simulacrum.Weapon;
 import com.bags.simulacrum.Damage.Damage;
 import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageType;
+import com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType;
 import org.junit.Before;
 import org.junit.Test;
 

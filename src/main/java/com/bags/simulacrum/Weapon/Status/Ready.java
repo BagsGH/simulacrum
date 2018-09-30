@@ -1,7 +1,7 @@
 package com.bags.simulacrum.Weapon.Status;
 
 import com.bags.simulacrum.Weapon.FireStatusProperties;
-import com.bags.simulacrum.Weapon.TriggerType;
+import com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType;
 
 /**
  * This status basically exists as a reset/starting point for each 'clip' fired by the Weapon.

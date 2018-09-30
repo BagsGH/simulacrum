@@ -146,7 +146,7 @@ public class Engine {
 //
 //        /* Fluff weapon information. **/
 //        plasmor.setNoiseLevel(Weapon.NoiseLevel.ALARMING);
-//        plasmor.setTriggerType(Weapon.com.bags.simulacrum.Weapon.TriggerType.SEMIAUTO);
+//        plasmor.setTriggerType(Weapon.com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType.SEMIAUTO);
 //        plasmor.setSlot(Weapon.Slot.PRIMARY);
 //        plasmor.setType(Weapon.WeaponType.SHOTGUN);
 //        plasmor.setAmmoType(Weapon.AmmoType.SHOTGUN);
@@ -185,7 +185,7 @@ public class Engine {
 //
 //        /* Fluff weapon information. **/
 //        lenz.setNoiseLevel(Weapon.NoiseLevel.ALARMING);
-//        lenz.setTriggerType(Weapon.com.bags.simulacrum.Weapon.TriggerType.CHARGE);
+//        lenz.setTriggerType(Weapon.com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType.CHARGE);
 //        lenz.setSlot(Weapon.Slot.PRIMARY);
 //        lenz.setType(Weapon.WeaponType.BOW);
 //        lenz.setAmmoType(Weapon.AmmoType.BOW);
@@ -257,7 +257,7 @@ public class Engine {
 //
 //        /* Fluff weapon information. **/
 //        opticor.setNoiseLevel(Weapon.NoiseLevel.ALARMING);
-//        opticor.setTriggerType(Weapon.com.bags.simulacrum.Weapon.TriggerType.CHARGE);
+//        opticor.setTriggerType(Weapon.com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType.CHARGE);
 //        opticor.setSlot(Weapon.Slot.PRIMARY);
 //        opticor.setType(Weapon.WeaponType.RIFLE);
 //        opticor.setAmmoType(Weapon.AmmoType.RIFLE);

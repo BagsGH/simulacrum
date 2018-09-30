@@ -1,6 +1,7 @@
 package com.bags.simulacrum.Weapon;
 
 import com.bags.simulacrum.Weapon.Status.*;
+import com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -208,7 +209,7 @@ public class WeaponStatusTest {
 
 //    @Test
 //    public void test() {
-//        subject = new Status(setupSpoolWeapon(FireStatusProperties.com.bags.simulacrum.Weapon.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 8, 1.0));
+//        subject = new Status(setupSpoolWeapon(FireStatusProperties.com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 8, 1.0));
 //
 //        DecimalFormat df = new DecimalFormat("0.00");
 //
