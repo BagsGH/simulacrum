@@ -21,9 +21,6 @@ public class FiringProperties {
     private double minChargePercentage;
 
     private int burstCount;
-    private double burstFireRate;
-
-    private boolean fullySpooled;
 
     public enum TriggerType {
         HELD,

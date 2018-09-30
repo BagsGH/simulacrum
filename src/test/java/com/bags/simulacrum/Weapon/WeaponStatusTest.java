@@ -53,7 +53,7 @@ public class WeaponStatusTest {
     }
 
     @Test
-    public void weaponStatusIsFiredImmediatelyAfterReload() {
+    public void weaponStatusIsFiredImmediatelyAfterReloadForAuto() {
         subject = new WeaponStatus(setupAutoWeapon(FiringProperties.TriggerType.AUTO, fakeAutoFireRate, 0.01, 1));
 
         int autoCount = 0;
@@ -102,6 +102,57 @@ public class WeaponStatusTest {
 
         assertEquals(expectedSpoolingTime, spoolTime);
         assertEquals(2, firedCount);
+    }
+
+    @Test
+    public void itReloadsSpoolWeapons() {
+        subject = new WeaponStatus(setupSpoolWeapon(FiringProperties.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 1, 5, 1.0));
+
+        int reloadTime = 0;
+        int firedCount = 0;
+
+        for (int i = 0; i < 2; i++) {
+            FiringStatus status = subject.progressTime(fakeDeltaT);
+
+            if (status instanceof Reloading) {
+                reloadTime++;
+            }
+            if (status instanceof Fired) {
+                firedCount++;
+            }
+        }
+
+        assertEquals(1, reloadTime);
+        assertEquals(1, firedCount);
+    }
+
+    @Test
+    public void itChangesFromSpoolingToAutoAfterSpoolingThresholdMet() {
+        subject = new WeaponStatus(setupSpoolWeapon(FiringProperties.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 1, 1.0));
+
+        int spoolTime = 0;
+        int firedCount = 0;
+        int autoCount = 0;
+
+        for (int i = 0; i < 16; i++) {
+            FiringStatus status = subject.progressTime(fakeDeltaT);
+            if (status instanceof Spooling) {
+                spoolTime++;
+            }
+            if (status instanceof Fired) {
+                firedCount++;
+            }
+
+            if (status instanceof Auto) {
+                autoCount++;
+            }
+        }
+
+        int expectedSpoolingTime = (int) Math.floor((1 / fakeAutoFireRate * fakeSpoolSlowdownRatio) / fakeDeltaT);
+
+        assertEquals(expectedSpoolingTime, spoolTime);
+        assertEquals(2, firedCount);
+        assertEquals(1, autoCount);
     }
 
     @Test
