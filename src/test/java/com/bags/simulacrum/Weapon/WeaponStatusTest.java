@@ -11,20 +11,21 @@ import static org.junit.Assert.assertEquals;
 public class WeaponStatusTest {
 
     private WeaponStatus subject;
-    private FiringProperties fakeFiringProperties;
     private double fakeDeltaT;
     private double fakeSpoolSlowdownRatio;
     private double fakeAutoFireRate;
     private double fakeBurstFireRate;
+    private double fakeChargingTime;
 
     @Before
     public void before() {
-        fakeFiringProperties = new FiringProperties();
+        FiringProperties fakeFiringProperties = new FiringProperties();
         subject = new WeaponStatus(fakeFiringProperties);
         fakeDeltaT = 0.01;
         fakeSpoolSlowdownRatio = 2.0;
         fakeAutoFireRate = 15.0;
         fakeBurstFireRate = 7.83;
+        fakeChargingTime = 0.25;
     }
 
     @Test
@@ -126,6 +127,34 @@ public class WeaponStatusTest {
         assertEquals(84, burstTime);
     }
 
+    @Test
+    public void itChargesFiresAndThenReloadsABow() {
+        subject = new WeaponStatus(setupChargingWeapon(FiringProperties.TriggerType.CHARGE, 0.25, 1, fakeChargingTime));
+
+        int chargingTime = 0;
+        int firedCount = 0;
+        int reloadTime = 0;
+
+        for (int i = 0; i < 50; i++) {
+            FiringStatus status = subject.progressTime(fakeDeltaT);
+
+
+            if (status instanceof Charging) {
+                chargingTime++;
+            }
+            if (status instanceof Fired) {
+                firedCount++;
+            }
+            if (status instanceof Reloading) {
+                reloadTime++;
+            }
+        }
+
+        assertEquals(1, firedCount);
+        assertEquals((int) (fakeChargingTime * 100) - 1, chargingTime);
+        assertEquals(25, reloadTime);
+    }
+
 //    @Test
 //    public void test() {
 //        subject = new Status(setupSpoolWeapon(FiringProperties.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 8, 1.0));
@@ -177,6 +206,17 @@ public class WeaponStatusTest {
         props.setMagazineSize(magazineSize);
         props.setTriggerType(triggerType);
         props.setBurstCount(burstCount);
+        props.loadMagazine();
+
+        return props;
+    }
+
+    private FiringProperties setupChargingWeapon(FiringProperties.TriggerType triggerType, double reloadTime, int magazineSize, double chargeTime) {
+        FiringProperties props = new FiringProperties();
+        props.setReloadTime(reloadTime);
+        props.setMagazineSize(magazineSize);
+        props.setTriggerType(triggerType);
+        props.setChargeTime(chargeTime);
         props.loadMagazine();
 
         return props;

@@ -5,10 +5,12 @@ import com.bags.simulacrum.Weapon.FiringProperties;
 public class Charging implements FiringStatus {
     private FiringProperties firingProperties;
     private double chargingProgress;
+    private double chargingTime;
 
     public Charging(FiringProperties firingProperties) {
         this.firingProperties = firingProperties;
         this.chargingProgress = 0.0;
+        this.chargingTime = firingProperties.getChargeTime();
     }
 
     @Override
@@ -17,7 +19,7 @@ public class Charging implements FiringStatus {
         if (firingProperties.getCurrentMagazineSize() <= 0) {
             return new Reloading(firingProperties);
         }
-        if (chargingProgress >= firingProperties.getChargeTime()) {
+        if (chargingProgress >= chargingTime) {
             chargingProgress = 0.0;
             firingProperties.expendAmmo();
             return new Fired(firingProperties, this);
