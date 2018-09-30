@@ -1,43 +1,40 @@
-package com.bags.simulacrum.Status;
+package com.bags.simulacrum.StatusProc;
 
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
 @Data
-public class ConfusionProc implements StatusProc {
+public class UnimplementedProc implements StatusProc {
 
     private double duration;
     private int damageTicks;
+    private double value;
     private DamageType damageType;
 
-    private static final double ARMOR_REDUCTION_RATIO = 0.25;
-
-    private ConfusionProc(DamageType damageType, double duration, int damageTicks) {
+    public UnimplementedProc(DamageType damageType, double duration, double value, int damageTicks) {
         this.damageType = damageType;
         this.duration = duration;
+        this.value = value;
         this.damageTicks = damageTicks;
     }
 
-    public ConfusionProc() {
+    public UnimplementedProc() {
 
     }
 
     @Override
     public void apply(Target target) {
+
     }
 
     @Override
     public StatusProc withDamageType(DamageType damageType) {
-        double duration = STATUS_PROPERTY_MAPPER.getStatusProcDuration(damageType);
-        int ticks = STATUS_PROPERTY_MAPPER.getStatusProcTicks(damageType);
-
-        return new ConfusionProc(damageType, duration, ticks);
+        return null;
     }
 
     @Override
     public boolean applyInstantly() {
         return false;
     }
-
 }

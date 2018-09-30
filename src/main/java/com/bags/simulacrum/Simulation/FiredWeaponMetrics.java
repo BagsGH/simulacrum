@@ -1,7 +1,7 @@
 package com.bags.simulacrum.Simulation;
 
 import com.bags.simulacrum.Damage.DelayedDamageSource;
-import com.bags.simulacrum.Status.StatusProc;
+import com.bags.simulacrum.StatusProc.StatusProc;
 import lombok.Data;
 
 import java.util.List;

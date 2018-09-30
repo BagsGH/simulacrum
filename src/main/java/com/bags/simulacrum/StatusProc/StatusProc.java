@@ -1,4 +1,4 @@
-package com.bags.simulacrum.Status;
+package com.bags.simulacrum.StatusProc;
 
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;

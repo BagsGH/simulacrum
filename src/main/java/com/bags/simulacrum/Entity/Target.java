@@ -1,7 +1,7 @@
 package com.bags.simulacrum.Entity;
 
 import com.bags.simulacrum.Armor.Health;
-import com.bags.simulacrum.Status.StatusProc;
+import com.bags.simulacrum.StatusProc.StatusProc;
 import lombok.Data;
 
 import java.util.ArrayList;

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
  * https://tuhrig.de/using-configurationproperties-to-separate-service-and-configuration
  * https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html
  * https://www.baeldung.com/configuration-properties-in-spring-boot
+ * https://stackoverflow.com/questions/42839126/configurationproperties-spring-boot-configuration-annotation-processor-not-foun?rq=1
  */
 
 @Component
@@ -20,4 +21,5 @@ import org.springframework.stereotype.Component;
 public class SimulationConfig {
 
     private double deltaTime;
+
 }

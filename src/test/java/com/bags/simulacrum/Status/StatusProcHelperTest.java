@@ -2,6 +2,7 @@ package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Simulation.RandomNumberGenerator;
+import com.bags.simulacrum.StatusProc.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
