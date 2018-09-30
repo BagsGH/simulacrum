@@ -4,6 +4,7 @@ import com.bags.simulacrum.Configuration.SimulationConfig;
 import com.bags.simulacrum.Entity.Target;
 import com.bags.simulacrum.Weapon.Status.Fired;
 import com.bags.simulacrum.Weapon.Status.FiringStatus;
+import com.bags.simulacrum.Weapon.TriggerType;
 import com.bags.simulacrum.Weapon.Weapon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -38,7 +39,7 @@ public class Simulation {
         /*
         Handle first shot.
          */
-        if (weapon.getTriggerType().equals(Weapon.TriggerType.CHARGE)) {
+        if (weapon.getTriggerType().equals(TriggerType.CHARGE)) {
             //handle charge weapon
         } else {
             //handle other types

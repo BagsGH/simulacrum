@@ -1,6 +1,7 @@
 package com.bags.simulacrum.Weapon.Status;
 
 import com.bags.simulacrum.Weapon.FireStatusProperties;
+import com.bags.simulacrum.Weapon.TriggerType;
 
 /**
  * This status basically exists as a reset/starting point for each 'clip' fired by the Weapon.
@@ -18,11 +19,11 @@ public class Ready implements FiringStatus {
     @Override
     public FiringStatus progressTime(double deltaTime) {
         FiringStatus status;
-        if (fireStatusProperties.getTriggerType().equals(FireStatusProperties.TriggerType.CHARGE)) {
+        if (fireStatusProperties.getTriggerType().equals(TriggerType.CHARGE)) {
             status = new Charging(fireStatusProperties);
-        } else if (fireStatusProperties.getTriggerType().equals(FireStatusProperties.TriggerType.AUTOSPOOL)) {
+        } else if (fireStatusProperties.getTriggerType().equals(TriggerType.AUTOSPOOL)) {
             status = new Spooling(fireStatusProperties);
-        } else if (fireStatusProperties.getTriggerType().equals(FireStatusProperties.TriggerType.BURST)) {
+        } else if (fireStatusProperties.getTriggerType().equals(TriggerType.BURST)) {
             status = new Bursting(fireStatusProperties);
         } else {
             status = new Auto(fireStatusProperties);

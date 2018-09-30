@@ -63,7 +63,7 @@ public class WeaponModifierTest {
         fakeWeapon.setRangeLimit(2375.0);
         fakeWeapon.setMaxAmmo(1234);
         fakeWeapon.setMods(new ArrayList<>());
-        fakeWeapon.setTriggerType(FireStatusProperties.TriggerType.HELD);
+        fakeWeapon.setTriggerType(TriggerType.HELD);
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 

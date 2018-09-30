@@ -10,7 +10,7 @@ import java.util.List;
 @Data
 public class Weapon {
 
-    private String name; //TODO: eventually move to fluff
+    private String name; //TODO: eventually move to fluff. Left here now for ease of debugging.
 
     private double accuracy;
     private List<DamageSource> damageSources;
@@ -18,11 +18,11 @@ public class Weapon {
     private double criticalChance;
     private double criticalDamage;
     private double statusChance;
-    private double headshotMultiplier;
-    private double accuracyMultiplier;
+    private double headshotMultiplier; //TODO: unused, but will be used
+    private double accuracyMultiplier; //TODO: how to use
     private double rangeLimit;
 
-    private FireStatusProperties fireStatusProperties;
+    private FireStatusProperties fireStatusProperties; //TODO: get rid of the below passthrough implementation? But I do like the idea that if you want to change something on the weapon, you tell the weapon to change it...
 
     public void setFireRate(double newFireRate) {
         this.fireStatusProperties.setFireRate(newFireRate);
@@ -64,14 +64,13 @@ public class Weapon {
         return this.fireStatusProperties.getMaxAmmo();
     }
 
-    public void setTriggerType(FireStatusProperties.TriggerType newTriggerType) {
+    public void setTriggerType(TriggerType newTriggerType) {
         this.fireStatusProperties.setTriggerType(newTriggerType);
     }
 
-    public FireStatusProperties.TriggerType getTriggerType() {
+    public TriggerType getTriggerType() {
         return this.fireStatusProperties.getTriggerType();
     }
-
 
     private ChargingProperties chargingProperties;
     private List<Mod> mods;
@@ -83,7 +82,6 @@ public class Weapon {
     }
 
     public Weapon() {
-
     }
 
     public Weapon(String name, WeaponInformation weaponInformation, FireStatusProperties fireStatusProperties, double rangeLimit, List<Mod> mods) {
@@ -99,14 +97,6 @@ public class Weapon {
             mods = new ArrayList<>();
         }
         mods.add(mod);
-    }
-
-    public enum TriggerType {
-        HELD,
-        CHARGE,
-        DUPLEXAUTO,
-        AUTOSPOOL,
-        AUTO, SEMIAUTO;
     }
 
     public void addDamageSource(DamageSource damageSource) {

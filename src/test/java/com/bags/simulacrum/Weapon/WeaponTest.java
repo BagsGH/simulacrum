@@ -23,7 +23,7 @@ public class WeaponTest {
     @Test
     public void itCanHaveSetterTestCoverage() {
         subject.setName("Ignis");
-        subject.setTriggerType(FireStatusProperties.TriggerType.CHARGE);
+        subject.setTriggerType(TriggerType.CHARGE);
         subject.setFireRate(1.25);
         subject.setAccuracy(1.25);
         subject.setMagazineSize(1);

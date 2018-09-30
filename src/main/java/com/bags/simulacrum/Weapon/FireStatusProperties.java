@@ -21,14 +21,6 @@ public class FireStatusProperties {
 
     private ChargingProperties chargingProperties;
 
-    public enum TriggerType {
-        HELD,
-        CHARGE,
-        DUPLEXAUTO,
-        AUTOSPOOL,
-        AUTO, SEMIAUTO, BURST;
-    }
-
     public void expendAmmo() {
         this.currentMagazineSize--;
     }
