@@ -35,9 +35,6 @@ public class WeaponTest {
         subject.setHeadshotMultiplier(1.25);
         subject.setAccuracyMultiplier(1.25);
         subject.setChargeTime(1.25);
-        subject.setMinBonusDamageFromCharging(1.25);
-        subject.setMaxBonusDamageFromCharging(1.25);
-        subject.setMinChargePercentage(1.25);
         subject.setMods(Collections.singletonList(new Mod()));
         subject.setMaxAmmo(1);
         subject.setRangeLimit(1.25);
@@ -53,9 +50,6 @@ public class WeaponTest {
         assertEquals(1.25, subject.getHeadshotMultiplier(), 0.0);
         assertEquals(1.25, subject.getAccuracyMultiplier(), 0.0);
         assertEquals(1.25, subject.getChargeTime(), 0.0);
-        assertEquals(1.25, subject.getMinBonusDamageFromCharging(), 0.0);
-        assertEquals(1.25, subject.getMaxBonusDamageFromCharging(), 0.0);
-        assertEquals(1.25, subject.getMinChargePercentage(), 0.0);
         assertEquals(1.25, subject.getRangeLimit(), 0.0);
         assertEquals(1, subject.getMagazineSize());
         assertEquals(1, subject.getMaxAmmo());

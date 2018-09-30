@@ -1,6 +1,6 @@
 package com.bags.simulacrum.Weapon.Status;
 
-import com.bags.simulacrum.Weapon.FiringProperties;
+import com.bags.simulacrum.Weapon.FireStatusProperties;
 
 /**
  * This status basically exists as a reset/starting point for each 'clip' fired by the Weapon.
@@ -9,23 +9,23 @@ import com.bags.simulacrum.Weapon.FiringProperties;
  * creator of it usually (if not always) immediately calling progressTime on it.
  */
 public class Ready implements FiringStatus {
-    private FiringProperties firingProperties;
+    private FireStatusProperties fireStatusProperties;
 
-    public Ready(FiringProperties firingProperties) {
-        this.firingProperties = firingProperties;
+    public Ready(FireStatusProperties fireStatusProperties) {
+        this.fireStatusProperties = fireStatusProperties;
     }
 
     @Override
     public FiringStatus progressTime(double deltaTime) {
         FiringStatus status;
-        if (firingProperties.getTriggerType().equals(FiringProperties.TriggerType.CHARGE)) {
-            status = new Charging(firingProperties);
-        } else if (firingProperties.getTriggerType().equals(FiringProperties.TriggerType.AUTOSPOOL)) {
-            status = new Spooling(firingProperties);
-        } else if (firingProperties.getTriggerType().equals(FiringProperties.TriggerType.BURST)) {
-            status = new Bursting(firingProperties);
+        if (fireStatusProperties.getTriggerType().equals(FireStatusProperties.TriggerType.CHARGE)) {
+            status = new Charging(fireStatusProperties);
+        } else if (fireStatusProperties.getTriggerType().equals(FireStatusProperties.TriggerType.AUTOSPOOL)) {
+            status = new Spooling(fireStatusProperties);
+        } else if (fireStatusProperties.getTriggerType().equals(FireStatusProperties.TriggerType.BURST)) {
+            status = new Bursting(fireStatusProperties);
         } else {
-            status = new Auto(firingProperties);
+            status = new Auto(fireStatusProperties);
         }
         return status.progressTime(deltaTime);
     }

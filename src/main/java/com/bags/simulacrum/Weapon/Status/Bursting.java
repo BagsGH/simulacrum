@@ -1,9 +1,9 @@
 package com.bags.simulacrum.Weapon.Status;
 
-import com.bags.simulacrum.Weapon.FiringProperties;
+import com.bags.simulacrum.Weapon.FireStatusProperties;
 
 public class Bursting implements FiringStatus {
-    private FiringProperties firingProperties;
+    private FireStatusProperties fireStatusProperties;
     private double interBurstFireTime;
     private double timeBetweenBursts;
     private double timeBetweenShots;
@@ -12,11 +12,11 @@ public class Bursting implements FiringStatus {
     private int burstCount;
 
 
-    public Bursting(FiringProperties firingProperties) {
-        this.firingProperties = firingProperties;
-        this.burstCount = firingProperties.getBurstCount();
-        this.intraBurstFireTime = ((1.25 / this.firingProperties.getFireRate()) / this.burstCount);
-        this.interBurstFireTime = (1.075 / this.firingProperties.getFireRate()) * 2;
+    public Bursting(FireStatusProperties fireStatusProperties) {
+        this.fireStatusProperties = fireStatusProperties;
+        this.burstCount = fireStatusProperties.getBurstCount();
+        this.intraBurstFireTime = ((1.25 / this.fireStatusProperties.getFireRate()) / this.burstCount);
+        this.interBurstFireTime = (1.075 / this.fireStatusProperties.getFireRate()) * 2;
         this.timeBetweenBursts = -1.0;
         this.timeBetweenShots = 0.0;
         this.burstShotProgress = -1;
@@ -31,23 +31,23 @@ public class Bursting implements FiringStatus {
         }
         if (timeBetweenShots >= intraBurstFireTime) {
             handleBurstFire();
-            return new Fired(this.firingProperties, this);
+            return new Fired(this.fireStatusProperties, this);
         }
         if (freshMagazine()) {
             handleFirstShot();
-            return new Fired(this.firingProperties, this);
+            return new Fired(this.fireStatusProperties, this);
         }
         if (timeBetweenBursts >= interBurstFireTime) {
             burstShotProgress = 1;
             timeBetweenBursts = 0.0;
-            return new Fired(this.firingProperties, this);
+            return new Fired(this.fireStatusProperties, this);
         }
 
         return this;
     }
 
     private void handleBurstFire() {
-        firingProperties.expendAmmo();
+        fireStatusProperties.expendAmmo();
         burstShotProgress++;
         timeBetweenShots = 0.0;
         if (burstShotProgress == burstCount) {
@@ -59,7 +59,7 @@ public class Bursting implements FiringStatus {
     private void handleFirstShot() {
         timeBetweenBursts = 0.0;
         timeBetweenShots = 0.0;
-        firingProperties.expendAmmo();
+        fireStatusProperties.expendAmmo();
         burstShotProgress = 1;
     }
 

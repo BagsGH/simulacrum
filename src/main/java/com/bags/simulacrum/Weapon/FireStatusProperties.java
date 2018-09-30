@@ -3,21 +3,19 @@ package com.bags.simulacrum.Weapon;
 import lombok.Data;
 
 @Data
-public class FiringProperties {
+public class FireStatusProperties {
 
     private TriggerType triggerType;
     private double fireRate;
-    private double accuracy;
-    private int currentMagazineSize;
     private int magazineSize;
     private double reloadTime;
     private int maxAmmo;
     private int spoolThreshold;
     private double spoolingSpeedDecreaseModifier;
-
     private double chargeTime;
-    private double minBonusDamageFromCharging;
-    private double maxBonusDamageFromCharging;
+
+    private int currentMagazineSize;
+    private double percentToCharge;
     private double minChargePercentage;
 
     private int burstCount;

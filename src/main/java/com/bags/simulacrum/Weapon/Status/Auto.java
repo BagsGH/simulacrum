@@ -1,6 +1,6 @@
 package com.bags.simulacrum.Weapon.Status;
 
-import com.bags.simulacrum.Weapon.FiringProperties;
+import com.bags.simulacrum.Weapon.FireStatusProperties;
 
 /**
  * This status is used for more than just (full) Auto weapons.
@@ -8,19 +8,19 @@ import com.bags.simulacrum.Weapon.FiringProperties;
  * Spooling, or Burst Weapon for modeling simplicity.
  */
 public class Auto implements FiringStatus {
-    private FiringProperties firingProperties;
+    private FireStatusProperties fireStatusProperties;
     private double refireTime;
     private double timeBetweenShots;
 
-    public Auto(FiringProperties firingProperties) {
-        this.firingProperties = firingProperties;
-        this.refireTime = 1 / firingProperties.getFireRate();
+    public Auto(FireStatusProperties fireStatusProperties) {
+        this.fireStatusProperties = fireStatusProperties;
+        this.refireTime = 1 / fireStatusProperties.getFireRate();
         this.timeBetweenShots = -1.0;
     }
 
-    public Auto(FiringProperties firingProperties, double timeBetweenShots) {
-        this.firingProperties = firingProperties;
-        this.refireTime = 1 / firingProperties.getFireRate();
+    public Auto(FireStatusProperties fireStatusProperties, double timeBetweenShots) {
+        this.fireStatusProperties = fireStatusProperties;
+        this.refireTime = 1 / fireStatusProperties.getFireRate();
         this.timeBetweenShots = timeBetweenShots;
     }
 
@@ -29,16 +29,16 @@ public class Auto implements FiringStatus {
         timeBetweenShots += deltaTime;
         if (freshMagazine()) {
             timeBetweenShots = 0.0;
-            firingProperties.expendAmmo();
-            return new Fired(this.firingProperties, this);
+            fireStatusProperties.expendAmmo();
+            return new Fired(this.fireStatusProperties, this);
         }
-        if (firingProperties.getCurrentMagazineSize() <= 0) {
-            return new Reloading(firingProperties);
+        if (fireStatusProperties.getCurrentMagazineSize() <= 0) {
+            return new Reloading(fireStatusProperties);
         }
         if (timeBetweenShots >= refireTime) {
-            firingProperties.expendAmmo();
+            fireStatusProperties.expendAmmo();
             timeBetweenShots = 0.0;
-            return new Fired(this.firingProperties, this);
+            return new Fired(this.fireStatusProperties, this);
         }
         return this;
     }

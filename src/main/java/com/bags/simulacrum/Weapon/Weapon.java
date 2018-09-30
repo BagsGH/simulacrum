@@ -1,6 +1,7 @@
 package com.bags.simulacrum.Weapon;
 
 import com.bags.simulacrum.Damage.DamageSource;
+import com.bags.simulacrum.Weapon.WeaponInformationEnums.ChargingProperties;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -10,12 +11,8 @@ import java.util.List;
 public class Weapon {
 
     private String name; //TODO: eventually move to fluff
-    private TriggerType triggerType;
 
-    private double fireRate;
     private double accuracy;
-    private int magazineSize;
-    private double reloadTime;
     private List<DamageSource> damageSources;
     private double multishot;
     private double criticalChance;
@@ -23,20 +20,21 @@ public class Weapon {
     private double statusChance;
     private double headshotMultiplier;
     private double accuracyMultiplier;
-
-    private int burstCount;
-    private double burstSpeed;
-    private double burstCooldown;
     private double rangeLimit;
+
+    private TriggerType triggerType;
+    private double fireRate;
+    private int magazineSize;
+    private double reloadTime;
+    private int burstCount;
     private int maxAmmo;
 
+    private 
 
-    /*TODO: Make this into a class */
     private double chargeTime;
-    private double minBonusDamageFromCharging;
-    private double maxBonusDamageFromCharging;
-    private double minChargePercentage;
-    /*                              */
+    /*TODO: Make this into a class */
+
+    private ChargingProperties chargingProperties;
 
     private List<Mod> mods;
 
