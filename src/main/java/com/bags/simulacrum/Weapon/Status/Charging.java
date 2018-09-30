@@ -21,7 +21,7 @@ public class Charging implements FiringStatus {
         }
         if (chargingProgress >= chargingTime) {
             chargingProgress = 0.0;
-            fireStatusProperties.expendAmmo();
+            fireStatusProperties.subtractAmmo();
             return new Fired(fireStatusProperties, this);
         }
         return this;

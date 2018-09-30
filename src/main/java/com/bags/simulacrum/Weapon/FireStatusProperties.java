@@ -21,13 +21,11 @@ public class FireStatusProperties {
 
     private ChargingProperties chargingProperties;
 
-    public void expendAmmo() {
+    public void subtractAmmo() {
         this.currentMagazineSize--;
     }
 
     public void loadMagazine() {
         this.currentMagazineSize = magazineSize;
     }
-
-
 }

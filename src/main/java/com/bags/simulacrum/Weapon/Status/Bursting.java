@@ -47,7 +47,7 @@ public class Bursting implements FiringStatus {
     }
 
     private void handleBurstFire() {
-        fireStatusProperties.expendAmmo();
+        fireStatusProperties.subtractAmmo();
         burstShotProgress++;
         timeBetweenShots = 0.0;
         if (burstShotProgress == burstCount) {
@@ -59,7 +59,7 @@ public class Bursting implements FiringStatus {
     private void handleFirstShot() {
         timeBetweenBursts = 0.0;
         timeBetweenShots = 0.0;
-        fireStatusProperties.expendAmmo();
+        fireStatusProperties.subtractAmmo();
         burstShotProgress = 1;
     }
 

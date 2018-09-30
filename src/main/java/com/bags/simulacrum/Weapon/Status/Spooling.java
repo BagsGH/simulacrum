@@ -30,7 +30,7 @@ public class Spooling implements FiringStatus {
         timeBetweenShots += deltaTime;
         if (freshMagazine()) {
             timeBetweenShots = 0.0;
-            fireStatusProperties.expendAmmo();
+            fireStatusProperties.subtractAmmo();
             return new Fired(this.fireStatusProperties, this);
         }
         if (spoolingProgress >= spoolingThreshold) {
@@ -41,7 +41,7 @@ public class Spooling implements FiringStatus {
             return new Reloading(fireStatusProperties);
         }
         if (timeBetweenShots + (spoolingProgressBonus) >= refireTime) {
-            fireStatusProperties.expendAmmo();
+            fireStatusProperties.subtractAmmo();
             timeBetweenShots = 0.0;
             spoolingProgress++;
             spoolingProgressBonus = spoolingProgress * spoolingSpeedStepUp;

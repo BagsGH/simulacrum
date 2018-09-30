@@ -29,14 +29,14 @@ public class Auto implements FiringStatus {
         timeBetweenShots += deltaTime;
         if (freshMagazine()) {
             timeBetweenShots = 0.0;
-            fireStatusProperties.expendAmmo();
+            fireStatusProperties.subtractAmmo();
             return new Fired(this.fireStatusProperties, this);
         }
         if (fireStatusProperties.getCurrentMagazineSize() <= 0) {
             return new Reloading(fireStatusProperties);
         }
         if (timeBetweenShots >= refireTime) {
-            fireStatusProperties.expendAmmo();
+            fireStatusProperties.subtractAmmo();
             timeBetweenShots = 0.0;
             return new Fired(this.fireStatusProperties, this);
         }

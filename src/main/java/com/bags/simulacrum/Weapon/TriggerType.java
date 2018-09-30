@@ -5,6 +5,6 @@ public enum TriggerType {
     CHARGE,
     DUPLEXAUTO,
     AUTOSPOOL,
-    AUTO, SEMIAUTO, BURST;
+    AUTO, SEMIAUTO, BURST
 }
 

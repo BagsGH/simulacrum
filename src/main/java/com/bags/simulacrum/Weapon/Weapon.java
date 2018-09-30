@@ -77,7 +77,7 @@ public class Weapon {
     private WeaponInformation weaponInformation;
     private WeaponStatus weaponStatus;
 
-    public void resetWeaponStatus() {
+    public void initializeWeaponStatus() {
         this.weaponStatus = new WeaponStatus(this.fireStatusProperties);
     }
 
