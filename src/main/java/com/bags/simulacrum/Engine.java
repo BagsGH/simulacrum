@@ -5,11 +5,8 @@ import com.bags.simulacrum.Damage.Damage;
 import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageSourceType;
 import com.bags.simulacrum.Damage.DamageType;
-import com.bags.simulacrum.Weapon.Mod;
-import com.bags.simulacrum.Weapon.Weapon;
-import com.bags.simulacrum.Weapon.WeaponInformation;
+import com.bags.simulacrum.Weapon.*;
 import com.bags.simulacrum.Weapon.WeaponInformationEnums.*;
-import com.bags.simulacrum.Weapon.WeaponModifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -203,6 +200,7 @@ public class Engine {
 
     private Weapon setupIgnis() {
         Weapon ignisWraith = new Weapon();
+        ignisWraith.setFireStatusProperties(new FireStatusProperties());
         /* Important weapon stuff. **/
         ignisWraith.setAccuracy(1.0);
         ignisWraith.setCriticalChance(.17);
@@ -226,7 +224,7 @@ public class Engine {
         WeaponInformation weaponInformation = new WeaponInformation(WeaponClass.RIFLE, WeaponSlot.PRIMARY, 9, AmmoType.RIFLE, NoiseLevel.ALARMING, Disposition.MILD);
         ignisWraith.setWeaponInformation(weaponInformation);
 
-        ignisWraith.setTriggerType(Weapon.TriggerType.HELD);
+        ignisWraith.setTriggerType(FireStatusProperties.TriggerType.HELD);
         ignisWraith.setRangeLimit(27.0);
         ignisWraith.setName("Ignis Wraith");
         ignisWraith.setMods(new ArrayList<>());

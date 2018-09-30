@@ -17,12 +17,13 @@ public class WeaponTest {
     @Before
     public void setUp() {
         subject = new Weapon();
+        subject.setFireStatusProperties(new FireStatusProperties());
     }
 
     @Test
     public void itCanHaveSetterTestCoverage() {
         subject.setName("Ignis");
-        subject.setTriggerType(Weapon.TriggerType.CHARGE);
+        subject.setTriggerType(FireStatusProperties.TriggerType.CHARGE);
         subject.setFireRate(1.25);
         subject.setAccuracy(1.25);
         subject.setMagazineSize(1);

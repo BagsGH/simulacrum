@@ -42,6 +42,7 @@ public class WeaponModifierTest {
 
         fakeWeaponInformation = new WeaponInformation(WeaponClass.RIFLE, WeaponSlot.PRIMARY, 9, AmmoType.RIFLE, NoiseLevel.ALARMING, Disposition.MILD);
         fakeWeapon = new Weapon();
+        fakeWeapon.setFireStatusProperties(new FireStatusProperties());
         fakeWeapon.setWeaponInformation(fakeWeaponInformation);
 
         DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.IMPACT, 5.0, 0.0)));
@@ -62,7 +63,7 @@ public class WeaponModifierTest {
         fakeWeapon.setRangeLimit(2375.0);
         fakeWeapon.setMaxAmmo(1234);
         fakeWeapon.setMods(new ArrayList<>());
-        fakeWeapon.setTriggerType(Weapon.TriggerType.HELD);
+        fakeWeapon.setTriggerType(FireStatusProperties.TriggerType.HELD);
 
         Weapon actualWeaponModified = subject.modWeapon(fakeWeapon);
 

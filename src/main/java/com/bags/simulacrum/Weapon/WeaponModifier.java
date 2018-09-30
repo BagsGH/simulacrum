@@ -55,7 +55,7 @@ public class WeaponModifier {
     }
 
     private Weapon copyWeaponToMod() {
-        return new Weapon(originalWeapon.getName(), originalWeapon.getWeaponInformation().copy(), originalWeapon.getTriggerType(), originalWeapon.getRangeLimit(), originalWeapon.getMaxAmmo(), weaponMods);
+        return new Weapon(originalWeapon.getName(), originalWeapon.getWeaponInformation().copy(), originalWeapon.getFireStatusProperties(), originalWeapon.getRangeLimit(), weaponMods);
     }
 
     private double calculateModdedFireRate() {

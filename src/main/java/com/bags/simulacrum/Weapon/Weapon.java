@@ -22,21 +22,60 @@ public class Weapon {
     private double accuracyMultiplier;
     private double rangeLimit;
 
-    private TriggerType triggerType;
-    private double fireRate;
-    private int magazineSize;
-    private double reloadTime;
-    private int burstCount;
-    private int maxAmmo;
-    private double chargeTime;
-
     private FireStatusProperties fireStatusProperties;
+
+    public void setFireRate(double newFireRate) {
+        this.fireStatusProperties.setFireRate(newFireRate);
+    }
+
+    public double getFireRate() {
+        return this.fireStatusProperties.getFireRate();
+    }
+
+    public void setMagazineSize(int newMagazineSize) {
+        this.fireStatusProperties.setMagazineSize(newMagazineSize);
+    }
+
+    public int getMagazineSize() {
+        return this.fireStatusProperties.getMagazineSize();
+    }
+
+    public void setReloadTime(double newReloadTime) {
+        this.fireStatusProperties.setReloadTime(newReloadTime);
+    }
+
+    public double getReloadTime() {
+        return this.fireStatusProperties.getReloadTime();
+    }
+
+    public void setChargeTime(double newChargeTime) {
+        this.fireStatusProperties.setChargeTime(newChargeTime);
+    }
+
+    public double getChargeTime() {
+        return this.fireStatusProperties.getChargeTime();
+    }
+
+    public void setMaxAmmo(int newMaxAmmo) {
+        this.fireStatusProperties.setMaxAmmo(newMaxAmmo);
+    }
+
+    public int getMaxAmmo() {
+        return this.fireStatusProperties.getMaxAmmo();
+    }
+
+    public void setTriggerType(FireStatusProperties.TriggerType newTriggerType) {
+        this.fireStatusProperties.setTriggerType(newTriggerType);
+    }
+
+    public FireStatusProperties.TriggerType getTriggerType() {
+        return this.fireStatusProperties.getTriggerType();
+    }
+
+
     private ChargingProperties chargingProperties;
-
     private List<Mod> mods;
-
     private WeaponInformation weaponInformation;
-
     private WeaponStatus weaponStatus;
 
     public void resetWeaponStatus() {
@@ -47,9 +86,8 @@ public class Weapon {
 
     }
 
-    public Weapon(String name, WeaponInformation weaponInformation, TriggerType triggerType, double rangeLimit, int maxAmmo, List<Mod> mods) {
-        this.triggerType = triggerType;
-        this.maxAmmo = maxAmmo;
+    public Weapon(String name, WeaponInformation weaponInformation, FireStatusProperties fireStatusProperties, double rangeLimit, List<Mod> mods) {
+        this.fireStatusProperties = fireStatusProperties;
         this.weaponInformation = weaponInformation;
         this.name = name;
         this.rangeLimit = rangeLimit;
