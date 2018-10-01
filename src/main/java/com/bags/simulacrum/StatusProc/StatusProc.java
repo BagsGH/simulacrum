@@ -16,6 +16,7 @@ public abstract class StatusProc {
     protected double duration;
     protected int damageTicks;
     protected DamageType damageType;
+    protected double totalDamage;
 
     abstract public void apply(Target target);
 

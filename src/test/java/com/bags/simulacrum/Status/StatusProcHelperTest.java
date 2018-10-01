@@ -1,5 +1,6 @@
 package com.bags.simulacrum.Status;
 
+import com.bags.simulacrum.Configuration.StatusProcConfig;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Simulation.RandomNumberGenerator;
 import com.bags.simulacrum.StatusProc.*;
@@ -28,6 +29,9 @@ public class StatusProcHelperTest {
     @Mock
     private StatusPropertyMapper mockStatusPropertyMapper;
 
+    @Mock
+    private StatusProcConfig mockStatusProcConfig;
+
     private Map<DamageType, Double> fakeDamageToHealth;
     private Map<DamageType, Double> fakeDamageToShields;
 
@@ -39,6 +43,8 @@ public class StatusProcHelperTest {
 
         fakeDamageToHealth = new HashMap<>();
         fakeDamageToShields = new HashMap<>();
+
+        when(mockStatusProcConfig.getIpsStatusWeight()).thenReturn(3.0);
 
         setupMockStatusProcPropertyMapper();
     }

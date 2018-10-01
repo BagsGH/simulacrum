@@ -1,26 +1,34 @@
 package com.bags.simulacrum.StatusProc;
 
+import com.bags.simulacrum.Configuration.StatusProcConfig;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Simulation.DamageMetrics;
 import com.bags.simulacrum.Simulation.RandomNumberGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.util.Map;
 
 @Component
 public class StatusProcHelper {
 
-    private static final double IPS_STATUS_WEIGHT = 3.0;
-
     private final RandomNumberGenerator randomNumberGenerator;
 
     private final StatusPropertyMapper statusPropertyMapper;
 
+    private final StatusProcConfig config;
+
+    @PostConstruct
+    public void test() {
+        System.out.println("config.getIpsStatusWeight(): " + config.getIpsStatusWeight());
+    }
+
     @Autowired
-    public StatusProcHelper(RandomNumberGenerator randomNumberGenerator, StatusPropertyMapper statusPropertyMapper) {
+    public StatusProcHelper(RandomNumberGenerator randomNumberGenerator, StatusPropertyMapper statusPropertyMapper, StatusProcConfig config) {
         this.randomNumberGenerator = randomNumberGenerator;
         this.statusPropertyMapper = statusPropertyMapper;
+        this.config = config;
     }
 
     public StatusProc handleStatusProc(Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> damageDoneToShields) {
@@ -48,7 +56,7 @@ public class StatusProcHelper {
 
     private void populateDamageMaps(Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> weightedDamagePerType, Map<DamageType, Double> damagePerType) {
         for (DamageType damageType : damageDoneToHealth.keySet()) {
-            double weightedNewValue = damageDoneToHealth.get(damageType) * (DamageType.isIPS(damageType) ? IPS_STATUS_WEIGHT : 1.0) + weightedDamagePerType.get(damageType);
+            double weightedNewValue = damageDoneToHealth.get(damageType) * (DamageType.isIPS(damageType) ? config.getIpsStatusWeight() : 1.0) + weightedDamagePerType.get(damageType);
             weightedDamagePerType.put(damageType, weightedNewValue);
             double newValue = damageDoneToHealth.get(damageType) + damagePerType.get(damageType);
             damagePerType.put(damageType, newValue);

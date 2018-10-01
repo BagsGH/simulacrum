@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
+@SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
 public class StatusPropertyMapper {
 
     private static final Map<DamageType, Double> statusProcDurationMap;
@@ -57,10 +58,10 @@ public class StatusPropertyMapper {
         return statusProcModifierMap.getOrDefault(statusPROCType, 0.0);
     }
 
-    private static final Map<DamageType, String> statusTypeMap;
+    private static final Map<DamageType, String> statusTypeClassNameMap;
 
     static {
-        statusTypeMap = new HashMap<DamageType, String>() {{
+        statusTypeClassNameMap = new HashMap<DamageType, String>() {{
             put(DamageType.IMPACT, getClassName(Knockback.class));
             put(DamageType.PUNCTURE, getClassName(Weakened.class));
             put(DamageType.SLASH, getClassName(Bleed.class));
@@ -82,7 +83,7 @@ public class StatusPropertyMapper {
     public StatusProc getStatusProcClass(DamageType statusProcType) { //TODO: should not need this if.
         Class<?> clazz = null;
         try {
-            clazz = Class.forName(statusTypeMap.getOrDefault(statusProcType, getClassName(UnimplementedProc.class)));
+            clazz = Class.forName(statusTypeClassNameMap.getOrDefault(statusProcType, getClassName(UnimplementedProc.class)));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -116,7 +117,7 @@ public class StatusPropertyMapper {
     private static final Map<DamageType, Integer> damageTickMap;
 
     static {
-        damageTickMap = new HashMap<DamageType, Integer>() {{
+        damageTickMap = new HashMap<DamageType, Integer>() {{ //TODO: Flesh out map?
             put(DamageType.IMPACT, 0);
             put(DamageType.PUNCTURE, 0);
             put(DamageType.SLASH, 7);
