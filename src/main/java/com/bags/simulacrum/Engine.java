@@ -5,6 +5,9 @@ import com.bags.simulacrum.Damage.Damage;
 import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageSourceType;
 import com.bags.simulacrum.Damage.DamageType;
+import com.bags.simulacrum.Entity.Target;
+import com.bags.simulacrum.Simulation.Simulation;
+import com.bags.simulacrum.Simulation.SimulationParameters;
 import com.bags.simulacrum.Weapon.*;
 import com.bags.simulacrum.Weapon.WeaponInformationEnums.*;
 import org.slf4j.Logger;
@@ -24,9 +27,21 @@ public class Engine {
 
     private final WeaponModifier weaponModifier;
 
+    private final Simulation simulation;
+
     @Autowired
-    public Engine(WeaponModifier weaponModifier) {
+    public Engine(WeaponModifier weaponModifier, Simulation simulation) {
         this.weaponModifier = weaponModifier;
+        this.simulation = simulation;
+    }
+
+    public void runSimulation(Weapon weapon, SimulationParameters simulationParameters, List<Target> targetList) {
+        simulationParameters.setModdedWeapon(weaponModifier.modWeapon(weapon));
+        simulationParameters.setTargetList(targetList);
+        for (int i = 0; i < simulationParameters.getIterations(); i++) {
+            simulation.runSimulation(simulationParameters);
+            simulationParameters.setModdedWeapon(weaponModifier.modWeapon(weapon)); //TODO: replace this with a copy... but need this to reset the weapon
+        }
     }
 
     public void start() {

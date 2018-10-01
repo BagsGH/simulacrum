@@ -14,6 +14,9 @@ public class FiredWeaponMetrics {
     private List<DelayedDamageSource> delayedDamageSources;
     private List<Status> statuses;
 
+    public FiredWeaponMetrics() {
+
+    }
 
     public FiredWeaponMetrics(List<HitProperties> hitPropertiesList, DamageMetrics damageMetrics, List<Status> statuses, List<DelayedDamageSource> delayedDamageSources) {
         this.hitPropertiesList = hitPropertiesList;

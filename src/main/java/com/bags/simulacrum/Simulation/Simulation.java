@@ -33,20 +33,19 @@ public class Simulation {
         System.out.println("config.getDeltaTime(): " + config.getDeltaTime());
     }
 
-    public void runSimulation(SimulationParameters simulationParameters, Weapon weapon, List<Target> targetList) {
+    public void runSimulation(SimulationParameters simulationParameters) {
+        Weapon weapon = simulationParameters.getModdedWeapon();
+        List<Target> targetList = simulationParameters.getTargetList();
+
         double deltaTime = config.getDeltaTime();
         double simulationDuration = simulationParameters.getDuration(); //60s //.01s == 6000
         int timeTicks = (int) (simulationDuration / deltaTime);
-        /*
-        Setup firing mechanism. Load charge time, reload time, fire speed, etc from the weapon.
-        On fire, it calls engineHelper.handle fire gun
-        Setup metrics tracking.
-         */
+
+        WeaponStateMetrics finalWeaponStateMetrics = new WeaponStateMetrics();
+        FiredWeaponMetrics finalFiredWeaponMetrics = new FiredWeaponMetrics();
+
 
         weapon.initializeWeaponStatus();
-
-        WeaponStateMetrics weaponStateMetrics = new WeaponStateMetrics();
-
         for (int i = 1; i < timeTicks; i++) {
 
             FiringState firingState = weapon.getWeaponState().progressTime(deltaTime);
@@ -54,12 +53,13 @@ public class Simulation {
                 FiredWeaponMetrics firedWeaponMetrics = simulationHelper.handleFireWeapon(weapon, targetList.get(0), simulationParameters.getHeadshotChance());
             }
 
-            weaponStateMetrics.add(firingState.getClass(), deltaTime);
+            finalWeaponStateMetrics.add(firingState.getClass(), deltaTime);
 
             List<Status> procsApplying = targetList.get(0).statusProgressTime(deltaTime);
             for (Status status : procsApplying) {
                 status.apply(targetList.get(0)); //TODO: apply should return metrics
             }
+            // Handle delayed damage sources
         }
 
     }
