@@ -28,16 +28,26 @@ public class DamageModHelper {
         this.originalWeaponMods = mods;
         DamageSource modifiedDamageSource = damageSource.copyWithoutDamages();
 
+        calculateRawDamageModsForInnateDamages(damageSource, modifiedDamageSource);
+
         List<Damage> baseDamagesFromSourceAfterRawDamageMods = calculateRawDamageModIncreases(damageSource.getDamages());
         double sumOfAllDamages = sumAllDamageTypes(baseDamagesFromSourceAfterRawDamageMods);
         List<Damage> ipsDamages = calculateIPSDamageMods(baseDamagesFromSourceAfterRawDamageMods);
+
+        modifiedDamageSource.setAddedElementalDamages(calculateElementalDamageAddedByMods(sumOfAllDamages));
         List<Damage> elementalDamagesAddedByMods = calculateElementalDamageAddedByMods(sumOfAllDamages);
+
         List<Damage> orderedElementalDamagesFromWeaponAndMods = orderDamageTypesBasedOnModIndex(baseDamagesFromSourceAfterRawDamageMods, elementalDamagesAddedByMods);
         List<Damage> finalElementalDamages = combineElementalDamages(orderedElementalDamagesFromWeaponAndMods);
 
         modifiedDamageSource.setDamages(mergeElementalAndIPS(finalElementalDamages, ipsDamages));
 
         return modifiedDamageSource;
+    }
+
+    private void calculateRawDamageModsForInnateDamages(DamageSource damageSource, DamageSource modifiedDamageSource) {
+        List<Damage> innateDamagesFromSourceAfterRawDamageMods = calculateRawDamageModIncreases(damageSource.getDamages());
+        modifiedDamageSource.setModifiedInnateDamages(innateDamagesFromSourceAfterRawDamageMods);
     }
 
     private double sumAllDamageTypes(List<Damage> defaultDamagesModded) {

@@ -11,6 +11,8 @@ public class DamageSource {
 
     private DamageSourceType damageSourceType;
     private List<Damage> damages;
+    private List<Damage> modifiedInnateDamages;
+    private List<Damage> addedElementalDamages;
     private double delay;
     private double aoe;
 

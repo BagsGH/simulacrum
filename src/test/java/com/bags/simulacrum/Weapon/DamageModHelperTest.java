@@ -62,6 +62,32 @@ public class DamageModHelperTest {
     }
 
     @Test
+    public void itCanCalculatePositiveDamageAndStoreItInInnateDamages_1() {
+        fakeMod.setDamageIncrease(1.65);
+        fakeModList.add(fakeMod);
+        DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.IMPACT, 35.0, 0.0)));
+
+        DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
+
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 92.75), actualModifiedDamageSource.getDamages(), 0.001);
+
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 92.75), actualModifiedDamageSource.getModifiedInnateDamages(), 0.001);
+    }
+
+    @Test
+    public void itCanCalculatePositiveDamageAndStoreItInInnateDamages_2() {
+        fakeMod.setDamageIncrease(1.65);
+        fakeModList.add(fakeMod);
+        DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.COLD, 35.0, 0.0)));
+
+        DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
+
+        assertExpectedDamageExists(new Damage(DamageType.COLD, 92.75), actualModifiedDamageSource.getDamages(), 0.001);
+
+        assertExpectedDamageExists(new Damage(DamageType.COLD, 92.75), actualModifiedDamageSource.getModifiedInnateDamages(), 0.001);
+    }
+
+    @Test
     public void itCanCalculateNegativeDamage() {
         fakeMod.setDamageIncrease(-0.15);
         fakeModList.add(fakeMod);
@@ -95,6 +121,20 @@ public class DamageModHelperTest {
 
         assertExpectedDamageExists(new Damage(DamageType.IMPACT, 35.0), actualModifiedDamageSource.getDamages(), 0.001);
         assertExpectedDamageExists(new Damage(DamageType.TOXIN, 31.5), actualModifiedDamageSource.getDamages(), 0.001);
+    }
+
+    @Test
+    public void itCanCalculateDamageAddedBy90PercentToxinAndAlsoStoresItInAddedElementalDamages() {
+        fakeMod.setDamage(new Damage(DamageType.TOXIN, 0.0, 0.90));
+        fakeModList.add(fakeMod);
+        DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.IMPACT, 35.0, 0.0)));
+
+        DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
+
+        assertExpectedDamageExists(new Damage(DamageType.IMPACT, 35.0), actualModifiedDamageSource.getDamages(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.TOXIN, 31.5), actualModifiedDamageSource.getDamages(), 0.001);
+
+        assertExpectedDamageExists(new Damage(DamageType.TOXIN, 31.5), actualModifiedDamageSource.getAddedElementalDamages(), 0.001);
     }
 
     @Test
@@ -200,6 +240,25 @@ public class DamageModHelperTest {
         DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
 
         assertExpectedDamageExists(new Damage(DamageType.RADIATION, 100.0), actualModifiedDamageSource.getDamages(), 0.001);
+    }
+
+    @Test
+    public void itSumsIdenticalCombinedTypesButPutsTheAddedAmountSeparately() {
+        /* This test doesn't REALLY test anything, it's for  100% coverage... but it helps check that some logic that was added is in fact used in some cases. */
+        DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(DamageType.RADIATION, 50.0)));
+        fakeMod.setDamage(new Damage(DamageType.ELECTRICITY, 0.0, 0.50));
+        anotherFakeMod.setDamage(new Damage(DamageType.HEAT, 0.0, 0.50));
+        fakeModList.add(fakeMod);
+        fakeModList.add(anotherFakeMod);
+        when(elementalDamageMapperMock.combineElements(DamageType.ELECTRICITY, DamageType.HEAT)).thenReturn(DamageType.RADIATION);
+        when(elementalDamageMapperMock.combineElements(DamageType.HEAT, DamageType.ELECTRICITY)).thenReturn(DamageType.RADIATION);
+
+        DamageSource actualModifiedDamageSource = subject.calculateDamageSources(damageSource, fakeModList);
+
+        assertExpectedDamageExists(new Damage(DamageType.RADIATION, 100.0), actualModifiedDamageSource.getDamages(), 0.001);
+
+        assertExpectedDamageExists(new Damage(DamageType.HEAT, 25.0), actualModifiedDamageSource.getAddedElementalDamages(), 0.001);
+        assertExpectedDamageExists(new Damage(DamageType.ELECTRICITY, 25.0), actualModifiedDamageSource.getAddedElementalDamages(), 0.001);
     }
 
     private void assertExpectedDamageExists(Damage damageExpected, List<Damage> actualDamages, double accuracyThreshold) {

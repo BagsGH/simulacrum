@@ -105,12 +105,6 @@ public class StatusHelperTest {
     }
 
     @Test
-    public void test() {
-        Ignite i = new Ignite();
-        System.out.println(i.getClass());
-    }
-
-    @Test
     public void itHandlesIPSAndElemental_1() {
         fakeDamageToHealth.put(DamageType.IMPACT, 50.0);
         fakeDamageToHealth.put(DamageType.HEAT, 50.0);
