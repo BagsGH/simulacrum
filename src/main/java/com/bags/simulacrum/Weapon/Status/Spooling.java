@@ -36,7 +36,7 @@ public class Spooling implements FiringStatus {
         if (fireStatusProperties.getCurrentMagazineSize() <= 0) {
             return new Reloading(fireStatusProperties);
         }
-        if (timeBetweenShots + (spoolingProgressBonus) >= getRefireTime()) {
+        if (timeBetweenShots + spoolingProgressBonus >= getRefireTime()) {
             fireStatusProperties.subtractAmmo();
             timeBetweenShots = 0.0;
             spoolingProgress++;

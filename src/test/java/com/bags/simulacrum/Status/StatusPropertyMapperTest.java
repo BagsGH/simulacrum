@@ -1,7 +1,7 @@
 package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Damage.DamageType;
-import com.bags.simulacrum.StatusProc.IgniteProc;
+import com.bags.simulacrum.StatusProc.Ignite;
 import com.bags.simulacrum.StatusProc.StatusProc;
 import com.bags.simulacrum.StatusProc.StatusPropertyMapper;
 import com.bags.simulacrum.StatusProc.UnimplementedProc;
@@ -50,7 +50,7 @@ public class StatusPropertyMapperTest {
     @Test
     public void itCanReturnAStatusProcClass() {
         StatusProc proc = subject.getStatusProcClass(DamageType.HEAT);
-        assertTrue(proc instanceof IgniteProc);
+        assertTrue(proc instanceof Ignite);
     }
 
     @Test

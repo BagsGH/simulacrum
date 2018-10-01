@@ -5,7 +5,7 @@ import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
 @Data
-public class IgniteProc implements StatusProc {
+public class Confusion implements StatusProc {
 
     private double duration;
     private int damageTicks;
@@ -13,13 +13,13 @@ public class IgniteProc implements StatusProc {
 
     private static final double ARMOR_REDUCTION_RATIO = 0.25;
 
-    private IgniteProc(DamageType damageType, double duration, int damageTicks) {
+    private Confusion(DamageType damageType, double duration, int damageTicks) {
         this.damageType = damageType;
         this.duration = duration;
         this.damageTicks = damageTicks;
     }
 
-    public IgniteProc() {
+    public Confusion() {
 
     }
 
@@ -32,11 +32,12 @@ public class IgniteProc implements StatusProc {
         double duration = STATUS_PROPERTY_MAPPER.getStatusProcDuration(damageType);
         int ticks = STATUS_PROPERTY_MAPPER.getStatusProcTicks(damageType);
 
-        return new IgniteProc(damageType, duration, ticks);
+        return new Confusion(damageType, duration, ticks);
     }
 
     @Override
     public boolean applyInstantly() {
         return false;
     }
+
 }

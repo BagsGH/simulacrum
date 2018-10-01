@@ -59,20 +59,20 @@ public class StatusPropertyMapper {
 
     static {
         statusTypeMap = new HashMap<DamageType, StatusProc>() {{
-            put(DamageType.IMPACT, new KnockbackProc());
-            put(DamageType.PUNCTURE, new UnimplementedProc());
-            put(DamageType.SLASH, new BleedProc());
-            put(DamageType.COLD, new UnimplementedProc());
-            put(DamageType.ELECTRICITY, new UnimplementedProc());
-            put(DamageType.HEAT, new IgniteProc());
-            put(DamageType.TOXIN, new UnimplementedProc());
-            put(DamageType.VOID, new UnimplementedProc());
-            put(DamageType.BLAST, new UnimplementedProc());
-            put(DamageType.CORROSIVE, new CorrosionProc());
-            put(DamageType.GAS, new UnimplementedProc());
-            put(DamageType.MAGNETIC, new UnimplementedProc());
-            put(DamageType.RADIATION, new UnimplementedProc());
-            put(DamageType.VIRAL, new UnimplementedProc());
+            put(DamageType.IMPACT, new Knockback());
+            put(DamageType.PUNCTURE, new Weakened());
+            put(DamageType.SLASH, new Bleed());
+            put(DamageType.COLD, new Freeze());
+            put(DamageType.ELECTRICITY, new TeslaChain());
+            put(DamageType.HEAT, new Ignite());
+            put(DamageType.TOXIN, new Poison());
+            put(DamageType.VOID, new BulletAttractor());
+            put(DamageType.BLAST, new Knockdown());
+            put(DamageType.CORROSIVE, new Corrosion());
+            put(DamageType.GAS, new ToxinCloud());
+            put(DamageType.MAGNETIC, new Disrupt());
+            put(DamageType.RADIATION, new Confusion());
+            put(DamageType.VIRAL, new Virus());
             put(null, new UnimplementedProc());
         }};
     }

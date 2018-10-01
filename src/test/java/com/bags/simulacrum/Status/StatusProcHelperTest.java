@@ -49,8 +49,8 @@ public class StatusProcHelperTest {
 
         StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
-        assertTrue(returnedProc instanceof IgniteProc);
-        assertEquals(DamageType.HEAT, ((IgniteProc) returnedProc).getDamageType());
+        assertTrue(returnedProc instanceof Ignite);
+        assertEquals(DamageType.HEAT, ((Ignite) returnedProc).getDamageType());
     }
 
     @Test
@@ -62,12 +62,12 @@ public class StatusProcHelperTest {
 
         StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
-        assertTrue(returnedProc instanceof IgniteProc || returnedProc instanceof ConfusionProc);
-        if (returnedProc instanceof IgniteProc) {
-            assertEquals(DamageType.HEAT, ((IgniteProc) returnedProc).getDamageType());
+        assertTrue(returnedProc instanceof Ignite || returnedProc instanceof Confusion);
+        if (returnedProc instanceof Ignite) {
+            assertEquals(DamageType.HEAT, ((Ignite) returnedProc).getDamageType());
         }
-        if (returnedProc instanceof ConfusionProc) {
-            assertEquals(DamageType.RADIATION, ((ConfusionProc) returnedProc).getDamageType());
+        if (returnedProc instanceof Confusion) {
+            assertEquals(DamageType.RADIATION, ((Confusion) returnedProc).getDamageType());
         }
     }
 
@@ -77,8 +77,8 @@ public class StatusProcHelperTest {
 
         StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
-        assertTrue(returnedProc instanceof KnockbackProc);
-        assertEquals(DamageType.IMPACT, ((KnockbackProc) returnedProc).getDamageType());
+        assertTrue(returnedProc instanceof Knockback);
+        assertEquals(DamageType.IMPACT, ((Knockback) returnedProc).getDamageType());
     }
 
     @Test
@@ -90,12 +90,12 @@ public class StatusProcHelperTest {
 
         StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
-        assertTrue(returnedProc instanceof KnockbackProc || returnedProc instanceof BleedProc);
-        if (returnedProc instanceof KnockbackProc) {
-            assertEquals(DamageType.IMPACT, ((KnockbackProc) returnedProc).getDamageType());
+        assertTrue(returnedProc instanceof Knockback || returnedProc instanceof Bleed);
+        if (returnedProc instanceof Knockback) {
+            assertEquals(DamageType.IMPACT, ((Knockback) returnedProc).getDamageType());
         }
-        if (returnedProc instanceof BleedProc) {
-            assertEquals(DamageType.SLASH, ((BleedProc) returnedProc).getDamageType());
+        if (returnedProc instanceof Bleed) {
+            assertEquals(DamageType.SLASH, ((Bleed) returnedProc).getDamageType());
         }
     }
 
@@ -108,8 +108,8 @@ public class StatusProcHelperTest {
 
         StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
-        assertTrue(returnedProc instanceof KnockbackProc);
-        assertEquals(DamageType.IMPACT, ((KnockbackProc) returnedProc).getDamageType());
+        assertTrue(returnedProc instanceof Knockback);
+        assertEquals(DamageType.IMPACT, ((Knockback) returnedProc).getDamageType());
     }
 
     @Test
@@ -121,8 +121,8 @@ public class StatusProcHelperTest {
 
         StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
-        assertTrue(returnedProc instanceof CorrosionProc);
-        assertEquals(DamageType.CORROSIVE, ((CorrosionProc) returnedProc).getDamageType());
+        assertTrue(returnedProc instanceof Corrosion);
+        assertEquals(DamageType.CORROSIVE, ((Corrosion) returnedProc).getDamageType());
     }
 
     @Test
@@ -135,8 +135,8 @@ public class StatusProcHelperTest {
 
         StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
-        assertTrue(returnedProc instanceof KnockbackProc);
-        assertEquals(DamageType.IMPACT, ((KnockbackProc) returnedProc).getDamageType());
+        assertTrue(returnedProc instanceof Knockback);
+        assertEquals(DamageType.IMPACT, ((Knockback) returnedProc).getDamageType());
     }
 
     @Test
@@ -153,11 +153,11 @@ public class StatusProcHelperTest {
     }
 
     private void setupMockStatusProcPropertyMapper() {
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.HEAT))).thenReturn(new IgniteProc().withDamageType(DamageType.HEAT));
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.RADIATION))).thenReturn(new ConfusionProc().withDamageType(DamageType.RADIATION));
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.CORROSIVE))).thenReturn(new CorrosionProc().withDamageType(DamageType.CORROSIVE));
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.SLASH))).thenReturn(new BleedProc().withDamageType(DamageType.SLASH));
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.IMPACT))).thenReturn(new KnockbackProc().withDamageType(DamageType.IMPACT));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.HEAT))).thenReturn(new Ignite().withDamageType(DamageType.HEAT));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.RADIATION))).thenReturn(new Confusion().withDamageType(DamageType.RADIATION));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.CORROSIVE))).thenReturn(new Corrosion().withDamageType(DamageType.CORROSIVE));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.SLASH))).thenReturn(new Bleed().withDamageType(DamageType.SLASH));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.IMPACT))).thenReturn(new Knockback().withDamageType(DamageType.IMPACT));
         when(mockStatusPropertyMapper.getStatusProcClass(eq(null))).thenReturn(new UnimplementedProc());
     }
 }

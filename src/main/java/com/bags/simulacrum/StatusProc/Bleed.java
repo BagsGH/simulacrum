@@ -9,7 +9,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class BleedProc implements StatusProc {
+public class Bleed implements StatusProc {
 
     private double duration;
     private int damageTicks;
@@ -17,13 +17,13 @@ public class BleedProc implements StatusProc {
 
     private static final double ARMOR_REDUCTION_RATIO = 0.25;
 
-    private BleedProc(DamageType damageType, double duration, int damageTicks) {
+    private Bleed(DamageType damageType, double duration, int damageTicks) {
         this.damageType = damageType;
         this.duration = duration;
         this.damageTicks = damageTicks;
     }
 
-    public BleedProc() {
+    public Bleed() {
 
     }
 
@@ -41,7 +41,7 @@ public class BleedProc implements StatusProc {
         double duration = STATUS_PROPERTY_MAPPER.getStatusProcDuration(damageType);
         int ticks = STATUS_PROPERTY_MAPPER.getStatusProcTicks(damageType);
 
-        return new BleedProc(damageType, duration, ticks);
+        return new Bleed(damageType, duration, ticks);
     }
 
     @Override

@@ -9,8 +9,8 @@ import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.BodyModifier;
 import com.bags.simulacrum.Entity.BodyPart;
 import com.bags.simulacrum.Entity.Target;
-import com.bags.simulacrum.StatusProc.CorrosionProc;
-import com.bags.simulacrum.StatusProc.IgniteProc;
+import com.bags.simulacrum.StatusProc.Corrosion;
+import com.bags.simulacrum.StatusProc.Ignite;
 import com.bags.simulacrum.StatusProc.StatusProcHelper;
 import com.bags.simulacrum.Weapon.Weapon;
 import org.junit.Before;
@@ -436,27 +436,27 @@ public class EngineHelperTest {
 
     @Test
     public void itReturnsStatusProcMetrics() {
-        when(mockStatusProcHelper.handleStatusProc(any(), any())).thenReturn(new IgniteProc());
+        when(mockStatusProcHelper.handleStatusProc(any(), any())).thenReturn(new Ignite());
         fakeWeapon.setStatusChance(0.75);
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.74);
 
         FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
         assertEquals(1, firedWeaponMetrics.getStatusProcs().size());
-        assertTrue(firedWeaponMetrics.getStatusProcs().get(0) instanceof IgniteProc);
+        assertTrue(firedWeaponMetrics.getStatusProcs().get(0) instanceof Ignite);
     }
 
     @Test
     public void eachShotOfMultishotCalculatesStatusChanceIndependently() {
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.04);
-        when(mockStatusProcHelper.handleStatusProc(any(), any())).thenReturn(new CorrosionProc());
+        when(mockStatusProcHelper.handleStatusProc(any(), any())).thenReturn(new Corrosion());
         fakeWeapon.setStatusChance(0.05);
         fakeWeapon.setMultishot(2.0);
 
         FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
         assertEquals(1, firedWeaponMetrics.getStatusProcs().size());
-        assertTrue(firedWeaponMetrics.getStatusProcs().get(0) instanceof CorrosionProc);
+        assertTrue(firedWeaponMetrics.getStatusProcs().get(0) instanceof Corrosion);
     }
 
     private void setupDefaultFakeDamageSummary() {
