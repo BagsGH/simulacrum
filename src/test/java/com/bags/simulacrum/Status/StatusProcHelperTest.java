@@ -159,11 +159,16 @@ public class StatusProcHelperTest {
     }
 
     private void setupMockStatusProcPropertyMapper() {
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.HEAT))).thenReturn(new Ignite().withDamageType("Ignite", DamageType.HEAT));
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.RADIATION))).thenReturn(new Confusion().withDamageType("Confusion", DamageType.RADIATION));
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.CORROSIVE))).thenReturn(new Corrosion().withDamageType("Corrosion", DamageType.CORROSIVE));
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.SLASH))).thenReturn(new Bleed().withDamageType("Bleed", DamageType.SLASH));
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.IMPACT))).thenReturn(new Knockback().withDamageType("Knockback", DamageType.IMPACT));
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(null))).thenReturn(new UnimplementedProc());
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.HEAT))).thenReturn(setupExpectedProc(new Ignite(), DamageType.HEAT));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.RADIATION))).thenReturn(setupExpectedProc(new Confusion(), DamageType.RADIATION));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.CORROSIVE))).thenReturn(setupExpectedProc(new Corrosion(), DamageType.CORROSIVE));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.SLASH))).thenReturn(setupExpectedProc(new Bleed(), DamageType.SLASH));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.IMPACT))).thenReturn(setupExpectedProc(new Knockback(), DamageType.IMPACT));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(null))).thenReturn(setupExpectedProc(new UnimplementedProc(), DamageType.VOID));
+    }
+
+    private StatusProc setupExpectedProc(StatusProc statusProc, DamageType damageType) {
+        statusProc.setDamageType(damageType);
+        return statusProc;
     }
 }

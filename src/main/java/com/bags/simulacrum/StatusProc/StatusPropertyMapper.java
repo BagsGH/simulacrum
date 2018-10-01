@@ -3,6 +3,8 @@ package com.bags.simulacrum.StatusProc;
 import com.bags.simulacrum.Damage.DamageType;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,37 +57,60 @@ public class StatusPropertyMapper {
         return statusProcModifierMap.getOrDefault(statusPROCType, 0.0);
     }
 
-    private static final Map<DamageType, StatusProc> statusTypeMap;
+    private static final Map<DamageType, String> statusTypeMap;
 
     static {
-        statusTypeMap = new HashMap<DamageType, StatusProc>() {{
-            put(DamageType.IMPACT, new Knockback());
-            put(DamageType.PUNCTURE, new Weakened());
-            put(DamageType.SLASH, new Bleed());
-            put(DamageType.COLD, new Freeze());
-            put(DamageType.ELECTRICITY, new TeslaChain());
-            put(DamageType.HEAT, new Ignite());
-            put(DamageType.TOXIN, new Poison());
-            put(DamageType.VOID, new BulletAttractor());
-            put(DamageType.BLAST, new Knockdown());
-            put(DamageType.CORROSIVE, new Corrosion());
-            put(DamageType.GAS, new ToxinCloud());
-            put(DamageType.MAGNETIC, new Disrupt());
-            put(DamageType.RADIATION, new Confusion());
-            put(DamageType.VIRAL, new Virus());
-            put(null, new UnimplementedProc());
+        statusTypeMap = new HashMap<DamageType, String>() {{
+            put(DamageType.IMPACT, getClassName(Knockback.class));
+            put(DamageType.PUNCTURE, getClassName(Weakened.class));
+            put(DamageType.SLASH, getClassName(Bleed.class));
+            put(DamageType.COLD, getClassName(Freeze.class));
+            put(DamageType.ELECTRICITY, getClassName(TeslaChain.class));
+            put(DamageType.HEAT, getClassName(Ignite.class));
+            put(DamageType.TOXIN, getClassName(Poison.class));
+            put(DamageType.VOID, getClassName(BulletAttractor.class));
+            put(DamageType.BLAST, getClassName(Knockdown.class));
+            put(DamageType.CORROSIVE, getClassName(Corrosion.class));
+            put(DamageType.GAS, getClassName(ToxinCloud.class));
+            put(DamageType.MAGNETIC, getClassName(Disrupt.class));
+            put(DamageType.RADIATION, getClassName(Confusion.class));
+            put(DamageType.VIRAL, getClassName(Virus.class));
+            put(null, getClassName(UnimplementedProc.class));
         }};
     }
 
     public StatusProc getStatusProcClass(DamageType statusProcType) { //TODO: should not need this if.
-        if (statusProcType == null) {
-            return new UnimplementedProc();
+        Class<?> clazz = null;
+        try {
+            clazz = Class.forName(statusTypeMap.getOrDefault(statusProcType, getClassName(UnimplementedProc.class)));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
-        return statusTypeMap.getOrDefault(statusProcType, new UnimplementedProc()).withDamageType(getClassName(statusProcType), statusProcType);
+        Constructor<?> constructor = null;
+        try {
+            constructor = clazz != null ? clazz.getConstructor() : null;
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        Object object = null;
+        try {
+            object = (constructor != null ? constructor.newInstance() : null);
+
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        StatusProc proc = null;
+        if (object != null) {
+            proc = (StatusProc) object;
+            proc.setDamageType(statusProcType);
+            proc.setDuration(getStatusProcDuration(statusProcType));
+            proc.setDamageTicks(getStatusProcTicks(statusProcType));
+        }
+        return proc;
     }
 
-    private String getClassName(DamageType statusProcType) {
-        return statusTypeMap.getOrDefault(statusProcType, new UnimplementedProc()).getClass().getSimpleName();
+    private static String getClassName(Class clazz) {
+        return clazz.getName().replace("class ", "");
     }
 
     private static final Map<DamageType, Integer> damageTickMap;
