@@ -1,6 +1,8 @@
 package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Configuration.StatusProcConfig;
+import com.bags.simulacrum.Damage.Damage;
+import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Simulation.DamageMetrics;
 import com.bags.simulacrum.Simulation.RandomNumberGenerator;
@@ -8,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -31,7 +34,7 @@ public class StatusProcHelper {
         this.config = config;
     }
 
-    public Status handleStatusProc(Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> damageDoneToShields) {
+    public Status handleStatusProc(DamageSource damageSource, Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> damageDoneToShields) {
         Map<DamageType, Double> weightedDamagePerType = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> damagePerType = DamageMetrics.initialDamageMap();
 
@@ -51,7 +54,37 @@ public class StatusProcHelper {
         double statusTypeRNG = randomNumberGenerator.getRandomPercentage();
 
         DamageType statusProcDamageType = getStatusProcType(statusPROCChanceMap, statusTypeRNG);
-        return statusPropertyMapper.getStatusProcClass(statusProcDamageType);
+        Status statusProc = statusPropertyMapper.getStatusProcClass(statusProcDamageType);
+        statusProc.setTotalDamage(calculateTotalProcDamage(damageSource, statusProc));
+
+        return statusProc;
+    }
+
+    private double calculateTotalProcDamage(DamageSource damageSource, Status statusProc) {
+        List<Damage> innateDamages = damageSource.getModifiedInnateDamages();
+        List<Damage> elementalAdded = damageSource.getAddedElementalDamages();
+
+        List<DamageType> innateDamagesUsed = statusPropertyMapper.getInnateDamageTypesUsed(statusProc.getDamageType());
+        List<DamageType> addedElementalDamageTypesUsed = statusPropertyMapper.getAddedElementalDamageTypesUsed(statusProc.getDamageType());
+
+        double value = 0.0;
+
+        for (DamageType damageType : innateDamagesUsed) {
+            for (Damage damage : innateDamages) {
+                if (damage.getType().equals(damageType)) {
+                    value += damage.getDamageValue();
+                }
+            }
+        }
+        for (DamageType damageType : addedElementalDamageTypesUsed) {
+            for (Damage damage : elementalAdded) {
+                if (damage.getType().equals(damageType)) {
+                    value += damage.getDamageValue();
+                }
+            }
+        }
+
+        return value;
     }
 
     private void populateDamageMaps(Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> weightedDamagePerType, Map<DamageType, Double> damagePerType) {
