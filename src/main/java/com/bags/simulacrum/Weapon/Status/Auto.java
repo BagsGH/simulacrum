@@ -9,18 +9,19 @@ import com.bags.simulacrum.Weapon.FireStatusProperties;
  */
 public class Auto implements FiringStatus {
     private FireStatusProperties fireStatusProperties;
-    private double refireTime;
     private double timeBetweenShots;
 
     public Auto(FireStatusProperties fireStatusProperties) {
         this.fireStatusProperties = fireStatusProperties;
-        this.refireTime = 1 / fireStatusProperties.getFireRate();
         this.timeBetweenShots = -1.0;
+    }
+
+    private double getRefireTime() {
+        return 1 / fireStatusProperties.getFireRate();
     }
 
     public Auto(FireStatusProperties fireStatusProperties, double timeBetweenShots) {
         this.fireStatusProperties = fireStatusProperties;
-        this.refireTime = 1 / fireStatusProperties.getFireRate();
         this.timeBetweenShots = timeBetweenShots;
     }
 
@@ -35,7 +36,7 @@ public class Auto implements FiringStatus {
         if (fireStatusProperties.getCurrentMagazineSize() <= 0) {
             return new Reloading(fireStatusProperties);
         }
-        if (timeBetweenShots >= refireTime) {
+        if (timeBetweenShots >= getRefireTime()) {
             fireStatusProperties.subtractAmmo();
             timeBetweenShots = 0.0;
             return new Fired(this.fireStatusProperties, this);

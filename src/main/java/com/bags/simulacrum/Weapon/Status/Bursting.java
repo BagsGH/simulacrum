@@ -4,10 +4,8 @@ import com.bags.simulacrum.Weapon.FireStatusProperties;
 
 public class Bursting implements FiringStatus {
     private FireStatusProperties fireStatusProperties;
-    private double interBurstFireTime;
     private double timeBetweenBursts;
     private double timeBetweenShots;
-    private double intraBurstFireTime;
     private int burstShotProgress;
     private int burstCount;
 
@@ -15,8 +13,6 @@ public class Bursting implements FiringStatus {
     public Bursting(FireStatusProperties fireStatusProperties) {
         this.fireStatusProperties = fireStatusProperties;
         this.burstCount = fireStatusProperties.getBurstCount();
-        this.intraBurstFireTime = ((1.25 / this.fireStatusProperties.getFireRate()) / this.burstCount);
-        this.interBurstFireTime = (1.075 / this.fireStatusProperties.getFireRate()) * 2;
         this.timeBetweenBursts = -1.0;
         this.timeBetweenShots = 0.0;
         this.burstShotProgress = -1;
@@ -29,7 +25,7 @@ public class Bursting implements FiringStatus {
         } else {
             timeBetweenBursts += deltaTime;
         }
-        if (timeBetweenShots >= intraBurstFireTime) {
+        if (timeBetweenShots >= getIntraBurstFireTime()) {
             handleBurstFire();
             return new Fired(this.fireStatusProperties, this);
         }
@@ -37,13 +33,21 @@ public class Bursting implements FiringStatus {
             handleFirstShot();
             return new Fired(this.fireStatusProperties, this);
         }
-        if (timeBetweenBursts >= interBurstFireTime) {
+        if (timeBetweenBursts >= getInterBurstFireTime()) {
             burstShotProgress = 1;
             timeBetweenBursts = 0.0;
             return new Fired(this.fireStatusProperties, this);
         }
 
         return this;
+    }
+
+    private double getIntraBurstFireTime() {
+        return (1.25 / this.fireStatusProperties.getFireRate()) / this.burstCount;
+    }
+
+    private double getInterBurstFireTime() {
+        return (1.075 / this.fireStatusProperties.getFireRate()) * 2;
     }
 
     private void handleBurstFire() {
