@@ -1,4 +1,4 @@
-package com.bags.simulacrum.StatusProc;
+package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Damage.DamageType;
 import org.springframework.stereotype.Component;
@@ -76,14 +76,14 @@ public class StatusPropertyMapper {
             put(DamageType.MAGNETIC, getClassName(Disrupt.class));
             put(DamageType.RADIATION, getClassName(Confusion.class));
             put(DamageType.VIRAL, getClassName(Virus.class));
-            put(null, getClassName(UnimplementedProc.class));
+            put(null, getClassName(UnimplementedStatus.class));
         }};
     }
 
-    public StatusProc getStatusProcClass(DamageType statusProcType) { //TODO: should not need this if.
+    public Status getStatusProcClass(DamageType statusProcType) { //TODO: should not need this if.
         Class<?> clazz = null;
         try {
-            clazz = Class.forName(statusTypeClassNameMap.getOrDefault(statusProcType, getClassName(UnimplementedProc.class)));
+            clazz = Class.forName(statusTypeClassNameMap.getOrDefault(statusProcType, getClassName(UnimplementedStatus.class)));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -100,9 +100,9 @@ public class StatusPropertyMapper {
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
-        StatusProc proc = null;
+        Status proc = null;
         if (object != null) {
-            proc = (StatusProc) object;
+            proc = (Status) object;
             proc.setDamageType(statusProcType);
             proc.setDuration(getStatusProcDuration(statusProcType));
             proc.setDamageTicks(getStatusProcTicks(statusProcType));

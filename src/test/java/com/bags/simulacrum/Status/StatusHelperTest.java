@@ -3,7 +3,6 @@ package com.bags.simulacrum.Status;
 import com.bags.simulacrum.Configuration.StatusProcConfig;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Simulation.RandomNumberGenerator;
-import com.bags.simulacrum.StatusProc.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -18,7 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-public class StatusProcHelperTest {
+public class StatusHelperTest {
 
     @InjectMocks
     private StatusProcHelper subject;
@@ -53,7 +52,7 @@ public class StatusProcHelperTest {
     public void itHandlesSingleElemental() {
         fakeDamageToHealth.put(DamageType.HEAT, 50.0);
 
-        StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
+        Status returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
         assertTrue(returnedProc instanceof Ignite);
         assertEquals(DamageType.HEAT, returnedProc.getDamageType());
@@ -66,7 +65,7 @@ public class StatusProcHelperTest {
 
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.0);
 
-        StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
+        Status returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
         assertTrue(returnedProc instanceof Ignite || returnedProc instanceof Confusion);
         if (returnedProc instanceof Ignite) {
@@ -81,7 +80,7 @@ public class StatusProcHelperTest {
     public void itHandlesSingleIPS() {
         fakeDamageToHealth.put(DamageType.IMPACT, 50.0);
 
-        StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
+        Status returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
         assertTrue(returnedProc instanceof Knockback);
         assertEquals(DamageType.IMPACT, returnedProc.getDamageType());
@@ -94,7 +93,7 @@ public class StatusProcHelperTest {
 
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.0);
 
-        StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
+        Status returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
         assertTrue(returnedProc instanceof Knockback || returnedProc instanceof Bleed);
         if (returnedProc instanceof Knockback) {
@@ -118,7 +117,7 @@ public class StatusProcHelperTest {
 
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.74);
 
-        StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
+        Status returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
         assertTrue(returnedProc instanceof Knockback);
         assertEquals(DamageType.IMPACT, returnedProc.getDamageType());
@@ -131,7 +130,7 @@ public class StatusProcHelperTest {
 
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.76);
 
-        StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
+        Status returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
         assertTrue(returnedProc instanceof Corrosion);
         assertEquals(DamageType.CORROSIVE, returnedProc.getDamageType());
@@ -145,7 +144,7 @@ public class StatusProcHelperTest {
 
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.0);
 
-        StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
+        Status returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
         assertTrue(returnedProc instanceof Knockback);
         assertEquals(DamageType.IMPACT, returnedProc.getDamageType());
@@ -159,9 +158,9 @@ public class StatusProcHelperTest {
          */
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(1.01);
 
-        StatusProc returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
+        Status returnedProc = subject.handleStatusProc(fakeDamageToHealth, fakeDamageToShields);
 
-        assertTrue(returnedProc instanceof UnimplementedProc);
+        assertTrue(returnedProc instanceof UnimplementedStatus);
     }
 
     private void setupMockStatusProcPropertyMapper() {
@@ -170,11 +169,11 @@ public class StatusProcHelperTest {
         when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.CORROSIVE))).thenReturn(setupExpectedProc(new Corrosion(), DamageType.CORROSIVE));
         when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.SLASH))).thenReturn(setupExpectedProc(new Bleed(), DamageType.SLASH));
         when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.IMPACT))).thenReturn(setupExpectedProc(new Knockback(), DamageType.IMPACT));
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(null))).thenReturn(setupExpectedProc(new UnimplementedProc(), DamageType.VOID));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(null))).thenReturn(setupExpectedProc(new UnimplementedStatus(), DamageType.VOID));
     }
 
-    private StatusProc setupExpectedProc(StatusProc statusProc, DamageType damageType) {
-        statusProc.setDamageType(damageType);
-        return statusProc;
+    private Status setupExpectedProc(Status status, DamageType damageType) {
+        status.setDamageType(damageType);
+        return status;
     }
 }

@@ -1,11 +1,11 @@
-package com.bags.simulacrum.StatusProc;
+package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
 @Data
-public class Bleed extends StatusProc {
+public class Bleed extends Status {
 
     private double duration;
     private int damageTicks;

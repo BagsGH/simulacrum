@@ -1,4 +1,4 @@
-package com.bags.simulacrum.StatusProc;
+package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Armor.Health;
 import com.bags.simulacrum.Armor.HealthClass;
@@ -9,7 +9,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Corrosion extends StatusProc {
+public class Corrosion extends Status {
 
     private double duration;
     private int damageTicks;

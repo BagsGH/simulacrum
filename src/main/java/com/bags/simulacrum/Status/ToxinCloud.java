@@ -1,13 +1,13 @@
-package com.bags.simulacrum.StatusProc;
+package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Entity.Target;
 
-public class Knockdown extends StatusProc {
-
+public class ToxinCloud extends Status {
     @Override
     public void apply(Target target) {
 
     }
+
 
     @Override
     public boolean applyInstantly() {

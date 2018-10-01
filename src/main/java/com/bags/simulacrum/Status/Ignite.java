@@ -1,25 +1,28 @@
-package com.bags.simulacrum.StatusProc;
+package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
 @Data
-public class Knockback extends StatusProc {
+public class Ignite extends Status {
 
-    private Knockback(DamageType damageType, double duration, int damageTicks) {
+    private static final double ARMOR_REDUCTION_RATIO = 0.25;
+
+    private Ignite(DamageType damageType, Double duration, Integer damageTicks) {
         this.damageType = damageType;
         this.duration = duration;
         this.damageTicks = damageTicks;
     }
 
-    public Knockback() {
+    public Ignite() {
 
     }
 
     @Override
     public void apply(Target target) {
     }
+
 
     @Override
     public boolean applyInstantly() {

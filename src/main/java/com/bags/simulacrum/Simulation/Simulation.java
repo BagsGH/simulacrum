@@ -2,6 +2,7 @@ package com.bags.simulacrum.Simulation;
 
 import com.bags.simulacrum.Configuration.SimulationConfig;
 import com.bags.simulacrum.Entity.Target;
+import com.bags.simulacrum.Status.Status;
 import com.bags.simulacrum.Weapon.State.Fired;
 import com.bags.simulacrum.Weapon.State.FiringState;
 import com.bags.simulacrum.Weapon.Weapon;
@@ -55,14 +56,10 @@ public class Simulation {
 
             weaponStateMetrics.add(firingState.getClass(), deltaTime);
 
-            /*
-
-            List<proc> procsDealingDamageThisTick = target.procs.progressTime(DELTA_TIME);
-            for(proc : procsDealingDamage)
-            {
-                metrics = proc.apply(target) // store these metrics
+            List<Status> procsApplying = targetList.get(0).statusProgressTime(deltaTime);
+            for (Status status : procsApplying) {
+                status.apply(targetList.get(0)); //TODO: apply should return metrics
             }
-             */
         }
 
     }

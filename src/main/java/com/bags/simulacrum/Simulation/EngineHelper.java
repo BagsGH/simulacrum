@@ -6,8 +6,8 @@ import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Damage.DelayedDamageSource;
 import com.bags.simulacrum.Entity.BodyModifier;
 import com.bags.simulacrum.Entity.Target;
-import com.bags.simulacrum.StatusProc.StatusProc;
-import com.bags.simulacrum.StatusProc.StatusProcHelper;
+import com.bags.simulacrum.Status.Status;
+import com.bags.simulacrum.Status.StatusProcHelper;
 import com.bags.simulacrum.Weapon.Weapon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class EngineHelper {
 
     public FiredWeaponMetrics handleFireWeapon(Weapon weapon, Target target, double headshotChance) { //tODO: secondary targets for aoe...?
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
-        List<StatusProc> statusProcsApplied = new ArrayList<>();
+        List<Status> statusProcsApplied = new ArrayList<>();
         Map<DamageType, Double> summedDamageToHealth = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> summedDamageToShields = DamageMetrics.initialDamageMap();
         DamageMetrics finalDamageMetrics = new DamageMetrics(target, summedDamageToHealth, summedDamageToShields);
@@ -128,12 +128,12 @@ public class EngineHelper {
         }
     }
 
-    private StatusProc handleStatusChance(Target target, DamageMetrics damageMetrics) {
-        StatusProc statusProc = statusProcHelper.handleStatusProc(damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
-        target.addStatus(statusProc);
-        if (statusProc.applyInstantly()) {
+    private Status handleStatusChance(Target target, DamageMetrics damageMetrics) {
+        Status status = statusProcHelper.handleStatusProc(damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
+        target.addStatus(status);
+        if (status.applyInstantly()) {
             target.applyStatus();
         }
-        return statusProc;
+        return status;
     }
 }

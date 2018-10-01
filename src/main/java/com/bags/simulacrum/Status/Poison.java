@@ -1,8 +1,8 @@
-package com.bags.simulacrum.StatusProc;
+package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Entity.Target;
 
-public class Disrupt extends StatusProc {
+public class Poison extends Status {
     @Override
     public void apply(Target target) {
 

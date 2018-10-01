@@ -9,9 +9,9 @@ import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.BodyModifier;
 import com.bags.simulacrum.Entity.BodyPart;
 import com.bags.simulacrum.Entity.Target;
-import com.bags.simulacrum.StatusProc.Corrosion;
-import com.bags.simulacrum.StatusProc.Ignite;
-import com.bags.simulacrum.StatusProc.StatusProcHelper;
+import com.bags.simulacrum.Status.Corrosion;
+import com.bags.simulacrum.Status.Ignite;
+import com.bags.simulacrum.Status.StatusProcHelper;
 import com.bags.simulacrum.Weapon.Weapon;
 import org.junit.Before;
 import org.junit.Test;
@@ -442,8 +442,8 @@ public class EngineHelperTest {
 
         FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(1, firedWeaponMetrics.getStatusProcs().size());
-        assertTrue(firedWeaponMetrics.getStatusProcs().get(0) instanceof Ignite);
+        assertEquals(1, firedWeaponMetrics.getStatuses().size());
+        assertTrue(firedWeaponMetrics.getStatuses().get(0) instanceof Ignite);
     }
 
     @Test
@@ -455,8 +455,8 @@ public class EngineHelperTest {
 
         FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(1, firedWeaponMetrics.getStatusProcs().size());
-        assertTrue(firedWeaponMetrics.getStatusProcs().get(0) instanceof Corrosion);
+        assertEquals(1, firedWeaponMetrics.getStatuses().size());
+        assertTrue(firedWeaponMetrics.getStatuses().get(0) instanceof Corrosion);
     }
 
     private void setupDefaultFakeDamageSummary() {

@@ -1,4 +1,4 @@
-package com.bags.simulacrum.StatusProc;
+package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Configuration.StatusProcConfig;
 import com.bags.simulacrum.Damage.DamageType;
@@ -31,7 +31,7 @@ public class StatusProcHelper {
         this.config = config;
     }
 
-    public StatusProc handleStatusProc(Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> damageDoneToShields) {
+    public Status handleStatusProc(Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> damageDoneToShields) {
         Map<DamageType, Double> weightedDamagePerType = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> damagePerType = DamageMetrics.initialDamageMap();
 

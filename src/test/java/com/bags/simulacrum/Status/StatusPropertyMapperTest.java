@@ -1,10 +1,6 @@
 package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Damage.DamageType;
-import com.bags.simulacrum.StatusProc.Ignite;
-import com.bags.simulacrum.StatusProc.StatusProc;
-import com.bags.simulacrum.StatusProc.StatusPropertyMapper;
-import com.bags.simulacrum.StatusProc.UnimplementedProc;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -49,14 +45,14 @@ public class StatusPropertyMapperTest {
 
     @Test
     public void itCanReturnAStatusProcClass() {
-        StatusProc proc = subject.getStatusProcClass(DamageType.HEAT);
+        Status proc = subject.getStatusProcClass(DamageType.HEAT);
         assertTrue(proc instanceof Ignite);
     }
 
     @Test
     public void itCanReturnAStatusProcClass_Null() {
-        StatusProc proc = subject.getStatusProcClass(null);
-        assertTrue(proc instanceof UnimplementedProc);
+        Status proc = subject.getStatusProcClass(null);
+        assertTrue(proc instanceof UnimplementedStatus);
     }
 
     @Test

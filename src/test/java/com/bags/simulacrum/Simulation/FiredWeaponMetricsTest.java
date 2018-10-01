@@ -18,7 +18,7 @@ public class FiredWeaponMetricsTest {
     public void itCanHaveTestCoverage() {
         assertNull(subject.getHitPropertiesList());
         assertNull(subject.getDamageMetrics());
-        assertNull(subject.getStatusProcs());
+        assertNull(subject.getStatuses());
         assertNull(subject.getDelayedDamageSources());
     }
 
@@ -27,11 +27,11 @@ public class FiredWeaponMetricsTest {
         subject.setDamageMetrics(null);
         subject.setDelayedDamageSources(null);
         subject.setHitPropertiesList(null);
-        subject.setStatusProcs(null);
+        subject.setStatuses(null);
         assertNull(subject.getHitPropertiesList());
         assertNull(subject.getDamageMetrics());
         assertNull(subject.getDelayedDamageSources());
-        assertNull(subject.getStatusProcs());
+        assertNull(subject.getStatuses());
     }
 
 

@@ -1,7 +1,7 @@
 package com.bags.simulacrum.Entity;
 
 import com.bags.simulacrum.Armor.Health;
-import com.bags.simulacrum.StatusProc.StatusProc;
+import com.bags.simulacrum.Status.Status;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class Target {
     private List<String> weapons;
     private List<String> abilities;
     private List<Health> health;
-    //    private List<StatusProc> procImmunities;
+    //    private List<Status> procImmunities;
     private int baseLevel;
     private int level;
     /*
@@ -25,7 +25,7 @@ public class Target {
      */
     private List<BodyModifier> bodyModifiers;
     private BodyModifier headBodyModifier;
-    private List<StatusProc> statuses;
+    private List<Status> statuses;
 
     public double getHeadModifierValue() {
         return headBodyModifier.getModifierValue();
@@ -38,15 +38,27 @@ public class Target {
         this.health.add(health);
     }
 
-    public void addStatus(StatusProc StatusProc) {
+    public void addStatus(Status Status) {
         if (this.statuses == null) {
             this.statuses = new ArrayList<>();
         }
-        this.statuses.add(StatusProc);
+        this.statuses.add(Status);
     }
 
     public void applyStatus() {
         this.statuses.get(this.statuses.size() - 1).apply(this);
+    }
+
+    public List<Status> statusProgressTime(double deltaTime) {
+        List<Status> procsToApply = new ArrayList<>();
+
+        statuses.forEach(status -> {
+            status.progressTime(deltaTime);
+            if (status.checkProgress()) {
+                procsToApply.add(status);
+            }
+        });
+        return procsToApply;
     }
 
     public enum Faction {
@@ -60,7 +72,7 @@ public class Target {
 //        MELEE
 //    }
 
-//    public enum StatusProc {
+//    public enum Status {
 //        KNOCKBACK,
 //        WEAKENED,
 //        BLEED,

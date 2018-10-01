@@ -1,22 +1,20 @@
 package com.bags.simulacrum.Simulation;
 
 import com.bags.simulacrum.Weapon.State.*;
-import lombok.Data;
 import org.apache.commons.lang3.mutable.MutableInt;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Data
 public class WeaponStateMetrics {
 
     private Map<Class, MutableInt> stateTimings;
 
     public WeaponStateMetrics() {
-        setupSateMap();
+        setupStateTimingMap();
     }
 
-    private void setupSateMap() {
+    private void setupStateTimingMap() {
         stateTimings = new HashMap<>();
         stateTimings.put(Auto.class, new MutableInt());
         stateTimings.put(Bursting.class, new MutableInt());

@@ -1,4 +1,4 @@
-package com.bags.simulacrum.StatusProc;
+package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
@@ -9,7 +9,7 @@ import lombok.Data;
  * https://stackoverflow.com/questions/6094575/creating-an-instance-using-the-class-name-and-calling-constructor
  */
 @Data
-public abstract class StatusProc {
+public abstract class Status {
 
     StatusPropertyMapper STATUS_PROPERTY_MAPPER = new StatusPropertyMapper();
 
@@ -17,8 +17,13 @@ public abstract class StatusProc {
     protected int damageTicks;
     protected DamageType damageType;
     protected double totalDamage;
+    protected double progressToNextTick;
 
     abstract public void apply(Target target);
 
     abstract public boolean applyInstantly(); //TODO: Better name
+
+    abstract public void progressTime(double deltaTime);
+
+    abstract public boolean checkProgress();
 }
