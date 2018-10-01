@@ -9,7 +9,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class Corrosion implements StatusProc {
+public class Corrosion extends StatusProc {
 
     private double duration;
     private int damageTicks;
@@ -34,14 +34,6 @@ public class Corrosion implements StatusProc {
             double currentArmor = armor.getHealthValue();
             armor.setHealthValue(currentArmor * (1 - ARMOR_REDUCTION_RATIO));
         }
-    }
-
-    @Override
-    public StatusProc withDamageType(DamageType damageType) {
-        double duration = STATUS_PROPERTY_MAPPER.getStatusProcDuration(damageType);
-        int ticks = STATUS_PROPERTY_MAPPER.getStatusProcTicks(damageType);
-
-        return new Corrosion(damageType, duration, ticks);
     }
 
     private Health findArmor(List<Health> health) {

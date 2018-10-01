@@ -5,15 +5,11 @@ import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
 @Data
-public class Ignite implements StatusProc {
-
-    private double duration;
-    private int damageTicks;
-    private DamageType damageType;
+public class Ignite extends StatusProc {
 
     private static final double ARMOR_REDUCTION_RATIO = 0.25;
 
-    private Ignite(DamageType damageType, double duration, int damageTicks) {
+    private Ignite(DamageType damageType, Double duration, Integer damageTicks) {
         this.damageType = damageType;
         this.duration = duration;
         this.damageTicks = damageTicks;
@@ -27,13 +23,6 @@ public class Ignite implements StatusProc {
     public void apply(Target target) {
     }
 
-    @Override
-    public StatusProc withDamageType(DamageType damageType) {
-        double duration = STATUS_PROPERTY_MAPPER.getStatusProcDuration(damageType);
-        int ticks = STATUS_PROPERTY_MAPPER.getStatusProcTicks(damageType);
-
-        return new Ignite(damageType, duration, ticks);
-    }
 
     @Override
     public boolean applyInstantly() {

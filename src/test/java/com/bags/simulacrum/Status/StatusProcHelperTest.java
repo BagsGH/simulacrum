@@ -100,6 +100,12 @@ public class StatusProcHelperTest {
     }
 
     @Test
+    public void test() {
+        Ignite i = new Ignite();
+        System.out.println(i.getClass());
+    }
+
+    @Test
     public void itHandlesIPSAndElemental_1() {
         fakeDamageToHealth.put(DamageType.IMPACT, 50.0);
         fakeDamageToHealth.put(DamageType.HEAT, 50.0);
@@ -153,11 +159,11 @@ public class StatusProcHelperTest {
     }
 
     private void setupMockStatusProcPropertyMapper() {
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.HEAT))).thenReturn(new Ignite().withDamageType(DamageType.HEAT));
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.RADIATION))).thenReturn(new Confusion().withDamageType(DamageType.RADIATION));
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.CORROSIVE))).thenReturn(new Corrosion().withDamageType(DamageType.CORROSIVE));
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.SLASH))).thenReturn(new Bleed().withDamageType(DamageType.SLASH));
-        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.IMPACT))).thenReturn(new Knockback().withDamageType(DamageType.IMPACT));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.HEAT))).thenReturn(new Ignite().withDamageType("Ignite", DamageType.HEAT));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.RADIATION))).thenReturn(new Confusion().withDamageType("Confusion", DamageType.RADIATION));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.CORROSIVE))).thenReturn(new Corrosion().withDamageType("Corrosion", DamageType.CORROSIVE));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.SLASH))).thenReturn(new Bleed().withDamageType("Bleed", DamageType.SLASH));
+        when(mockStatusPropertyMapper.getStatusProcClass(eq(DamageType.IMPACT))).thenReturn(new Knockback().withDamageType("Knockback", DamageType.IMPACT));
         when(mockStatusPropertyMapper.getStatusProcClass(eq(null))).thenReturn(new UnimplementedProc());
     }
 }

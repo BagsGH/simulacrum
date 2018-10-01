@@ -5,7 +5,7 @@ import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
 @Data
-public class Confusion implements StatusProc {
+public class Confusion extends StatusProc {
 
     private double duration;
     private int damageTicks;
@@ -27,13 +27,6 @@ public class Confusion implements StatusProc {
     public void apply(Target target) {
     }
 
-    @Override
-    public StatusProc withDamageType(DamageType damageType) {
-        double duration = STATUS_PROPERTY_MAPPER.getStatusProcDuration(damageType);
-        int ticks = STATUS_PROPERTY_MAPPER.getStatusProcTicks(damageType);
-
-        return new Confusion(damageType, duration, ticks);
-    }
 
     @Override
     public boolean applyInstantly() {

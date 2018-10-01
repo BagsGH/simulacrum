@@ -1,18 +1,13 @@
 package com.bags.simulacrum.StatusProc;
 
-import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
 
-public class Poison implements StatusProc {
+public class Poison extends StatusProc {
     @Override
     public void apply(Target target) {
 
     }
 
-    @Override
-    public StatusProc withDamageType(DamageType damageType) {
-        return null;
-    }
 
     @Override
     public boolean applyInstantly() {

@@ -5,7 +5,7 @@ import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
 @Data
-public class UnimplementedProc implements StatusProc {
+public class UnimplementedProc extends StatusProc {
 
     private double duration;
     private int damageTicks;
@@ -28,10 +28,6 @@ public class UnimplementedProc implements StatusProc {
 
     }
 
-    @Override
-    public StatusProc withDamageType(DamageType damageType) {
-        return null;
-    }
 
     @Override
     public boolean applyInstantly() {

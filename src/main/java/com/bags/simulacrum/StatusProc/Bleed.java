@@ -1,15 +1,11 @@
 package com.bags.simulacrum.StatusProc;
 
-import com.bags.simulacrum.Armor.Health;
-import com.bags.simulacrum.Armor.HealthClass;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
-import java.util.List;
-
 @Data
-public class Bleed implements StatusProc {
+public class Bleed extends StatusProc {
 
     private double duration;
     private int damageTicks;
@@ -29,29 +25,15 @@ public class Bleed implements StatusProc {
 
     @Override
     public void apply(Target target) {
-        Health armor = findArmor(target.getHealth());
-        if (armor != null) {
-            double currentArmor = armor.getHealthValue();
-            armor.setHealthValue(currentArmor * (1 - ARMOR_REDUCTION_RATIO));
-        }
     }
 
-    @Override
-    public StatusProc withDamageType(DamageType damageType) {
-        double duration = STATUS_PROPERTY_MAPPER.getStatusProcDuration(damageType);
-        int ticks = STATUS_PROPERTY_MAPPER.getStatusProcTicks(damageType);
-
-        return new Bleed(damageType, duration, ticks);
-    }
 
     @Override
     public boolean applyInstantly() {
         return false;
     }
 
-    private Health findArmor(List<Health> health) {
-        return health.stream().filter(h -> HealthClass.isArmor(h.getHealthClass())).findFirst().orElse(null);
-    }
+
     /*
 Am I missing something with the slash proc?
 Slash damage's status effect is Bleed, lacerating the enemy with a damage over time effect that deals 35% of the source's innate damage

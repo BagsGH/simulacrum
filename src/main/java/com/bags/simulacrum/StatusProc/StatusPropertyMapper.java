@@ -81,7 +81,11 @@ public class StatusPropertyMapper {
         if (statusProcType == null) {
             return new UnimplementedProc();
         }
-        return statusTypeMap.getOrDefault(statusProcType, new UnimplementedProc()).withDamageType(statusProcType);
+        return statusTypeMap.getOrDefault(statusProcType, new UnimplementedProc()).withDamageType(getClassName(statusProcType), statusProcType);
+    }
+
+    private String getClassName(DamageType statusProcType) {
+        return statusTypeMap.getOrDefault(statusProcType, new UnimplementedProc()).getClass().getSimpleName();
     }
 
     private static final Map<DamageType, Integer> damageTickMap;

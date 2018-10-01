@@ -5,14 +5,7 @@ import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
 @Data
-public class Knockback implements StatusProc {
-
-    private double duration;
-    private int damageTicks;
-    private int stacks;
-    private DamageType damageType;
-
-    private static final double ARMOR_REDUCTION_RATIO = 0.25;
+public class Knockback extends StatusProc {
 
     private Knockback(DamageType damageType, double duration, int damageTicks) {
         this.damageType = damageType;
@@ -26,13 +19,6 @@ public class Knockback implements StatusProc {
 
     @Override
     public void apply(Target target) {
-    }
-
-    @Override
-    public StatusProc withDamageType(DamageType damageType) {
-        double duration = STATUS_PROPERTY_MAPPER.getStatusProcDuration(damageType);
-        int ticks = STATUS_PROPERTY_MAPPER.getStatusProcTicks(damageType);
-        return new Knockback(damageType, duration, ticks);
     }
 
     @Override
