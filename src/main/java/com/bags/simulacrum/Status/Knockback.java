@@ -25,4 +25,14 @@ public class Knockback extends Status {
     public boolean applyInstantly() {
         return false;
     }
+
+    @Override
+    public void progressTime(double deltaTime) {
+
+    }
+
+    @Override
+    public boolean checkProgress() {
+        return false;
+    }
 }

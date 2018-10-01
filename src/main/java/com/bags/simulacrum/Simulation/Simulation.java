@@ -19,13 +19,13 @@ public class Simulation {
 
     private final RandomNumberGenerator randomNumberGenerator;
 
-    private final EngineHelper engineHelper;
+    private final SimulationHelper simulationHelper;
 
     @Autowired
-    public Simulation(SimulationConfig config, RandomNumberGenerator randomNumberGenerator, EngineHelper engineHelper) {
+    public Simulation(SimulationConfig config, RandomNumberGenerator randomNumberGenerator, SimulationHelper simulationHelper) {
         this.config = config;
         this.randomNumberGenerator = randomNumberGenerator;
-        this.engineHelper = engineHelper;
+        this.simulationHelper = simulationHelper;
     }
 
     @PostConstruct
@@ -51,7 +51,7 @@ public class Simulation {
 
             FiringState firingState = weapon.getWeaponState().progressTime(deltaTime);
             if (firingState instanceof Fired) {
-                FiredWeaponMetrics firedWeaponMetrics = engineHelper.handleFireWeapon(weapon, targetList.get(0), simulationParameters.getHeadshotChance());
+                FiredWeaponMetrics firedWeaponMetrics = simulationHelper.handleFireWeapon(weapon, targetList.get(0), simulationParameters.getHeadshotChance());
             }
 
             weaponStateMetrics.add(firingState.getClass(), deltaTime);

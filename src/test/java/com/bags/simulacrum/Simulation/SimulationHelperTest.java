@@ -29,10 +29,10 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class EngineHelperTest {
+public class SimulationHelperTest {
 
     @InjectMocks
-    private EngineHelper subject;
+    private SimulationHelper subject;
 
     @Mock
     private RandomNumberGenerator mockRandomNumberGenerator;

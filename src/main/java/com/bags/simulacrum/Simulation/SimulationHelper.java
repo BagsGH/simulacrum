@@ -17,14 +17,14 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class EngineHelper {
+public class SimulationHelper {
 
     private final TargetDamageHelper targetDamageHelper;
     private final RandomNumberGenerator randomNumberGenerator;
     private final StatusProcHelper statusProcHelper;
 
     @Autowired
-    public EngineHelper(TargetDamageHelper targetDamageHelper, RandomNumberGenerator randomNumberGenerator, StatusProcHelper statusProcHelper) {
+    public SimulationHelper(TargetDamageHelper targetDamageHelper, RandomNumberGenerator randomNumberGenerator, StatusProcHelper statusProcHelper) {
         this.targetDamageHelper = targetDamageHelper;
         this.randomNumberGenerator = randomNumberGenerator;
         this.statusProcHelper = statusProcHelper;

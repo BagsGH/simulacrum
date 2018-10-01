@@ -33,4 +33,14 @@ public class Confusion extends Status {
         return false;
     }
 
+    @Override
+    public void progressTime(double deltaTime) {
+
+    }
+
+    @Override
+    public boolean checkProgress() {
+        return false;
+    }
+
 }

@@ -44,4 +44,14 @@ public class Corrosion extends Status {
     public boolean applyInstantly() {
         return true;
     }
+
+    @Override
+    public void progressTime(double deltaTime) {
+
+    }
+
+    @Override
+    public boolean checkProgress() {
+        return false;
+    }
 }
