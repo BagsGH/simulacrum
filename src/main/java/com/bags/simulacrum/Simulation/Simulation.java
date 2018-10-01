@@ -2,8 +2,8 @@ package com.bags.simulacrum.Simulation;
 
 import com.bags.simulacrum.Configuration.SimulationConfig;
 import com.bags.simulacrum.Entity.Target;
-import com.bags.simulacrum.Weapon.Status.Fired;
-import com.bags.simulacrum.Weapon.Status.FiringStatus;
+import com.bags.simulacrum.Weapon.State.Fired;
+import com.bags.simulacrum.Weapon.State.FiringState;
 import com.bags.simulacrum.Weapon.Weapon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -33,8 +33,9 @@ public class Simulation {
     }
 
     public void runSimulation(SimulationParameters simulationParameters, Weapon weapon, List<Target> targetList) {
+        double deltaTime = config.getDeltaTime();
         double simulationDuration = simulationParameters.getDuration(); //60s //.01s == 6000
-        int timeTicks = (int) (simulationDuration / config.getDeltaTime());
+        int timeTicks = (int) (simulationDuration / deltaTime);
         /*
         Setup firing mechanism. Load charge time, reload time, fire speed, etc from the weapon.
         On fire, it calls engineHelper.handle fire gun
@@ -43,11 +44,17 @@ public class Simulation {
 
         weapon.initializeWeaponStatus();
 
+        WeaponStateMetrics weaponStateMetrics = new WeaponStateMetrics();
+
         for (int i = 1; i < timeTicks; i++) {
-            FiringStatus firingStatus = weapon.getWeaponStatus().progressTime(config.getDeltaTime());
-            if (firingStatus instanceof Fired) {
+
+            FiringState firingState = weapon.getWeaponState().progressTime(deltaTime);
+            if (firingState instanceof Fired) {
                 FiredWeaponMetrics firedWeaponMetrics = engineHelper.handleFireWeapon(weapon, targetList.get(0), simulationParameters.getHeadshotChance());
             }
+
+            weaponStateMetrics.add(firingState.getClass(), deltaTime);
+
             /*
 
             List<proc> procsDealingDamageThisTick = target.procs.progressTime(DELTA_TIME);
@@ -59,5 +66,4 @@ public class Simulation {
         }
 
     }
-
 }

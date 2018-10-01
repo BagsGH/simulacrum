@@ -76,10 +76,10 @@ public class Weapon {
     private ChargingProperties chargingProperties;
     private List<Mod> mods;
     private WeaponInformation weaponInformation;
-    private WeaponStatus weaponStatus;
+    private WeaponState weaponState;
 
     public void initializeWeaponStatus() {
-        this.weaponStatus = new WeaponStatus(this.fireStatusProperties);
+        this.weaponState = new WeaponState(this.fireStatusProperties);
     }
 
     public Weapon() {

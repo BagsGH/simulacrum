@@ -1,4 +1,4 @@
-package com.bags.simulacrum.Weapon.Status;
+package com.bags.simulacrum.Weapon.State;
 
 import com.bags.simulacrum.Weapon.FireStatusProperties;
 
@@ -7,7 +7,7 @@ import com.bags.simulacrum.Weapon.FireStatusProperties;
  * While the name is Auto, it's actually used for any weapon that is not a Charging,
  * Spooling, or Burst Weapon for modeling simplicity.
  */
-public class Auto implements FiringStatus {
+public class Auto implements FiringState {
     private FireStatusProperties fireStatusProperties;
     private double timeBetweenShots;
 
@@ -26,7 +26,7 @@ public class Auto implements FiringStatus {
     }
 
     @Override
-    public FiringStatus progressTime(double deltaTime) {
+    public FiringState progressTime(double deltaTime) {
         timeBetweenShots += deltaTime;
         if (freshMagazine()) {
             timeBetweenShots = 0.0;

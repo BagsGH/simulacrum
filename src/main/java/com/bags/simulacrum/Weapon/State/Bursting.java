@@ -1,8 +1,8 @@
-package com.bags.simulacrum.Weapon.Status;
+package com.bags.simulacrum.Weapon.State;
 
 import com.bags.simulacrum.Weapon.FireStatusProperties;
 
-public class Bursting implements FiringStatus {
+public class Bursting implements FiringState {
     private FireStatusProperties fireStatusProperties;
     private double timeBetweenBursts;
     private double timeBetweenShots;
@@ -19,7 +19,7 @@ public class Bursting implements FiringStatus {
     }
 
     @Override
-    public FiringStatus progressTime(double deltaTime) {
+    public FiringState progressTime(double deltaTime) {
         if (burstShotProgress > 0) {
             timeBetweenShots += deltaTime;
         } else {

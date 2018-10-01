@@ -1,8 +1,8 @@
-package com.bags.simulacrum.Weapon.Status;
+package com.bags.simulacrum.Weapon.State;
 
 import com.bags.simulacrum.Weapon.FireStatusProperties;
 
-public class Reloading implements FiringStatus {
+public class Reloading implements FiringState {
     private FireStatusProperties fireStatusProperties;
     private double reloadingProgress;
 
@@ -12,7 +12,7 @@ public class Reloading implements FiringStatus {
     }
 
     @Override
-    public FiringStatus progressTime(double deltaTime) {
+    public FiringState progressTime(double deltaTime) {
         reloadingProgress += deltaTime;
         if (reloadingProgress >= fireStatusProperties.getReloadTime()) {
             fireStatusProperties.loadMagazine();

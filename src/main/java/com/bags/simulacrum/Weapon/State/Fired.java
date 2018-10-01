@@ -1,18 +1,18 @@
-package com.bags.simulacrum.Weapon.Status;
+package com.bags.simulacrum.Weapon.State;
 
 import com.bags.simulacrum.Weapon.FireStatusProperties;
 
-public class Fired implements FiringStatus {
+public class Fired implements FiringState {
     private FireStatusProperties fireStatusProperties;
-    private FiringStatus previousStatus;
+    private FiringState previousStatus;
 
-    public Fired(FireStatusProperties fireStatusProperties, FiringStatus previousStatus) {
+    public Fired(FireStatusProperties fireStatusProperties, FiringState previousStatus) {
         this.fireStatusProperties = fireStatusProperties;
         this.previousStatus = previousStatus;
     }
 
     @Override
-    public FiringStatus progressTime(double deltaTime) {
+    public FiringState progressTime(double deltaTime) {
         return previousStatus.progressTime(deltaTime);
     }
 }

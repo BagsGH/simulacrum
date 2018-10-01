@@ -1,4 +1,4 @@
-package com.bags.simulacrum.Weapon.Status;
+package com.bags.simulacrum.Weapon.State;
 
 import com.bags.simulacrum.Weapon.FireStatusProperties;
 
@@ -8,7 +8,7 @@ import com.bags.simulacrum.Weapon.FireStatusProperties;
  * With each shot while spooling the weapon gains a portion of speed. After firing enough
  * it will transition to the (full) Auto state.
  */
-public class Spooling implements FiringStatus {
+public class Spooling implements FiringState {
     private FireStatusProperties fireStatusProperties;
     private double timeBetweenShots;
     private int spoolingThreshold;
@@ -22,7 +22,7 @@ public class Spooling implements FiringStatus {
     }
 
     @Override
-    public FiringStatus progressTime(double deltaTime) {
+    public FiringState progressTime(double deltaTime) {
         timeBetweenShots += deltaTime;
         if (freshMagazine()) {
             timeBetweenShots = 0.0;
@@ -30,7 +30,7 @@ public class Spooling implements FiringStatus {
             return new Fired(this.fireStatusProperties, this);
         }
         if (spoolingProgress >= spoolingThreshold) {
-            FiringStatus status = new Auto(this.fireStatusProperties, timeBetweenShots);
+            FiringState status = new Auto(this.fireStatusProperties, timeBetweenShots);
             return status.progressTime(deltaTime);
         }
         if (fireStatusProperties.getCurrentMagazineSize() <= 0) {
