@@ -10,7 +10,7 @@ public class Knockback extends Status {
     private Knockback(DamageType damageType, double duration, int damageTicks) {
         this.damageType = damageType;
         this.duration = duration;
-        this.damageTicks = damageTicks;
+        this.numberOfDamageTicks = damageTicks;
     }
 
     public Knockback() {

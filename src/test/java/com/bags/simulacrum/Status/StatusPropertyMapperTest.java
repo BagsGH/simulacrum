@@ -37,7 +37,7 @@ public class StatusPropertyMapperTest {
         assertTrue(proc instanceof Ignite);
         assertEquals(12.5, proc.getDamagePerTick(), 0.0);
         assertEquals(6.0, proc.getDuration(), 0.0);
-        assertEquals(7, proc.getDamageTicks());
+        assertEquals(7, proc.getNumberOfDamageTicks());
     }
 
     @Test

@@ -14,7 +14,7 @@ public abstract class Status {
     StatusPropertyMapper STATUS_PROPERTY_MAPPER = new StatusPropertyMapper();
 
     protected double duration;
-    protected int damageTicks;
+    protected int numberOfDamageTicks;
     protected DamageType damageType;
     protected double damagePerTick;
     protected double progressToNextTick;

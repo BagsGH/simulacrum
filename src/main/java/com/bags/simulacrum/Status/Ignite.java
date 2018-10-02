@@ -12,7 +12,7 @@ public class Ignite extends Status {
     private Ignite(DamageType damageType, Double duration, Integer damageTicks) {
         this.damageType = damageType;
         this.duration = duration;
-        this.damageTicks = damageTicks;
+        this.numberOfDamageTicks = damageTicks;
     }
 
     public Ignite() {

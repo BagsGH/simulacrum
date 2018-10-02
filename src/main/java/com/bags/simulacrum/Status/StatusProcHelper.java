@@ -32,7 +32,7 @@ public class StatusProcHelper {
         this.config = config;
     }
 
-    public Status handleStatusProc(DamageSource damageSource, Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> damageDoneToShields) {
+    public Status constructStatusProc(DamageSource damageSource, Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> damageDoneToShields) {
         Map<DamageType, Double> weightedDamagePerType = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> damagePerType = DamageMetrics.initialDamageMap();
 
@@ -51,9 +51,7 @@ public class StatusProcHelper {
 
         double statusTypeRNG = randomNumberGenerator.getRandomPercentage();
 
-        DamageType statusProcDamageType = getStatusProcType(statusPROCChanceMap, statusTypeRNG);
-
-        return statusPropertyMapper.getStatusProc(damageSource, statusProcDamageType);
+        return statusPropertyMapper.getStatusProc(damageSource, getStatusProcType(statusPROCChanceMap, statusTypeRNG));
     }
 
     private void populateDamageMaps(Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> weightedDamagePerType, Map<DamageType, Double> damagePerType) {
