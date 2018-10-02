@@ -10,9 +10,7 @@ import com.bags.simulacrum.Entity.Target;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class TargetDamageHelper {
@@ -25,8 +23,11 @@ public class TargetDamageHelper {
     }
 
     public DamageMetrics applyDamageSourceDamageToTarget(DamageSource damageSource, HitProperties hitProperties, Target target) {
-        Map<DamageType, Double> damageToShields = initialDamageMap();
-        Map<DamageType, Double> damageToHealth = initialDamageMap();
+        DamageMetrics damageMetrics = new DamageMetrics.DamageMetricsBuilder(target)
+                .withDamageToHealth()
+                .withDamageToShields()
+                .build();
+
         List<Health> targetHealthClasses = target.getHealth();
         Health targetHealth = findBaseHealth(targetHealthClasses);
         Health targetShield = findShields(targetHealthClasses);
@@ -39,26 +40,18 @@ public class TargetDamageHelper {
 
             if (targetHasNoShields(targetShield)) {
                 targetHealth.subtractHealthValue(damageDealt);
-                trackDamageDealt(damageToHealth, damageType, damageDealt);
+                damageMetrics.addDamageToHealth(damageType, damageDealt);
             } else if (damageLessThanTargetShields(targetShield, damageDealt)) {
                 targetShield.subtractHealthValue(damageDealt);
-                trackDamageDealt(damageToShields, damageType, damageDealt);
+                damageMetrics.addDamageToShields(damageType, damageDealt);
             } else if (damageMoreThanTargetShields(targetShield, damageDealt)) {
-                trackDamageDealt(damageToShields, damageType, targetShield.getHealthValue());
+                damageMetrics.addDamageToShields(damageType, targetShield.getHealthValue());
                 double spilloverHealthDamage = handleShieldDamageSpillover(hitProperties, targetHealth, targetShield, targetArmor, damage, damageDealt);
-                trackDamageDealt(damageToHealth, damageType, spilloverHealthDamage);
+                damageMetrics.addDamageToHealth(damageType, spilloverHealthDamage);
             }
         }
 
-        return new DamageMetrics(target, damageToHealth, damageToShields);
-    }
-
-    private Map<DamageType, Double> initialDamageMap() {
-        Map<DamageType, Double> damageMap = new HashMap<>();
-        for (DamageType dt : DamageType.values()) {
-            damageMap.put(dt, 0.0);
-        }
-        return damageMap;
+        return damageMetrics;
     }
 
     private Health findBaseHealth(List<Health> health) {
@@ -75,11 +68,6 @@ public class TargetDamageHelper {
 
     private boolean targetHasNoShields(Health targetShield) {
         return targetShield.getHealthValue() <= 0;
-    }
-
-    private void trackDamageDealt(Map<DamageType, Double> damageMap, DamageType damageType, double damageDealt) {
-        double currentDamageForType = damageMap.get(damageType);
-        damageMap.put(damageType, currentDamageForType + damageDealt);
     }
 
     private boolean damageLessThanTargetShields(Health targetShield, double damageDealt) {

@@ -24,22 +24,22 @@ public class DamageMetrics {
         this.damageToHealth = damageToHealth;
     }
 
-    public void addToShields(DamageType damageType, double value) {
+    public void addDamageToShields(DamageType damageType, double value) {
         double currentValueForType = damageToShields.get(damageType);
         damageToShields.put(damageType, currentValueForType + value);
     }
 
-    public void addToHealth(DamageType damageType, double value) {
+    public void addDamageToHealth(DamageType damageType, double value) {
         double currentValueForType = damageToHealth.get(damageType);
         damageToHealth.put(damageType, currentValueForType + value);
     }
 
-    public void addToStatusShields(DamageType damageType, double value) {
+    public void addStatusDamageToShields(DamageType damageType, double value) {
         double currentValueForType = statusDamageToShields.get(damageType);
         statusDamageToShields.put(damageType, currentValueForType + value);
     }
 
-    public void addToStatusHealth(DamageType damageType, double value) {
+    public void addStatusDamageToHealth(DamageType damageType, double value) {
         double currentValueForType = statusDamageToHealth.get(damageType);
         statusDamageToHealth.put(damageType, currentValueForType + value);
     }
@@ -53,7 +53,7 @@ public class DamageMetrics {
     }
 
     private DamageMetrics(DamageMetricsBuilder builder) {
-        this.target = builder.getTarget();
+        this.target = builder.target;
         if (builder.withDamageToHealth) {
             this.damageToHealth = initialDamageMap();
         }
@@ -68,7 +68,6 @@ public class DamageMetrics {
         }
     }
 
-    @Data
     public static class DamageMetricsBuilder {
 
         private Target target;

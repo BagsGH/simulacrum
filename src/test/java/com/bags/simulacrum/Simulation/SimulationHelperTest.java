@@ -458,7 +458,7 @@ public class SimulationHelperTest {
         Map<DamageType, Double> damageToShields = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> damageToHealth = DamageMetrics.initialDamageMap();
         DamageMetrics fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget = new DamageMetrics(fakeTarget, damageToHealth, damageToShields);
-        fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget.addToShields(HEAT, 22.0);
+        fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget.addDamageToShields(HEAT, 22.0);
         when(mockTargetDamageHelper.applyDamageSourceDamageToTarget(eq(fakeIgniteDamageTickDamageSource), hitPropertiesCaptor.capture(), eq(fakeTarget))).thenReturn(fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget);
 
         fakeWeapon.setStatusChance(0.75);
@@ -487,7 +487,7 @@ public class SimulationHelperTest {
         Map<DamageType, Double> damageToShields = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> damageToHealth = DamageMetrics.initialDamageMap();
         DamageMetrics fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget = new DamageMetrics(fakeTarget, damageToHealth, damageToShields);
-        fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget.addToShields(CORROSIVE, 0.0);
+        fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget.addDamageToShields(CORROSIVE, 0.0);
         when(mockTargetDamageHelper.applyDamageSourceDamageToTarget(eq(fakeCorrosionTickDamageSource), hitPropertiesCaptor.capture(), eq(fakeTarget))).thenReturn(fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget);
 
         fakeWeapon.setStatusChance(0.75);

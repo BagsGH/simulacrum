@@ -30,15 +30,17 @@ public class FireStateProperties {
     }
 
     private FireStateProperties(FireStatePropertiesBuilder builder) {
-        this.fireRate = builder.getFireRate();
-        this.magazineSize = builder.getMagazineSize();
-        this.reloadTime = builder.getReloadTime();
-        this.maxAmmo = builder.getMaxAmmo();
-        this.triggerType = builder.getTriggerType();
-        this.burstCount = builder.getBurstCount();
-        this.spoolingSpeedDecreaseModifier = builder.getSpoolingSpeedDecreaseModifier();
-        this.spoolThreshold = builder.getSpoolThreshold();
-        this.chargingProperties = (builder.getChargingProperties() != null ? builder.getChargingProperties().copy() : new ChargingProperties(0.0, 0.0, 0.0, 0.0));
+        this.fireRate = builder.fireRate;
+        this.magazineSize = builder.magazineSize;
+        this.reloadTime = builder.reloadTime;
+        this.maxAmmo = builder.maxAmmo;
+        this.triggerType = builder.triggerType;
+        this.burstCount = builder.burstCount;
+        this.spoolingSpeedDecreaseModifier = builder.spoolingSpeedDecreaseModifier;
+        this.spoolThreshold = builder.spoolThreshold;
+        this.chargingProperties = (builder.chargingProperties != null ? builder.chargingProperties.copy() : new ChargingProperties(0.0, 0.0, 0.0, 0.0));
+        this.currentMagazineSize = builder.currentMagazineSize;
+        this.percentToCharge = builder.percentToCharge;
     }
 
     public FireStateProperties copy() {
@@ -53,7 +55,6 @@ public class FireStateProperties {
                 .build();
     }
 
-    @Data
     public static class FireStatePropertiesBuilder {
 
         private int magazineSize;

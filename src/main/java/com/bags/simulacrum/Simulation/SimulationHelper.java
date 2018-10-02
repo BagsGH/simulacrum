@@ -121,13 +121,13 @@ public class SimulationHelper {
 
     private void updateRunningTotalDamageToHealth(DamageMetrics finalDamageMetrics, Map<DamageType, Double> damageToHealth) {
         for (DamageType damageType : damageToHealth.keySet()) {
-            finalDamageMetrics.addToHealth(damageType, damageToHealth.get(damageType));
+            finalDamageMetrics.addDamageToHealth(damageType, damageToHealth.get(damageType));
         }
     }
 
     private void updateRunningTotalDamageToShields(DamageMetrics finalDamageMetrics, Map<DamageType, Double> damageToShields) {
         for (DamageType damageType : damageToShields.keySet()) {
-            finalDamageMetrics.addToShields(damageType, damageToShields.get(damageType));
+            finalDamageMetrics.addDamageToShields(damageType, damageToShields.get(damageType));
         }
     }
 
@@ -146,13 +146,13 @@ public class SimulationHelper {
 
     private void updateRunningTotalStatusDamageToHealth(DamageMetrics finalDamageMetrics, Map<DamageType, Double> damageToHealth) {
         for (DamageType damageType : damageToHealth.keySet()) {
-            finalDamageMetrics.addToStatusHealth(damageType, damageToHealth.get(damageType));
+            finalDamageMetrics.addStatusDamageToHealth(damageType, damageToHealth.get(damageType));
         }
     }
 
     private void updateRunningTotalStatusDamageToShields(DamageMetrics finalDamageMetrics, Map<DamageType, Double> damageToShields) {
         for (DamageType damageType : damageToShields.keySet()) {
-            finalDamageMetrics.addToStatusShields(damageType, damageToShields.get(damageType));
+            finalDamageMetrics.addStatusDamageToShields(damageType, damageToShields.get(damageType));
         }
     }
 }
