@@ -14,6 +14,10 @@ public class DamageMetrics {
     private Map<DamageType, Double> damageToShields;
     private Map<DamageType, Double> damageToHealth;
 
+    private Map<DamageType, Double> statusDamageToShields;
+    private Map<DamageType, Double> statusDamageToHealth;
+
+
     public DamageMetrics(Target target, Map<DamageType, Double> damageToHealth, Map<DamageType, Double> damageToShields) {
         this.target = target;
         this.damageToShields = damageToShields;
@@ -28,6 +32,16 @@ public class DamageMetrics {
     public void addToHealth(DamageType damageType, double value) {
         double currentValueForType = damageToHealth.get(damageType);
         damageToHealth.put(damageType, currentValueForType + value);
+    }
+
+    public void addToStatusShields(DamageType damageType, double value) {
+        double currentValueForType = statusDamageToShields.get(damageType);
+        statusDamageToShields.put(damageType, currentValueForType + value);
+    }
+
+    public void addToStatusHealth(DamageType damageType, double value) {
+        double currentValueForType = statusDamageToHealth.get(damageType);
+        statusDamageToHealth.put(damageType, currentValueForType + value);
     }
 
     public static Map<DamageType, Double> initialDamageMap() {

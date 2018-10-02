@@ -35,7 +35,11 @@ public class SimulationHelper {
         List<Status> statusProcsApplied = new ArrayList<>();
         Map<DamageType, Double> summedDamageToHealth = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> summedDamageToShields = DamageMetrics.initialDamageMap();
+        Map<DamageType, Double> summedStatusDamageToShields = DamageMetrics.initialDamageMap();
+        Map<DamageType, Double> summedStatusDamageToHealth = DamageMetrics.initialDamageMap();
         DamageMetrics finalDamageMetrics = new DamageMetrics(target, summedDamageToHealth, summedDamageToShields);
+        finalDamageMetrics.setStatusDamageToHealth(summedStatusDamageToHealth);
+        finalDamageMetrics.setStatusDamageToShields(summedStatusDamageToShields); //TODO: roll into constructor
 
         List<HitProperties> hitPropertiesList = new ArrayList<>();
 
@@ -61,7 +65,7 @@ public class SimulationHelper {
                     updateRunningTotalDamageToHealth(finalDamageMetrics, damageMetrics.getDamageToHealth());
                     updateRunningTotalDamageToShields(finalDamageMetrics, damageMetrics.getDamageToShields());
                     if (statusProcRNG < weapon.getStatusChance()) {
-                        statusProcsApplied.add(handleStatusChance(damageSource, target, damageMetrics));
+                        handleStatusProc(target, statusProcsApplied, finalDamageMetrics, damageSource, damageMetrics);
                     }
                 } else {
                     delayedDamageSources.add(new DelayedDamageSource(damageSource.copy(), damageSource.getDelay())); //TODO: calculate crits etc now or later?
@@ -128,12 +132,28 @@ public class SimulationHelper {
         }
     }
 
-    private Status handleStatusChance(DamageSource damageSource, Target target, DamageMetrics damageMetrics) {
+    private void handleStatusProc(Target target, List<Status> statusProcsApplied, DamageMetrics finalDamageMetrics, DamageSource damageSource, DamageMetrics damageMetrics) {
         Status status = statusProcHelper.constructStatusProc(damageSource, damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
         target.addStatus(status);
-        if (status.applyInstantly()) {
-            target.applyStatus();
+        status.apply(target);
+        statusProcsApplied.add(status);
+
+        HitProperties statusTickHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
+        DamageSource damageSourceForDamageTick = status.getDamageTickDamageSource();
+        DamageMetrics damageMetricsFromDamageTick = targetDamageHelper.applyDamageSourceDamageToTarget(damageSourceForDamageTick, statusTickHitProperties, target);
+        updateRunningTotalStatusDamageToHealth(finalDamageMetrics, damageMetricsFromDamageTick.getDamageToHealth()); //TODO: if i make it only do one status proc per hit, doesnt need this method any more
+        updateRunningTotalStatusDamageToShields(finalDamageMetrics, damageMetricsFromDamageTick.getDamageToShields());
+    }
+
+    private void updateRunningTotalStatusDamageToHealth(DamageMetrics finalDamageMetrics, Map<DamageType, Double> damageToHealth) {
+        for (DamageType damageType : damageToHealth.keySet()) {
+            finalDamageMetrics.addToStatusHealth(damageType, damageToHealth.get(damageType));
         }
-        return status;
+    }
+
+    private void updateRunningTotalStatusDamageToShields(DamageMetrics finalDamageMetrics, Map<DamageType, Double> damageToShields) {
+        for (DamageType damageType : damageToShields.keySet()) {
+            finalDamageMetrics.addToStatusShields(damageType, damageToShields.get(damageType));
+        }
     }
 }

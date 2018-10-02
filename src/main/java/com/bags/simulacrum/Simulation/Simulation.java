@@ -63,8 +63,8 @@ public class Simulation {
 
             List<Status> procsApplying = targetList.get(0).statusProgressTime(deltaTime);
             for (Status status : procsApplying) {
-                DamageSource statusDamageSource = status.getDamageSource(); //TODO: apply should return metrics
-                status.apply(target); //TODO: apply should return metrics
+                DamageSource statusDamageSource = status.getDamageTickDamageSource();
+                status.apply(target);
                 DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(statusDamageSource, statusTickHitProperties, target);
             }
             // Handle delayed damage sources
