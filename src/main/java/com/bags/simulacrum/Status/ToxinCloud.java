@@ -14,13 +14,12 @@ public class ToxinCloud extends Status {
     }
 
     @Override
-    public DamageSource getDamageSource() {
+    public DamageSource getDamageTickDamageSource() {
         return new DamageSource(DOT, new ArrayList<>());
     }
 
 
-    @Override
-    public boolean applyInstantly() {
+    private boolean applyInstantly() {
         return false;
     }
 

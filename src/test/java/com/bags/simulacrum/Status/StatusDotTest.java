@@ -40,11 +40,11 @@ public abstract class StatusDotTest {
 
     @Test
     public void itStoresItsDamagePerTickAndCanReturnTheDamageSource() {
-        assertEquals(fakeDamagePerTick, subject.getDamageSource().getDamages().get(0).getDamageValue(), 0.0);
-        assertEquals(fakeDamageType, subject.getDamageSource().getDamages().get(0).getType());
-        assertEquals(1, subject.getDamageSource().getDamages().size());
-        assertNull(subject.getDamageSource().getModifiedInnateDamages());
-        assertNull(subject.getDamageSource().getAddedElementalDamages());
+        assertEquals(fakeDamagePerTick, subject.getDamageTickDamageSource().getDamages().get(0).getDamageValue(), 0.0);
+        assertEquals(fakeDamageType, subject.getDamageTickDamageSource().getDamages().get(0).getType());
+        assertEquals(1, subject.getDamageTickDamageSource().getDamages().size());
+        assertNull(subject.getDamageTickDamageSource().getModifiedInnateDamages());
+        assertNull(subject.getDamageTickDamageSource().getAddedElementalDamages());
     }
 
     @Test
@@ -103,13 +103,13 @@ public abstract class StatusDotTest {
         double totalDamage = 0.0;
         if (subject.applyInstantly()) {
             subject.apply(null);
-            totalDamage += subject.getDamageSource().getDamages().get(0).getDamageValue();
+            totalDamage += subject.getDamageTickDamageSource().getDamages().get(0).getDamageValue();
         }
         for (int i = 0; i < fakeDuration / fakeDeltaTime + 1; i++) {
             subject.progressTime(fakeDeltaTime);
             if (subject.checkProgress()) {
                 subject.apply(null);
-                totalDamage += subject.getDamageSource().getDamages().get(0).getDamageValue();
+                totalDamage += subject.getDamageTickDamageSource().getDamages().get(0).getDamageValue();
             }
 
         }

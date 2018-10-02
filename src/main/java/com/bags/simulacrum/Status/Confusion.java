@@ -29,7 +29,7 @@ public class Confusion extends Status {
     }
 
     @Override
-    public DamageSource getDamageSource() {
+    public DamageSource getDamageTickDamageSource() {
         return new DamageSource(DOT, new ArrayList<>());
     }
 
@@ -37,8 +37,7 @@ public class Confusion extends Status {
     public void apply(Target target) {
     }
 
-    @Override
-    public boolean applyInstantly() {
+    private boolean applyInstantly() {
         return false;
     }
 

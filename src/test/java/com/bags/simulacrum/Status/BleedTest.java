@@ -23,11 +23,11 @@ public class BleedTest extends StatusDotTest {
     @Test
     @Override
     public void itStoresItsDamagePerTickAndCanReturnTheDamageSource() {
-        assertEquals(1, subject.getDamageSource().getDamages().size());
-        assertEquals(fakeDamagePerTick, subject.getDamageSource().getDamages().get(0).getDamageValue(), 0.0);
-        assertEquals(specialCaseType, subject.getDamageSource().getDamages().get(0).getType());
-        assertNull(subject.getDamageSource().getModifiedInnateDamages());
-        assertNull(subject.getDamageSource().getAddedElementalDamages());
+        assertEquals(1, subject.getDamageTickDamageSource().getDamages().size());
+        assertEquals(fakeDamagePerTick, subject.getDamageTickDamageSource().getDamages().get(0).getDamageValue(), 0.0);
+        assertEquals(specialCaseType, subject.getDamageTickDamageSource().getDamages().get(0).getType());
+        assertNull(subject.getDamageTickDamageSource().getModifiedInnateDamages());
+        assertNull(subject.getDamageTickDamageSource().getAddedElementalDamages());
     }
 
     @Override

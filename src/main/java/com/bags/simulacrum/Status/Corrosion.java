@@ -35,11 +35,10 @@ public class Corrosion extends Status {
     }
 
     @Override
-    public DamageSource getDamageSource() {
+    public DamageSource getDamageTickDamageSource() {
         return new DamageSource(DOT, new ArrayList<>());
     }
 
-    @Override
     public boolean applyInstantly() {
         return true;
     }

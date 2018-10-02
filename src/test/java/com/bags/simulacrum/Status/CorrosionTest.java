@@ -80,7 +80,7 @@ public class CorrosionTest {
 
     @Test
     public void itDoesNotReturnAnyDamages() {
-        DamageSource actualDamageSource = subject.getDamageSource();
+        DamageSource actualDamageSource = subject.getDamageTickDamageSource();
 
         assertEquals(0, actualDamageSource.getDamages().size());
     }

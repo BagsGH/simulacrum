@@ -16,11 +16,10 @@ public class StatusDot extends Status {
     }
 
     @Override
-    public DamageSource getDamageSource() {
+    public DamageSource getDamageTickDamageSource() {
         return new DamageSource(DOT, Arrays.asList(new Damage(this.damageType, this.getDamagePerTick())));
     }
 
-    @Override
     public boolean applyInstantly() {
         return true;
     }

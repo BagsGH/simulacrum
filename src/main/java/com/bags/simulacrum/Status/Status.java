@@ -25,9 +25,7 @@ public abstract class Status {
 
     abstract public void apply(Target target);
 
-    abstract public DamageSource getDamageSource();
-
-    abstract public boolean applyInstantly(); //TODO: Better name
+    abstract public DamageSource getDamageTickDamageSource();
 
     abstract public void progressTime(double deltaTime);
 

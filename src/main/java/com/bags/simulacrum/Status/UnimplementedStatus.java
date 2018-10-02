@@ -29,7 +29,7 @@ public class UnimplementedStatus extends Status {
     }
 
     @Override
-    public DamageSource getDamageSource() {
+    public DamageSource getDamageTickDamageSource() {
         return new DamageSource(DOT, new ArrayList<>());
     }
 
@@ -39,8 +39,7 @@ public class UnimplementedStatus extends Status {
     }
 
 
-    @Override
-    public boolean applyInstantly() {
+    private boolean applyInstantly() {
         return false;
     }
 

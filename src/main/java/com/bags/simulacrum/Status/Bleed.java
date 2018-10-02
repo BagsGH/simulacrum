@@ -24,7 +24,7 @@ public class Bleed extends StatusDot {
     }
 
     @Override
-    public DamageSource getDamageSource() {
+    public DamageSource getDamageTickDamageSource() {
         Damage dealsTrueDamage = new Damage(TRUE, this.damagePerTick);
         return new DamageSource(DOT, Collections.singletonList(dealsTrueDamage));
     }
