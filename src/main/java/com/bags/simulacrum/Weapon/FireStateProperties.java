@@ -5,7 +5,7 @@ import com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType;
 import lombok.Data;
 
 @Data
-public class FireStatusProperties {
+public class FireStateProperties {
 
     private double fireRate;
     private int magazineSize;

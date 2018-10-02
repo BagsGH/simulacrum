@@ -20,8 +20,8 @@ public class WeaponStateTest {
 
     @Before
     public void before() {
-        FireStatusProperties fakeFireStatusProperties = new FireStatusProperties();
-        subject = new WeaponState(fakeFireStatusProperties);
+        FireStateProperties fakeFireStateProperties = new FireStateProperties();
+        subject = new WeaponState(fakeFireStateProperties);
         fakeDeltaT = 0.01;
         fakeSpoolSlowdownRatio = 2.0;
         fakeAutoFireRate = 15.0;
@@ -209,7 +209,7 @@ public class WeaponStateTest {
 
 //    @Test
 //    public void test() {
-//        subject = new State(setupSpoolWeapon(FireStatusProperties.com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 8, 1.0));
+//        subject = new State(setupSpoolWeapon(FireStateProperties.com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 8, 1.0));
 //
 //        DecimalFormat df = new DecimalFormat("0.00");
 //
@@ -217,7 +217,7 @@ public class WeaponStateTest {
 //        long startTime = System.currentTimeMillis();
 //        //for (int j = 0; j < 30000; j++) {
 //        for (int i = 0; i < 6000; i++) {
-//            FiringState status = subject.progressTime(0.01);
+//            FiringState status = subject.firingStateProgressTime(0.01);
 //            runningTime += 0.01;
 //            System.out.println("Current time: " + df.format(runningTime) + " Current status: " + status.getClass());
 //        }
@@ -227,8 +227,8 @@ public class WeaponStateTest {
 //
 //    }
 
-    private FireStatusProperties setupSpoolWeapon(TriggerType triggerType, double fireRate, double reloadTime, int magazineSize, int spoolThreshold, double spoolingDecrease) {
-        FireStatusProperties props = new FireStatusProperties();
+    private FireStateProperties setupSpoolWeapon(TriggerType triggerType, double fireRate, double reloadTime, int magazineSize, int spoolThreshold, double spoolingDecrease) {
+        FireStateProperties props = new FireStateProperties();
         props.setFireRate(fireRate);
         props.setReloadTime(reloadTime);
         props.setMagazineSize(magazineSize);
@@ -240,8 +240,8 @@ public class WeaponStateTest {
         return props;
     }
 
-    private FireStatusProperties setupAutoWeapon(TriggerType triggerType, double fireRate, double reloadTime, int magazineSize) {
-        FireStatusProperties props = new FireStatusProperties();
+    private FireStateProperties setupAutoWeapon(TriggerType triggerType, double fireRate, double reloadTime, int magazineSize) {
+        FireStateProperties props = new FireStateProperties();
         props.setFireRate(fireRate);
         props.setReloadTime(reloadTime);
         props.setMagazineSize(magazineSize);
@@ -251,8 +251,8 @@ public class WeaponStateTest {
         return props;
     }
 
-    private FireStatusProperties setupBurstWeapon(TriggerType triggerType, double fireRate, double reloadTime, int magazineSize, int burstCount) {
-        FireStatusProperties props = new FireStatusProperties();
+    private FireStateProperties setupBurstWeapon(TriggerType triggerType, double fireRate, double reloadTime, int magazineSize, int burstCount) {
+        FireStateProperties props = new FireStateProperties();
         props.setFireRate(fireRate);
         props.setReloadTime(reloadTime);
         props.setMagazineSize(magazineSize);
@@ -263,8 +263,8 @@ public class WeaponStateTest {
         return props;
     }
 
-    private FireStatusProperties setupChargingWeapon(TriggerType triggerType, double reloadTime, int magazineSize, double chargeTime) {
-        FireStatusProperties props = new FireStatusProperties();
+    private FireStateProperties setupChargingWeapon(TriggerType triggerType, double reloadTime, int magazineSize, double chargeTime) {
+        FireStateProperties props = new FireStateProperties();
         props.setReloadTime(reloadTime);
         props.setMagazineSize(magazineSize);
         props.setTriggerType(triggerType);

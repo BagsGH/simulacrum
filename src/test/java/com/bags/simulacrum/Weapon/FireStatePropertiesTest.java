@@ -5,13 +5,13 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class FireStatusPropertiesTest {
+public class FireStatePropertiesTest {
 
-    private FireStatusProperties subject;
+    private FireStateProperties subject;
 
     @Before
     public void setup() {
-        subject = new FireStatusProperties();
+        subject = new FireStateProperties();
     }
 
     @Test

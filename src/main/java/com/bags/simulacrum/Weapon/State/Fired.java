@@ -1,13 +1,13 @@
 package com.bags.simulacrum.Weapon.State;
 
-import com.bags.simulacrum.Weapon.FireStatusProperties;
+import com.bags.simulacrum.Weapon.FireStateProperties;
 
 public class Fired implements FiringState {
-    private FireStatusProperties fireStatusProperties;
+    private FireStateProperties fireStateProperties;
     private FiringState previousStatus;
 
-    public Fired(FireStatusProperties fireStatusProperties, FiringState previousStatus) {
-        this.fireStatusProperties = fireStatusProperties;
+    public Fired(FireStateProperties fireStateProperties, FiringState previousStatus) {
+        this.fireStateProperties = fireStateProperties;
         this.previousStatus = previousStatus;
     }
 

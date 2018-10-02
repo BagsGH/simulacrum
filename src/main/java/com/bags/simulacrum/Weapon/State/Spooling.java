@@ -1,6 +1,6 @@
 package com.bags.simulacrum.Weapon.State;
 
-import com.bags.simulacrum.Weapon.FireStatusProperties;
+import com.bags.simulacrum.Weapon.FireStateProperties;
 
 /**
  * The status for a Weapon while it is in the spooling part of its fire pattern.
@@ -9,16 +9,16 @@ import com.bags.simulacrum.Weapon.FireStatusProperties;
  * it will transition to the (full) Auto state.
  */
 public class Spooling implements FiringState {
-    private FireStatusProperties fireStatusProperties;
+    private FireStateProperties fireStateProperties;
     private double timeBetweenShots;
     private int spoolingThreshold;
     private int spoolingProgress;
     private double spoolingProgressBonus;
 
-    public Spooling(FireStatusProperties fireStatusProperties) {
-        this.fireStatusProperties = fireStatusProperties;
+    public Spooling(FireStateProperties fireStateProperties) {
+        this.fireStateProperties = fireStateProperties;
         this.timeBetweenShots = -1.0;
-        this.spoolingThreshold = fireStatusProperties.getSpoolThreshold();
+        this.spoolingThreshold = fireStateProperties.getSpoolThreshold();
     }
 
     @Override
@@ -26,32 +26,32 @@ public class Spooling implements FiringState {
         timeBetweenShots += deltaTime;
         if (freshMagazine()) {
             timeBetweenShots = 0.0;
-            fireStatusProperties.subtractAmmo();
-            return new Fired(this.fireStatusProperties, this);
+            fireStateProperties.subtractAmmo();
+            return new Fired(this.fireStateProperties, this);
         }
         if (spoolingProgress >= spoolingThreshold) {
-            FiringState status = new Auto(this.fireStatusProperties, timeBetweenShots);
+            FiringState status = new Auto(this.fireStateProperties, timeBetweenShots);
             return status.progressTime(deltaTime);
         }
-        if (fireStatusProperties.getCurrentMagazineSize() <= 0) {
-            return new Reloading(fireStatusProperties);
+        if (fireStateProperties.getCurrentMagazineSize() <= 0) {
+            return new Reloading(fireStateProperties);
         }
         if (timeBetweenShots + spoolingProgressBonus >= getRefireTime()) {
-            fireStatusProperties.subtractAmmo();
+            fireStateProperties.subtractAmmo();
             timeBetweenShots = 0.0;
             spoolingProgress++;
             spoolingProgressBonus = spoolingProgress * getSpoolingSpeedStepUp();
-            return new Fired(this.fireStatusProperties, this);
+            return new Fired(this.fireStateProperties, this);
         }
         return this;
     }
 
     private double getSpoolingSpeedStepUp() {
-        return (1 / fireStatusProperties.getFireRate()) / this.spoolingThreshold;
+        return (1 / fireStateProperties.getFireRate()) / this.spoolingThreshold;
     }
 
     private double getRefireTime() {
-        return (1 / fireStatusProperties.getFireRate()) * (1 + fireStatusProperties.getSpoolingSpeedDecreaseModifier());
+        return (1 / fireStateProperties.getFireRate()) * (1 + fireStateProperties.getSpoolingSpeedDecreaseModifier());
     }
 
     private boolean freshMagazine() {

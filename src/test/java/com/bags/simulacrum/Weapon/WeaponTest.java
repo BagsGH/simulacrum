@@ -18,7 +18,7 @@ public class WeaponTest {
     @Before
     public void setUp() {
         subject = new Weapon();
-        subject.setFireStatusProperties(new FireStatusProperties());
+        subject.setFireStateProperties(new FireStateProperties());
     }
 
     @Test

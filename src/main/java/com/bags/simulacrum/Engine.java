@@ -215,7 +215,7 @@ public class Engine {
 
     private Weapon setupIgnis() {
         Weapon ignisWraith = new Weapon();
-        ignisWraith.setFireStatusProperties(new FireStatusProperties());
+        ignisWraith.setFireStateProperties(new FireStateProperties());
         /* Important weapon stuff. **/
         ignisWraith.setAccuracy(1.0);
         ignisWraith.setCriticalChance(.17);

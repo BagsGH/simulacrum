@@ -45,10 +45,10 @@ public class Simulation {
         FiredWeaponMetrics finalFiredWeaponMetrics = new FiredWeaponMetrics();
 
 
-        weapon.initializeWeaponStatus();
+        weapon.initializeFiringState();
         for (int i = 1; i < timeTicks; i++) {
 
-            FiringState firingState = weapon.getWeaponState().progressTime(deltaTime);
+            FiringState firingState = weapon.firingStateProgressTime(deltaTime);
             if (firingState instanceof Fired) {
                 FiredWeaponMetrics firedWeaponMetrics = simulationHelper.handleFireWeapon(weapon, targetList.get(0), simulationParameters.getHeadshotChance());
             }

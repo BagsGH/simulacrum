@@ -1,12 +1,12 @@
 package com.bags.simulacrum.Weapon.State;
 
-import com.bags.simulacrum.Weapon.FireStatusProperties;
+import com.bags.simulacrum.Weapon.FireStateProperties;
 
 public class OutOfAmmo implements FiringState {
-    private FireStatusProperties fireStatusProperties;
+    private FireStateProperties fireStateProperties;
 
-    public OutOfAmmo(FireStatusProperties fireStatusProperties) {
-        this.fireStatusProperties = fireStatusProperties;
+    public OutOfAmmo(FireStateProperties fireStateProperties) {
+        this.fireStateProperties = fireStateProperties;
     }
 
     @Override

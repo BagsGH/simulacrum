@@ -1,6 +1,8 @@
 package com.bags.simulacrum.Weapon;
 
 import com.bags.simulacrum.Damage.DamageSource;
+import com.bags.simulacrum.Weapon.State.FiringState;
+import com.bags.simulacrum.Weapon.State.Ready;
 import com.bags.simulacrum.Weapon.WeaponInformationEnums.ChargingProperties;
 import com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType;
 import lombok.Data;
@@ -23,70 +25,76 @@ public class Weapon {
     private double accuracyMultiplier; //TODO: how to use
     private double rangeLimit;
 
-    private FireStatusProperties fireStatusProperties; //TODO: get rid of the below passthrough implementation? But I do like the idea that if you want to change something on the weapon, you tell the weapon to change it...
+    private FireStateProperties fireStateProperties; //TODO: get rid of the below passthrough implementation? But I do like the idea that if you want to change something on the weapon, you tell the weapon to change it...
 
     public void setFireRate(double newFireRate) {
-        this.fireStatusProperties.setFireRate(newFireRate);
+        this.fireStateProperties.setFireRate(newFireRate);
     }
 
     public double getFireRate() {
-        return this.fireStatusProperties.getFireRate();
+        return this.fireStateProperties.getFireRate();
     }
 
     public void setMagazineSize(int newMagazineSize) {
-        this.fireStatusProperties.setMagazineSize(newMagazineSize);
+        this.fireStateProperties.setMagazineSize(newMagazineSize);
     }
 
     public int getMagazineSize() {
-        return this.fireStatusProperties.getMagazineSize();
+        return this.fireStateProperties.getMagazineSize();
     }
 
     public void setReloadTime(double newReloadTime) {
-        this.fireStatusProperties.setReloadTime(newReloadTime);
+        this.fireStateProperties.setReloadTime(newReloadTime);
     }
 
     public double getReloadTime() {
-        return this.fireStatusProperties.getReloadTime();
+        return this.fireStateProperties.getReloadTime();
     }
 
     public void setChargeTime(double newChargeTime) {
-        this.fireStatusProperties.setChargeTime(newChargeTime);
+        this.fireStateProperties.setChargeTime(newChargeTime);
     }
 
     public double getChargeTime() {
-        return this.fireStatusProperties.getChargeTime();
+        return this.fireStateProperties.getChargeTime();
     }
 
     public void setMaxAmmo(int newMaxAmmo) {
-        this.fireStatusProperties.setMaxAmmo(newMaxAmmo);
+        this.fireStateProperties.setMaxAmmo(newMaxAmmo);
     }
 
     public int getMaxAmmo() {
-        return this.fireStatusProperties.getMaxAmmo();
+        return this.fireStateProperties.getMaxAmmo();
     }
 
     public void setTriggerType(TriggerType newTriggerType) {
-        this.fireStatusProperties.setTriggerType(newTriggerType);
+        this.fireStateProperties.setTriggerType(newTriggerType);
     }
 
+    private FiringState firingState;
+
     public TriggerType getTriggerType() {
-        return this.fireStatusProperties.getTriggerType();
+        return this.fireStateProperties.getTriggerType();
     }
 
     private ChargingProperties chargingProperties;
     private List<Mod> mods;
     private WeaponInformation weaponInformation;
-    private WeaponState weaponState;
 
-    public void initializeWeaponStatus() {
-        this.weaponState = new WeaponState(this.fireStatusProperties);
+    public void initializeFiringState() {
+        this.firingState = new Ready(this.fireStateProperties);
+    }
+
+    public FiringState firingStateProgressTime(double deltaTime) {
+        this.firingState = firingState.progressTime(deltaTime);
+        return firingState;
     }
 
     public Weapon() {
     }
 
-    public Weapon(String name, WeaponInformation weaponInformation, FireStatusProperties fireStatusProperties, double rangeLimit, List<Mod> mods) {
-        this.fireStatusProperties = fireStatusProperties;
+    public Weapon(String name, WeaponInformation weaponInformation, FireStateProperties fireStateProperties, double rangeLimit, List<Mod> mods) {
+        this.fireStateProperties = fireStateProperties;
         this.weaponInformation = weaponInformation;
         this.name = name;
         this.rangeLimit = rangeLimit;

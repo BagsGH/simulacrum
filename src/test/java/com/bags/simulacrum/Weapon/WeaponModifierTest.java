@@ -42,7 +42,7 @@ public class WeaponModifierTest {
 
         fakeWeaponInformation = new WeaponInformation(WeaponClass.RIFLE, WeaponSlot.PRIMARY, 9, AmmoType.RIFLE, NoiseLevel.ALARMING, Disposition.MILD);
         fakeWeapon = new Weapon();
-        fakeWeapon.setFireStatusProperties(new FireStatusProperties());
+        fakeWeapon.setFireStateProperties(new FireStateProperties());
         fakeWeapon.setWeaponInformation(fakeWeaponInformation);
 
         DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(IMPACT, 5.0, 0.0)));

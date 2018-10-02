@@ -7,8 +7,8 @@ public class WeaponState {
 
     private FiringState firingState;
 
-    public WeaponState(FireStatusProperties fireStatusProperties) {
-        this.firingState = new Ready(fireStatusProperties);
+    public WeaponState(FireStateProperties fireStateProperties) {
+        this.firingState = new Ready(fireStateProperties);
     }
 
     public FiringState progressTime(double deltaTime) {
