@@ -9,9 +9,9 @@ import java.text.DecimalFormat;
 
 import static org.junit.Assert.assertEquals;
 
-public class WeaponStateTest {
+public class FiringStateTest {
 
-    private WeaponState subject;
+    private FiringState subject;
     private double fakeDeltaT;
     private double fakeSpoolSlowdownRatio;
     private double fakeAutoFireRate;
@@ -21,7 +21,7 @@ public class WeaponStateTest {
     @Before
     public void before() {
         FireStateProperties fakeFireStateProperties = new FireStateProperties();
-        subject = new WeaponState(fakeFireStateProperties);
+        subject = new Ready(fakeFireStateProperties);
         fakeDeltaT = 0.01;
         fakeSpoolSlowdownRatio = 2.0;
         fakeAutoFireRate = 15.0;
@@ -31,18 +31,18 @@ public class WeaponStateTest {
 
     @Test
     public void itDoesNotSlowDownFireRateForAutoWeapons() {
-        subject = new WeaponState(setupAutoWeapon(TriggerType.AUTO, fakeAutoFireRate, 2.5, 200));
+        subject = new Ready(setupAutoWeapon(TriggerType.AUTO, fakeAutoFireRate, 2.5, 200));
 
         int autoTime = 0;
         int firedCount = 0;
 
         for (int i = 0; i < 8; i++) {
-            FiringState status = subject.progressTime(fakeDeltaT);
+            subject = subject.progressTime(fakeDeltaT);
 
-            if (status instanceof Auto) {
+            if (subject instanceof Auto) {
                 autoTime++;
             }
-            if (status instanceof Fired) {
+            if (subject instanceof Fired) {
                 firedCount++;
             }
         }
@@ -55,23 +55,23 @@ public class WeaponStateTest {
 
     @Test
     public void weaponStatusIsFiredImmediatelyAfterReloadForAuto() {
-        subject = new WeaponState(setupAutoWeapon(TriggerType.AUTO, fakeAutoFireRate, 0.01, 1));
+        subject = new Ready(setupAutoWeapon(TriggerType.AUTO, fakeAutoFireRate, 0.01, 1));
 
         int autoCount = 0;
         int firedCount = 0;
         int reloadCount = 0;
 
         for (int i = 0; i < 3; i++) {
-            FiringState status = subject.progressTime(fakeDeltaT);
+            subject = subject.progressTime(fakeDeltaT);
 
-            if (status instanceof Auto) {
+            if (subject instanceof Auto) {
                 autoCount++;
             }
-            if (status instanceof Fired) {
+            if (subject instanceof Fired) {
                 firedCount++;
             }
 
-            if (status instanceof Reloading) {
+            if (subject instanceof Reloading) {
                 reloadCount++;
             }
         }
@@ -83,18 +83,18 @@ public class WeaponStateTest {
 
     @Test
     public void itSlowsDownFireRateForSpoolingWeapons() {
-        subject = new WeaponState(setupSpoolWeapon(TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 5, 1.0));
+        subject = new Ready(setupSpoolWeapon(TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 5, 1.0));
 
         int spoolTime = 0;
         int firedCount = 0;
 
         for (int i = 0; i < 15; i++) {
-            FiringState status = subject.progressTime(fakeDeltaT);
+            subject = subject.progressTime(fakeDeltaT);
 
-            if (status instanceof Spooling) {
+            if (subject instanceof Spooling) {
                 spoolTime++;
             }
-            if (status instanceof Fired) {
+            if (subject instanceof Fired) {
                 firedCount++;
             }
         }
@@ -107,18 +107,18 @@ public class WeaponStateTest {
 
     @Test
     public void itReloadsSpoolWeapons() {
-        subject = new WeaponState(setupSpoolWeapon(TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 1, 5, 1.0));
+        subject = new Ready(setupSpoolWeapon(TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 1, 5, 1.0));
 
         int reloadTime = 0;
         int firedCount = 0;
 
         for (int i = 0; i < 2; i++) {
-            FiringState status = subject.progressTime(fakeDeltaT);
+            subject = subject.progressTime(fakeDeltaT);
 
-            if (status instanceof Reloading) {
+            if (subject instanceof Reloading) {
                 reloadTime++;
             }
-            if (status instanceof Fired) {
+            if (subject instanceof Fired) {
                 firedCount++;
             }
         }
@@ -129,22 +129,22 @@ public class WeaponStateTest {
 
     @Test
     public void itChangesFromSpoolingToAutoAfterSpoolingThresholdMet() {
-        subject = new WeaponState(setupSpoolWeapon(TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 1, 1.0));
+        subject = new Ready(setupSpoolWeapon(TriggerType.AUTOSPOOL, fakeAutoFireRate, 2.5, 200, 1, 1.0));
 
         int spoolTime = 0;
         int firedCount = 0;
         int autoCount = 0;
 
         for (int i = 0; i < 16; i++) {
-            FiringState status = subject.progressTime(fakeDeltaT);
-            if (status instanceof Spooling) {
+            subject = subject.progressTime(fakeDeltaT);
+            if (subject instanceof Spooling) {
                 spoolTime++;
             }
-            if (status instanceof Fired) {
+            if (subject instanceof Fired) {
                 firedCount++;
             }
 
-            if (status instanceof Auto) {
+            if (subject instanceof Auto) {
                 autoCount++;
             }
         }
@@ -158,19 +158,19 @@ public class WeaponStateTest {
 
     @Test
     public void burstFiresInBursts() {
-        subject = new WeaponState(setupBurstWeapon(TriggerType.BURST, fakeBurstFireRate, 2.5, 45, 3));
+        subject = new Ready(setupBurstWeapon(TriggerType.BURST, fakeBurstFireRate, 2.5, 45, 3));
 
         int burstTime = 0;
         int firedCount = 0;
 
         DecimalFormat df = new DecimalFormat("0.00");
         for (int i = 0; i < 93; i++) {
-            FiringState status = subject.progressTime(fakeDeltaT);
+            subject = subject.progressTime(fakeDeltaT);
 
-            if (status instanceof Bursting) {
+            if (subject instanceof Bursting) {
                 burstTime++;
             }
-            if (status instanceof Fired) {
+            if (subject instanceof Fired) {
                 firedCount++;
             }
         }
@@ -181,23 +181,25 @@ public class WeaponStateTest {
 
     @Test
     public void itChargesFiresAndThenReloadsABow() {
-        subject = new WeaponState(setupChargingWeapon(TriggerType.CHARGE, 0.25, 1, fakeChargingTime));
+        subject = new Ready(setupChargingWeapon(TriggerType.CHARGE, 0.25, 1, fakeChargingTime));
 
         int chargingTime = 0;
         int firedCount = 0;
         int reloadTime = 0;
 
         for (int i = 0; i < 50; i++) {
-            FiringState status = subject.progressTime(fakeDeltaT);
+            subject = subject.progressTime(fakeDeltaT);
+
+            System.out.println(subject.getClass());
 
 
-            if (status instanceof Charging) {
+            if (subject instanceof Charging) {
                 chargingTime++;
             }
-            if (status instanceof Fired) {
+            if (subject instanceof Fired) {
                 firedCount++;
             }
-            if (status instanceof Reloading) {
+            if (subject instanceof Reloading) {
                 reloadTime++;
             }
         }
@@ -217,7 +219,7 @@ public class WeaponStateTest {
 //        long startTime = System.currentTimeMillis();
 //        //for (int j = 0; j < 30000; j++) {
 //        for (int i = 0; i < 6000; i++) {
-//            FiringState status = subject.firingStateProgressTime(0.01);
+//            subject = subject.firingStateProgressTime(0.01);
 //            runningTime += 0.01;
 //            System.out.println("Current time: " + df.format(runningTime) + " Current status: " + status.getClass());
 //        }

@@ -5,9 +5,7 @@ import com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType;
 
 /**
  * This status basically exists as a reset/starting point for each 'clip' fired by the Weapon.
- * This status is entered after reloading or at the creation of a WeaponState. Classes using
- * WeaponState will be unaware of this status as it's 'skipped' over whenever initiated by the
- * creator of it usually (if not always) immediately calling firingStateProgressTime on it.
+ * This status is entered after reloading or should be the entry point for the State Machine.
  */
 public class Ready implements FiringState {
     private FireStateProperties fireStateProperties;
