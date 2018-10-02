@@ -7,19 +7,19 @@ import lombok.Data;
 @Data
 public class FireStateProperties {
 
-    private double fireRate;
     private int magazineSize;
     private double reloadTime;
     private int maxAmmo;
     private TriggerType triggerType;
-    private double chargeTime;
+
+    private double fireRate;
+    private double percentToCharge;
     private ChargingProperties chargingProperties;
     private int burstCount;
     private double spoolingSpeedDecreaseModifier;
     private int spoolThreshold;
 
     private int currentMagazineSize;
-    private double percentToCharge;
 
     public void subtractAmmo() {
         this.currentMagazineSize--;
@@ -35,11 +35,10 @@ public class FireStateProperties {
         this.reloadTime = builder.getReloadTime();
         this.maxAmmo = builder.getMaxAmmo();
         this.triggerType = builder.getTriggerType();
-        this.chargeTime = builder.getChargeTime();
         this.burstCount = builder.getBurstCount();
         this.spoolingSpeedDecreaseModifier = builder.getSpoolingSpeedDecreaseModifier();
         this.spoolThreshold = builder.getSpoolThreshold();
-        this.chargingProperties = builder.getChargingProperties();
+        this.chargingProperties = (builder.getChargingProperties() != null ? builder.getChargingProperties().copy() : new ChargingProperties(0.0, 0.0, 0.0, 0.0));
     }
 
     @Data
@@ -51,7 +50,6 @@ public class FireStateProperties {
         private TriggerType triggerType;
 
         private double fireRate;
-        private double chargeTime;
         private int burstCount;
         private double spoolingSpeedDecreaseModifier;
         private int spoolThreshold;
@@ -70,11 +68,6 @@ public class FireStateProperties {
 
         public FireStatePropertiesBuilder withFireRate(double fireRate) {
             this.fireRate = fireRate;
-            return this;
-        }
-
-        public FireStatePropertiesBuilder withChargeTime(double chargeTime) {
-            this.chargeTime = chargeTime;
             return this;
         }
 
@@ -97,7 +90,6 @@ public class FireStateProperties {
             this.chargingProperties = chargingProperties;
             return this;
         }
-
 
         public FireStateProperties build() {
             return new FireStateProperties(this);

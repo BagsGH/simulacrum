@@ -3,7 +3,6 @@ package com.bags.simulacrum.Weapon;
 import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Weapon.State.FiringState;
 import com.bags.simulacrum.Weapon.State.Ready;
-import com.bags.simulacrum.Weapon.WeaponInformationEnums.ChargingProperties;
 import com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType;
 import lombok.Data;
 
@@ -52,11 +51,11 @@ public class Weapon {
     }
 
     public void setChargeTime(double newChargeTime) {
-        this.fireStateProperties.setChargeTime(newChargeTime);
+        this.fireStateProperties.getChargingProperties().setChargeTime(newChargeTime);
     }
 
     public double getChargeTime() {
-        return this.fireStateProperties.getChargeTime();
+        return this.fireStateProperties.getChargingProperties().getChargeTime();
     }
 
     public void setMaxAmmo(int newMaxAmmo) {
@@ -77,7 +76,6 @@ public class Weapon {
         return this.fireStateProperties.getTriggerType();
     }
 
-    private ChargingProperties chargingProperties;
     private List<Mod> mods;
     private WeaponInformation weaponInformation;
 

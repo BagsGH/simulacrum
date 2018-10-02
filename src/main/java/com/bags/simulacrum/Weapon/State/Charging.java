@@ -17,7 +17,7 @@ public class Charging implements FiringState {
         if (fireStateProperties.getCurrentMagazineSize() <= 0) {
             return new Reloading(fireStateProperties);
         }
-        if (chargingProgress >= fireStateProperties.getChargeTime()) {
+        if (chargingProgress >= fireStateProperties.getChargingProperties().getChargeTime()) {
             chargingProgress = 0.0;
             fireStateProperties.subtractAmmo();
             return new Fired(fireStateProperties, this);

@@ -1,6 +1,7 @@
 package com.bags.simulacrum.Weapon;
 
 import com.bags.simulacrum.Weapon.State.*;
+import com.bags.simulacrum.Weapon.WeaponInformationEnums.ChargingProperties;
 import com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType;
 import org.junit.Before;
 import org.junit.Test;
@@ -259,7 +260,7 @@ public class FiringStateTest {
 
     private FireStateProperties setupChargingWeapon(TriggerType triggerType, double reloadTime, int magazineSize, double chargeTime) {
         FireStateProperties props = new FireStateProperties.FireStatePropertiesBuilder(triggerType, reloadTime, magazineSize, 200)
-                .withChargeTime(chargeTime)
+                .withChargingProperties(new ChargingProperties(chargeTime, 0.0, 0.0, 0.0))
                 .build();
         props.loadMagazine();
 

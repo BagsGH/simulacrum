@@ -9,7 +9,7 @@ public class ChargingPropertiesTest {
 
     @Before
     public void setup() {
-        subject = new ChargingProperties();
+        subject = new ChargingProperties(0.0, 0.0, 0.0, 0.0);
     }
 
     @Test

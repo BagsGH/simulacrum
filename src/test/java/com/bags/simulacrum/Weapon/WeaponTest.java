@@ -2,6 +2,7 @@ package com.bags.simulacrum.Weapon;
 
 import com.bags.simulacrum.Damage.Damage;
 import com.bags.simulacrum.Damage.DamageSource;
+import com.bags.simulacrum.Weapon.WeaponInformationEnums.ChargingProperties;
 import com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +21,7 @@ public class WeaponTest {
         subject = new Weapon();
         subject.setFireStateProperties(new FireStateProperties.FireStatePropertiesBuilder(TriggerType.CHARGE, 1.25, 1, 1)
                 .withFireRate(1.25)
-                .withChargeTime(1.25)
+                .withChargingProperties(new ChargingProperties(1.25, 0.0, 0.0, 0.0))
                 .build());
     }
 
