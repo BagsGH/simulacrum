@@ -51,4 +51,62 @@ public class DamageMetrics {
         }
         return damageMap;
     }
+
+    private DamageMetrics(DamageMetricsBuilder builder) {
+        this.target = builder.getTarget();
+        if (builder.withDamageToHealth) {
+            this.damageToHealth = initialDamageMap();
+        }
+        if (builder.withDamageToShields) {
+            this.damageToShields = initialDamageMap();
+        }
+        if (builder.withStatusDamageToHealth) {
+            this.statusDamageToHealth = initialDamageMap();
+        }
+        if (builder.withStatusDamageToShields) {
+            this.statusDamageToShields = initialDamageMap();
+        }
+    }
+
+    @Data
+    public static class DamageMetricsBuilder {
+
+        private Target target;
+
+        private boolean withDamageToHealth;
+        private boolean withDamageToShields;
+        private boolean withStatusDamageToHealth;
+        private boolean withStatusDamageToShields;
+
+
+        public DamageMetricsBuilder(Target target) {
+            this.target = target;
+        }
+
+        public DamageMetricsBuilder withDamageToHealth() {
+            this.withDamageToHealth = true;
+            return this;
+        }
+
+        public DamageMetricsBuilder withDamageToShields() {
+            this.withDamageToShields = true;
+            return this;
+        }
+
+        public DamageMetricsBuilder withStatusDamageToHealth() {
+            this.withStatusDamageToHealth = true;
+            return this;
+        }
+
+        public DamageMetricsBuilder withStatusDamageToShields() {
+            this.withStatusDamageToShields = true;
+            return this;
+        }
+
+
+        public DamageMetrics build() {
+            return new DamageMetrics(this);
+        }
+    }
+
 }

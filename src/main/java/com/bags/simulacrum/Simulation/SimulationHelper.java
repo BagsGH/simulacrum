@@ -33,13 +33,12 @@ public class SimulationHelper {
     public FiredWeaponMetrics handleFireWeapon(Weapon weapon, Target target, double headshotChance) { //tODO: secondary targets for aoe...?
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         List<Status> statusProcsApplied = new ArrayList<>();
-        Map<DamageType, Double> summedDamageToHealth = DamageMetrics.initialDamageMap();
-        Map<DamageType, Double> summedDamageToShields = DamageMetrics.initialDamageMap();
-        Map<DamageType, Double> summedStatusDamageToShields = DamageMetrics.initialDamageMap();
-        Map<DamageType, Double> summedStatusDamageToHealth = DamageMetrics.initialDamageMap();
-        DamageMetrics finalDamageMetrics = new DamageMetrics(target, summedDamageToHealth, summedDamageToShields);
-        finalDamageMetrics.setStatusDamageToHealth(summedStatusDamageToHealth);
-        finalDamageMetrics.setStatusDamageToShields(summedStatusDamageToShields); //TODO: roll into constructor
+        DamageMetrics finalDamageMetrics = new DamageMetrics.DamageMetricsBuilder(target)
+                .withDamageToHealth()
+                .withDamageToShields()
+                .withStatusDamageToHealth()
+                .withStatusDamageToShields()
+                .build();
 
         List<HitProperties> hitPropertiesList = new ArrayList<>();
 
