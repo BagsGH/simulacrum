@@ -70,6 +70,5 @@ public class Virus extends Status {
 
         targetHealth.setHealthValueMax(maxHealth + this.maxHealthRemoved);
         targetHealth.setHealthValue(currentHealth + this.currentHealthRemoved);
-
     }
 }
