@@ -1,5 +1,6 @@
 package com.bags.simulacrum.Weapon;
 
+import com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +12,7 @@ public class FireStatePropertiesTest {
 
     @Before
     public void setup() {
-        subject = new FireStateProperties();
+        subject = new FireStateProperties.FireStatePropertiesBuilder(TriggerType.HELD, 1.25, 1, 1).build();
     }
 
     @Test

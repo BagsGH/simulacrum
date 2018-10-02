@@ -20,8 +20,6 @@ public class FiringStateTest {
 
     @Before
     public void before() {
-        FireStateProperties fakeFireStateProperties = new FireStateProperties();
-        subject = new Ready(fakeFireStateProperties);
         fakeDeltaT = 0.01;
         fakeSpoolSlowdownRatio = 2.0;
         fakeAutoFireRate = 15.0;
@@ -230,47 +228,39 @@ public class FiringStateTest {
 //    }
 
     private FireStateProperties setupSpoolWeapon(TriggerType triggerType, double fireRate, double reloadTime, int magazineSize, int spoolThreshold, double spoolingDecrease) {
-        FireStateProperties props = new FireStateProperties();
-        props.setFireRate(fireRate);
-        props.setReloadTime(reloadTime);
-        props.setMagazineSize(magazineSize);
-        props.setSpoolThreshold(spoolThreshold);
-        props.setTriggerType(triggerType);
+        FireStateProperties props = new FireStateProperties.FireStatePropertiesBuilder(triggerType, reloadTime, magazineSize, 200)
+                .withFireRate(fireRate)
+                .withSpoolThreshold(spoolThreshold)
+                .withSpoolingSpeedDecreaseModifier(spoolingDecrease)
+                .build();
         props.loadMagazine();
-        props.setSpoolingSpeedDecreaseModifier(spoolingDecrease);
 
         return props;
     }
 
     private FireStateProperties setupAutoWeapon(TriggerType triggerType, double fireRate, double reloadTime, int magazineSize) {
-        FireStateProperties props = new FireStateProperties();
-        props.setFireRate(fireRate);
-        props.setReloadTime(reloadTime);
-        props.setMagazineSize(magazineSize);
-        props.setTriggerType(triggerType);
+        FireStateProperties props = new FireStateProperties.FireStatePropertiesBuilder(triggerType, reloadTime, magazineSize, 200)
+                .withFireRate(fireRate)
+                .build();
         props.loadMagazine();
 
         return props;
     }
 
     private FireStateProperties setupBurstWeapon(TriggerType triggerType, double fireRate, double reloadTime, int magazineSize, int burstCount) {
-        FireStateProperties props = new FireStateProperties();
-        props.setFireRate(fireRate);
-        props.setReloadTime(reloadTime);
-        props.setMagazineSize(magazineSize);
-        props.setTriggerType(triggerType);
-        props.setBurstCount(burstCount);
+        FireStateProperties props = new FireStateProperties.FireStatePropertiesBuilder(triggerType, reloadTime, magazineSize, 200)
+                .withFireRate(fireRate)
+                .withBurstCount(burstCount)
+                .build();
         props.loadMagazine();
 
         return props;
     }
 
     private FireStateProperties setupChargingWeapon(TriggerType triggerType, double reloadTime, int magazineSize, double chargeTime) {
-        FireStateProperties props = new FireStateProperties();
-        props.setReloadTime(reloadTime);
-        props.setMagazineSize(magazineSize);
-        props.setTriggerType(triggerType);
-        props.setChargeTime(chargeTime);
+        FireStateProperties props = new FireStateProperties.FireStatePropertiesBuilder(triggerType, reloadTime, magazineSize, 200)
+                .withChargeTime(chargeTime)
+                .build();
         props.loadMagazine();
 
         return props;

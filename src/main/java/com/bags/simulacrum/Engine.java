@@ -214,16 +214,15 @@ public class Engine {
 //    }
 
     private Weapon setupIgnis() {
-        Weapon ignisWraith = new Weapon();
-        ignisWraith.setFireStateProperties(new FireStateProperties());
+        Weapon ignisWraith = new Weapon(); //TriggerType triggerType, double reloadTime, int magazineSize, int maxAmmo
+        ignisWraith.setFireStateProperties(new FireStateProperties.FireStatePropertiesBuilder(TriggerType.HELD, 1.70, 200, 800)
+                .withFireRate(8.0)
+                .build());
         /* Important weapon stuff. **/
         ignisWraith.setAccuracy(1.0);
         ignisWraith.setCriticalChance(.17);
         ignisWraith.setCriticalDamage(2.5);
         ignisWraith.setHeadshotMultiplier(2.0);
-        ignisWraith.setFireRate(8.0);
-        ignisWraith.setMagazineSize(200);
-        ignisWraith.setMaxAmmo(800);
         ignisWraith.setAccuracyMultiplier(0.0);
         ignisWraith.setMultishot(1.00);
         List<Damage> ignisDamageTypes = new ArrayList<>();
@@ -232,7 +231,6 @@ public class Engine {
         DamageSource damageSource = new DamageSource(DamageSourceType.PROJECTILE, ignisDamageTypes);
         ignisWraith.setDamageSources(Arrays.asList(damageSource));
 
-        ignisWraith.setReloadTime(1.7);
         ignisWraith.setStatusChance(.29);
 
         /* Fluff weapon information. **/

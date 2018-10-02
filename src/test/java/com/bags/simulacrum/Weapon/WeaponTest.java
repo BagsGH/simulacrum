@@ -18,17 +18,16 @@ public class WeaponTest {
     @Before
     public void setUp() {
         subject = new Weapon();
-        subject.setFireStateProperties(new FireStateProperties());
+        subject.setFireStateProperties(new FireStateProperties.FireStatePropertiesBuilder(TriggerType.CHARGE, 1.25, 1, 1)
+                .withFireRate(1.25)
+                .withChargeTime(1.25)
+                .build());
     }
 
     @Test
     public void itCanHaveSetterTestCoverage() {
         subject.setName("Ignis");
-        subject.setTriggerType(TriggerType.CHARGE);
-        subject.setFireRate(1.25);
         subject.setAccuracy(1.25);
-        subject.setMagazineSize(1);
-        subject.setReloadTime(1.25);
         subject.setDamageSources(Collections.singletonList(new DamageSource()));
         subject.setMultishot(1.25);
         subject.setCriticalChance(1.25);
@@ -36,9 +35,7 @@ public class WeaponTest {
         subject.setStatusChance(1.25);
         subject.setHeadshotMultiplier(1.25);
         subject.setAccuracyMultiplier(1.25);
-        subject.setChargeTime(1.25);
         subject.setMods(Collections.singletonList(new Mod()));
-        subject.setMaxAmmo(1);
         subject.setRangeLimit(1.25);
 
         assertEquals("Ignis", subject.getName());
