@@ -1,8 +1,13 @@
 package com.bags.simulacrum.Status;
 
+import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
+
+import java.util.ArrayList;
+
+import static com.bags.simulacrum.Damage.DamageSourceType.DOT;
 
 @Data
 public class Knockback extends Status {
@@ -19,6 +24,11 @@ public class Knockback extends Status {
 
     @Override
     public void apply(Target target) {
+    }
+
+    @Override
+    public DamageSource getDamageSource() {
+        return new DamageSource(DOT, new ArrayList<>());
     }
 
     @Override

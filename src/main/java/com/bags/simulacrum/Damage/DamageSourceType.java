@@ -5,5 +5,6 @@ public enum DamageSourceType {
     HIT,
     HIT_AOE,
     DELAYED,
-    DELAYED_AOE
+    DELAYED_AOE,
+    DOT
 }

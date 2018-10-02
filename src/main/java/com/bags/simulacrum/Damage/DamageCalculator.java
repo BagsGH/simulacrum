@@ -69,7 +69,7 @@ public class DamageCalculator {
     }
 
     private boolean isHeadshot(double headshotMultiplier) {
-        return headshotMultiplier != 0;
+        return headshotMultiplier != 0.0;
     }
 
     private boolean damagingShields(Health targetShield, double targetShieldValue, DamageType damageType) {

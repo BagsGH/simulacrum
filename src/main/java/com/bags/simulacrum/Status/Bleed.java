@@ -1,22 +1,25 @@
 package com.bags.simulacrum.Status;
 
+import com.bags.simulacrum.Damage.Damage;
+import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
+import java.util.Arrays;
+
+import static com.bags.simulacrum.Damage.DamageSourceType.DOT;
+import static com.bags.simulacrum.Damage.DamageType.TRUE;
+
 @Data
 public class Bleed extends Status {
-
-    private double duration;
-    private int damageTicks;
-    private DamageType damageType;
 
     private static final double ARMOR_REDUCTION_RATIO = 0.25;
 
     private Bleed(DamageType damageType, double duration, int damageTicks) {
         this.damageType = damageType;
         this.duration = duration;
-        this.damageTicks = damageTicks;
+        this.numberOfDamageTicks = damageTicks;
     }
 
     public Bleed() {
@@ -25,6 +28,13 @@ public class Bleed extends Status {
 
     @Override
     public void apply(Target target) {
+
+    }
+
+    @Override
+    public DamageSource getDamageSource() {
+        Damage dealsTrueDamage = new Damage(TRUE, this.damagePerTick);
+        return new DamageSource(DOT, Arrays.asList(dealsTrueDamage));
     }
 
 

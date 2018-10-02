@@ -1,8 +1,13 @@
 package com.bags.simulacrum.Status;
 
+import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
+
+import java.util.ArrayList;
+
+import static com.bags.simulacrum.Damage.DamageSourceType.DOT;
 
 @Data
 public class Confusion extends Status {
@@ -24,9 +29,13 @@ public class Confusion extends Status {
     }
 
     @Override
-    public void apply(Target target) {
+    public DamageSource getDamageSource() {
+        return new DamageSource(DOT, new ArrayList<>());
     }
 
+    @Override
+    public void apply(Target target) {
+    }
 
     @Override
     public boolean applyInstantly() {

@@ -1,6 +1,11 @@
 package com.bags.simulacrum.Status;
 
+import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Entity.Target;
+
+import java.util.ArrayList;
+
+import static com.bags.simulacrum.Damage.DamageSourceType.DOT;
 
 public class Poison extends Status {
     @Override
@@ -8,6 +13,10 @@ public class Poison extends Status {
 
     }
 
+    @Override
+    public DamageSource getDamageSource() {
+        return new DamageSource(DOT, new ArrayList<>());
+    }
 
     @Override
     public boolean applyInstantly() {

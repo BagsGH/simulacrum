@@ -2,11 +2,15 @@ package com.bags.simulacrum.Status;
 
 import com.bags.simulacrum.Armor.Health;
 import com.bags.simulacrum.Armor.HealthClass;
+import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.bags.simulacrum.Damage.DamageSourceType.DOT;
 
 @Data
 public class Corrosion extends Status {
@@ -34,6 +38,12 @@ public class Corrosion extends Status {
             double currentArmor = armor.getHealthValue();
             armor.setHealthValue(currentArmor * (1 - ARMOR_REDUCTION_RATIO));
         }
+
+    }
+
+    @Override
+    public DamageSource getDamageSource() {
+        return new DamageSource(DOT, new ArrayList<>());
     }
 
     private Health findArmor(List<Health> health) {

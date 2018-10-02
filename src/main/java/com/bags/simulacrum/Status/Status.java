@@ -1,5 +1,6 @@
 package com.bags.simulacrum.Status;
 
+import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
@@ -20,6 +21,8 @@ public abstract class Status {
     protected double progressToNextTick;
 
     abstract public void apply(Target target);
+
+    abstract public DamageSource getDamageSource();
 
     abstract public boolean applyInstantly(); //TODO: Better name
 
