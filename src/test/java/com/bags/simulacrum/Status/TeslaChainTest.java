@@ -14,16 +14,16 @@ import java.util.Collections;
 
 import static com.bags.simulacrum.Armor.HealthClass.*;
 import static com.bags.simulacrum.Damage.DamageSourceType.PROJECTILE;
-import static com.bags.simulacrum.Damage.DamageType.HEAT;
+import static com.bags.simulacrum.Damage.DamageType.ELECTRICITY;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-public class IgniteTest {
+public class TeslaChainTest {
 
-    private Ignite subject;
+    private TeslaChain subject;
 
     @Mock
     private StatusFactory statusFactory;
@@ -36,10 +36,10 @@ public class IgniteTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        fakeDuration = 5.0;
-        fakeNumberOfTicks = 6;
+        fakeDuration = 0.0;
+        fakeNumberOfTicks = 1;
         fakeDeltaTime = 0.01;
-        fakeDamagePerTick = 22;
+        fakeDamagePerTick = 55;
         setupDefaultSubject();
     }
 
@@ -50,19 +50,11 @@ public class IgniteTest {
 
     @Test
     public void itStoresItsDamagePerTickAndCanReturnTheDamageSource() {
-        assertEquals(22.0, subject.getDamageSource().getDamages().get(0).getDamageValue(), 0.0);
-        assertEquals(HEAT, subject.getDamageSource().getDamages().get(0).getType());
+        assertEquals(fakeDamagePerTick, subject.getDamageSource().getDamages().get(0).getDamageValue(), 0.0);
+        assertEquals(ELECTRICITY, subject.getDamageSource().getDamages().get(0).getType());
         assertEquals(1, subject.getDamageSource().getDamages().size());
         assertNull(subject.getDamageSource().getModifiedInnateDamages());
         assertNull(subject.getDamageSource().getAddedElementalDamages());
-    }
-
-    @Test
-    public void itIsReadyToApplyAfterExpectedTime() {
-        for (int i = 0; i < (int) ((fakeDuration / (fakeNumberOfTicks - (subject.applyInstantly() ? 1 : 0))) / fakeDeltaTime); i++) {
-            subject.progressTime(fakeDeltaTime);
-        }
-        assertTrue(subject.checkProgress());
     }
 
     @Test
@@ -146,14 +138,22 @@ public class IgniteTest {
         assertEquals(expectedTarget, fakeTarget);
     }
 
+    @Test
+    public void itIsNeverReadyToApply() {
+        for (int i = 0; i < (int) ((fakeDuration / (fakeNumberOfTicks - (subject.applyInstantly() ? 1 : 0))) / fakeDeltaTime); i++) {
+            subject.progressTime(fakeDeltaTime);
+        }
+        assertFalse(subject.checkProgress());
+    }
+
     private void setupDefaultSubject() {
-        Ignite ignite = new Ignite();
-        ignite.setDuration(fakeDuration);
-        ignite.setNumberOfDamageTicks(fakeNumberOfTicks);
-        ignite.setDamagePerTick(fakeDamagePerTick);
-        ignite.setDamageType(HEAT);
-        ignite.setupTimers();
-        when(statusFactory.getStatusProc(any(), eq(HEAT))).thenReturn(ignite);
-        subject = (Ignite) statusFactory.getStatusProc(new DamageSource(PROJECTILE, Collections.singletonList(new Damage(HEAT, 50.0))), HEAT);
+        TeslaChain teslaChain = new TeslaChain();
+        teslaChain.setDuration(fakeDuration);
+        teslaChain.setNumberOfDamageTicks(fakeNumberOfTicks);
+        teslaChain.setDamagePerTick(fakeDamagePerTick);
+        teslaChain.setDamageType(ELECTRICITY);
+        teslaChain.setupTimers();
+        when(statusFactory.getStatusProc(any(), eq(ELECTRICITY))).thenReturn(teslaChain);
+        subject = (TeslaChain) statusFactory.getStatusProc(new DamageSource(PROJECTILE, Collections.singletonList(new Damage(ELECTRICITY, 50.0))), ELECTRICITY);
     }
 }

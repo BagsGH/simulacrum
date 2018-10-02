@@ -9,7 +9,6 @@ import lombok.Data;
 import java.util.Arrays;
 
 import static com.bags.simulacrum.Damage.DamageSourceType.DOT;
-import static com.bags.simulacrum.Damage.DamageType.HEAT;
 
 @Data
 public class Ignite extends Status {
@@ -32,7 +31,7 @@ public class Ignite extends Status {
 
     @Override
     public DamageSource getDamageSource() {
-        return new DamageSource(DOT, Arrays.asList(new Damage(HEAT, this.getDamagePerTick())));
+        return new DamageSource(DOT, Arrays.asList(new Damage(this.damageType, this.getDamagePerTick())));
     }
 
 

@@ -9,7 +9,6 @@ import lombok.Data;
 import java.util.Arrays;
 
 import static com.bags.simulacrum.Damage.DamageSourceType.DOT;
-import static com.bags.simulacrum.Damage.DamageType.TOXIN;
 
 @Data
 public class Poison extends Status {
@@ -32,7 +31,7 @@ public class Poison extends Status {
 
     @Override
     public DamageSource getDamageSource() {
-        return new DamageSource(DOT, Arrays.asList(new Damage(TOXIN, this.getDamagePerTick())));
+        return new DamageSource(DOT, Arrays.asList(new Damage(this.damageType, this.getDamagePerTick())));
     }
 
 
