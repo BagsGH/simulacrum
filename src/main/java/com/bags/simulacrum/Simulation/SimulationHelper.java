@@ -64,7 +64,7 @@ public class SimulationHelper {
                         statusProcsApplied.add(handleStatusChance(damageSource, target, damageMetrics));
                     }
                 } else {
-                    delayedDamageSources.add(new DelayedDamageSource(damageSource.deepCopy(), damageSource.getDelay())); //TODO: calculate crits etc now or later?
+                    delayedDamageSources.add(new DelayedDamageSource(damageSource.copy(), damageSource.getDelay())); //TODO: calculate crits etc now or later?
                 }
             }
             hitPropertiesList.add(hitProperties);

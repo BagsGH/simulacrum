@@ -18,4 +18,10 @@ public class Health {
     public void subtractHealthValue(double value) {
         healthValue = healthValue - value;
     }
+
+    public Health copy() {
+        Health copiedHealth = new Health(this.healthClass, this.healthValue);
+        copiedHealth.setHealthValueMax(this.healthValue);
+        return copiedHealth;
+    }
 }

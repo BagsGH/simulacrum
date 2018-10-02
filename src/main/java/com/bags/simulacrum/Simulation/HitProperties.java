@@ -16,4 +16,8 @@ public class HitProperties {
         this.critLevel = critLevel;
         this.bodyPartModifier = bodyPartModifier;
     }
+
+    public HitProperties copy() {
+        return new HitProperties(this.critLevel, this.criticalDamageMultiplier, this.headshotModifier, this.bodyPartModifier);
+    }
 }

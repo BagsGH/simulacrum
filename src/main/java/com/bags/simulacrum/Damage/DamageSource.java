@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
+
 @Data
 public class DamageSource {
 
@@ -36,9 +38,18 @@ public class DamageSource {
         return copiedDamageSource;
     }
 
-    public DamageSource deepCopy() {
+    public DamageSource copy() {
         DamageSource copiedDamageSource = this.copyWithoutDamages();
-        copiedDamageSource.setDamages(damages.stream().map(Damage::new).collect(Collectors.toList()));
+        List<Damage> damagesList = this.damages.stream().map(Damage::copy).collect(Collectors.toList());
+        copiedDamageSource.setDamages(damagesList);
+
+        List<Damage> modifiedInnateDamageList = emptyIfNull(this.modifiedInnateDamages).stream().map(Damage::copy).collect(Collectors.toList());
+        copiedDamageSource.setModifiedInnateDamages((modifiedInnateDamageList.isEmpty() ? null : modifiedInnateDamageList)); //TODO: shouldnt need this weird thing, but it made a test fail.
+
+        List<Damage> addedElementalDamageList = emptyIfNull(this.addedElementalDamages).stream().map(Damage::copy).collect(Collectors.toList());
+        copiedDamageSource.setAddedElementalDamages((addedElementalDamageList.isEmpty() ? null : addedElementalDamageList));
+
+
         return copiedDamageSource;
     }
 

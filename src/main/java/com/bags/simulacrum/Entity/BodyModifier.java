@@ -20,4 +20,8 @@ public class BodyModifier {
         this.modifierValue = modifierValue;
     }
 
+    public BodyModifier copy() {
+        return new BodyModifier(this.bodyPart, this.modifierValue, this.chanceToHit);
+    }
+
 }

@@ -113,4 +113,6 @@ public class Weapon {
         damageSources.add(damageSource);
     }
 
+    //TODO: Factory, copy
+
 }

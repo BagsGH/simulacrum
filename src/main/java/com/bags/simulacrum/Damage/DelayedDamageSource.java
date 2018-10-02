@@ -12,4 +12,8 @@ public class DelayedDamageSource {
         this.damageSource = damageSource;
         this.delay = delay;
     }
+
+    public DelayedDamageSource copy() {
+        return new DelayedDamageSource(this.damageSource.copy(), this.delay);
+    }
 }

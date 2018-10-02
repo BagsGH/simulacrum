@@ -31,6 +31,7 @@ dependencies {
 //    compile('org.springframework.boot:spring-boot-starter-security')
     compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.8'
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.2'
     compile "org.springframework.boot:spring-boot-configuration-processor"
     compile('org.apache.kafka:kafka-streams')
     compile('org.springframework.kafka:spring-kafka')

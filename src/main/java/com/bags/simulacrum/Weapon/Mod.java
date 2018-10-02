@@ -40,4 +40,11 @@ public class Mod {
     public Mod(Damage damage) {
         this.damage = damage;
     }
+
+    //TODO: factory
+    public Mod copy() {
+        Mod copy = new Mod(this.damage.copy());
+        copy.setName(this.name);
+        return copy;
+    }
 }

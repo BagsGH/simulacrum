@@ -30,6 +30,10 @@ public class Damage {
         this.modAddedDamageRatio = damage.getModAddedDamageRatio();
     }
 
+    public Damage copy() {
+        return new Damage(this.type, this.damageValue, this.modAddedDamageRatio);
+    }
+
     public Damage() {
 
     }
