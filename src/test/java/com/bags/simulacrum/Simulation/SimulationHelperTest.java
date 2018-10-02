@@ -436,7 +436,7 @@ public class SimulationHelperTest {
 
     @Test
     public void itReturnsStatusProcMetrics() {
-        when(mockStatusProcHelper.handleStatusProc(any(), any())).thenReturn(new Ignite());
+        when(mockStatusProcHelper.handleStatusProc(any(), any(), any())).thenReturn(new Ignite());
         fakeWeapon.setStatusChance(0.75);
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.74);
 
@@ -449,7 +449,7 @@ public class SimulationHelperTest {
     @Test
     public void eachShotOfMultishotCalculatesStatusChanceIndependently() {
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.04);
-        when(mockStatusProcHelper.handleStatusProc(any(), any())).thenReturn(new Corrosion());
+        when(mockStatusProcHelper.handleStatusProc(any(), any(), any())).thenReturn(new Corrosion());
         fakeWeapon.setStatusChance(0.05);
         fakeWeapon.setMultishot(2.0);
 

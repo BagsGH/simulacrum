@@ -16,7 +16,7 @@ public abstract class Status {
     protected double duration;
     protected int damageTicks;
     protected DamageType damageType;
-    protected double totalDamage;
+    protected double damagePerTick;
     protected double progressToNextTick;
 
     abstract public void apply(Target target);

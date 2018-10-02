@@ -1,5 +1,7 @@
 package com.bags.simulacrum.Status;
 
+import com.bags.simulacrum.Damage.Damage;
+import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageType;
 import org.springframework.stereotype.Component;
 
@@ -34,30 +36,30 @@ public class StatusPropertyMapper {
         }};
     }
 
-    public Double getStatusProcDuration(DamageType statusPROCType) {
+    private Double getStatusProcDuration(DamageType statusPROCType) {
         return statusProcDurationMap.getOrDefault(statusPROCType, 0.0);
     }
 
-    private static final Map<DamageType, Double> statusProcModifierMap;
-
-    static {
-        statusProcModifierMap = new HashMap<DamageType, Double>() {{
-            put(PUNCTURE, 0.70);
-            put(SLASH, 1.45);
-            put(COLD, -0.50);
-            put(ELECTRICITY, 0.50);
-            put(HEAT, 2.50);
-            put(TOXIN, 3.50);
-            put(CORROSIVE, 0.25);
-            put(GAS, 3.50);
-            put(MAGNETIC, -0.75);
-            put(VIRAL, -0.50);
-        }};
-    }
-
-    public Double getStatusProcModifier(DamageType statusPROCType) {
-        return statusProcModifierMap.getOrDefault(statusPROCType, 0.0);
-    }
+//    private static final Map<DamageType, Double> statusProcModifierMap;
+//
+//    static {
+//        statusProcModifierMap = new HashMap<DamageType, Double>() {{
+//            put(PUNCTURE, 0.70);
+//            put(SLASH, 1.45);
+//            put(COLD, -0.50);
+//            put(ELECTRICITY, 0.50);
+//            put(HEAT, 2.50);
+//            put(TOXIN, 3.50);
+//            put(CORROSIVE, 0.25);
+//            put(GAS, 3.50);
+//            put(MAGNETIC, -0.75);
+//            put(VIRAL, -0.50);
+//        }};
+//    }
+//
+//    public Double getStatusProcModifier(DamageType statusPROCType) {
+//        return statusProcModifierMap.getOrDefault(statusPROCType, 0.0);
+//    }
 
     private static final Map<DamageType, String> statusTypeClassNameMap;
 
@@ -81,7 +83,7 @@ public class StatusPropertyMapper {
         }};
     }
 
-    public Status getStatusProcClass(DamageType statusProcType) { //TODO: should not need this if.
+    public Status getStatusProc(DamageSource damageSource, DamageType statusProcType) { //TODO: should not need this if.
         Class<?> clazz = null;
         try {
             clazz = Class.forName(statusTypeClassNameMap.getOrDefault(statusProcType, getClassName(UnimplementedStatus.class)));
@@ -106,9 +108,31 @@ public class StatusPropertyMapper {
             proc = (Status) object;
             proc.setDamageType(statusProcType);
             proc.setDuration(getStatusProcDuration(statusProcType));
-            proc.setDamageTicks(getStatusProcTicks(statusProcType));
+            proc.setDamageTicks(getStatusProcNumberOfTicks(statusProcType));
+            proc.setDamagePerTick(calculateProcTickDamage(damageSource, statusProcType));
         }
         return proc;
+    }
+
+    private double calculateProcTickDamage(DamageSource damageSource, DamageType statusProcDamageType) {
+        List<Damage> innateDamages = damageSource.getModifiedInnateDamages();
+        List<Damage> addedElementalDamages = damageSource.getAddedElementalDamages();
+
+        List<DamageType> innateDamageTypesUsed = getInnateDamageTypesUsed(statusProcDamageType);
+        List<DamageType> addedElementalDamageTypesUsed = getAddedElementalDamageTypesUsed(statusProcDamageType);
+
+        double damageValuePerTick = 0.0;
+
+        for (DamageType damageType : innateDamageTypesUsed) {
+            damageValuePerTick += innateDamages.stream().filter(damage -> damage.getType().equals(damageType)).mapToDouble(Damage::getDamageValue).sum();
+        }
+        if (addedElementalDamages != null) {
+            for (DamageType damageType : addedElementalDamageTypesUsed) {
+                damageValuePerTick += addedElementalDamages.stream().filter(damage -> damage.getType().equals(damageType)).mapToDouble(Damage::getDamageValue).sum();
+            }
+        }
+
+        return damageValuePerTick * (1 + getDamageTickModifier(statusProcDamageType));
     }
 
     private static String getClassName(Class clazz) {
@@ -136,39 +160,39 @@ public class StatusPropertyMapper {
         }};
     }
 
-    public int getStatusProcTicks(DamageType statusPROCType) {
+    private int getStatusProcNumberOfTicks(DamageType statusPROCType) {
         return damageTickMap.getOrDefault(statusPROCType, 0);
     }
 
     private static final Map<DamageType, List<DamageType>> innateDamagesUsedForProcDamageMap;
 
     static {
-        innateDamagesUsedForProcDamageMap = new HashMap<DamageType, List<DamageType>>() {{ //TODO: Flesh out map?
+        innateDamagesUsedForProcDamageMap = new HashMap<DamageType, List<DamageType>>() {{
             put(IMPACT, new ArrayList<>());
             put(PUNCTURE, new ArrayList<>());
-            put(SLASH, Arrays.asList(IMPACT, PUNCTURE, TRUE, COLD, ELECTRICITY, HEAT, TOXIN, VOID, BLAST, CORROSIVE, GAS, MAGNETIC, RADIATION, VIRAL));
+            put(SLASH, Arrays.asList(IMPACT, PUNCTURE, SLASH, TRUE, COLD, ELECTRICITY, HEAT, TOXIN, VOID, BLAST, CORROSIVE, GAS, MAGNETIC, RADIATION, VIRAL));
             put(COLD, new ArrayList<>());
-            put(ELECTRICITY, Arrays.asList(IMPACT, PUNCTURE, SLASH, TRUE, COLD, HEAT, TOXIN, VOID, BLAST, CORROSIVE, GAS, MAGNETIC, RADIATION, VIRAL));
-            put(HEAT, Arrays.asList(IMPACT, PUNCTURE, SLASH, TRUE, COLD, ELECTRICITY, TOXIN, VOID, BLAST, CORROSIVE, GAS, MAGNETIC, RADIATION, VIRAL));
-            put(TOXIN, Arrays.asList(IMPACT, PUNCTURE, SLASH, TRUE, COLD, ELECTRICITY, HEAT, VOID, BLAST, CORROSIVE, GAS, MAGNETIC, RADIATION, VIRAL));
+            put(ELECTRICITY, Arrays.asList(IMPACT, PUNCTURE, SLASH, TRUE, ELECTRICITY, COLD, HEAT, TOXIN, VOID, BLAST, CORROSIVE, GAS, MAGNETIC, RADIATION, VIRAL));
+            put(HEAT, Arrays.asList(IMPACT, PUNCTURE, SLASH, TRUE, COLD, HEAT, ELECTRICITY, TOXIN, VOID, BLAST, CORROSIVE, GAS, MAGNETIC, RADIATION, VIRAL));
+            put(TOXIN, Arrays.asList(IMPACT, PUNCTURE, SLASH, TRUE, COLD, ELECTRICITY, HEAT, TOXIN, VOID, BLAST, CORROSIVE, GAS, MAGNETIC, RADIATION, VIRAL));
             put(VOID, new ArrayList<>());
             put(BLAST, new ArrayList<>());
             put(CORROSIVE, new ArrayList<>());
-            put(GAS, Arrays.asList(IMPACT, PUNCTURE, SLASH, TRUE, COLD, ELECTRICITY, HEAT, VOID, BLAST, CORROSIVE, GAS, MAGNETIC, RADIATION, VIRAL));
+            put(GAS, Arrays.asList(IMPACT, PUNCTURE, SLASH, TRUE, COLD, ELECTRICITY, HEAT, TOXIN, VOID, BLAST, CORROSIVE, GAS, MAGNETIC, RADIATION, VIRAL));
             put(MAGNETIC, new ArrayList<>());
             put(RADIATION, new ArrayList<>());
             put(VIRAL, new ArrayList<>());
         }};
     }
 
-    public List<DamageType> getInnateDamageTypesUsed(DamageType statusProcType) {
+    private List<DamageType> getInnateDamageTypesUsed(DamageType statusProcType) {
         return innateDamagesUsedForProcDamageMap.getOrDefault(statusProcType, new ArrayList<>());
     }
 
     private static final Map<DamageType, List<DamageType>> addedElementalDamageTypesUsedForProcDamageMap;
 
     static {
-        addedElementalDamageTypesUsedForProcDamageMap = new HashMap<DamageType, List<DamageType>>() {{ //TODO: Flesh out map?
+        addedElementalDamageTypesUsedForProcDamageMap = new HashMap<DamageType, List<DamageType>>() {{
             put(IMPACT, new ArrayList<>());
             put(PUNCTURE, new ArrayList<>());
             put(SLASH, new ArrayList<>());
@@ -186,7 +210,32 @@ public class StatusPropertyMapper {
         }};
     }
 
-    public List<DamageType> getAddedElementalDamageTypesUsed(DamageType statusProcType) {
+    private List<DamageType> getAddedElementalDamageTypesUsed(DamageType statusProcType) {
         return addedElementalDamageTypesUsedForProcDamageMap.getOrDefault(statusProcType, new ArrayList<>());
+    }
+
+    private static final Map<DamageType, Double> damageTickModifierMap;
+
+    static {
+        damageTickModifierMap = new HashMap<DamageType, Double>() {{
+            put(IMPACT, 0.0);
+            put(PUNCTURE, 0.0);
+            put(SLASH, -0.65);
+            put(COLD, 0.0);
+            put(ELECTRICITY, -0.50);
+            put(HEAT, -0.50);
+            put(TOXIN, -0.50);
+            put(VOID, 0.0);
+            put(BLAST, 0.0);
+            put(CORROSIVE, 0.0);
+            put(GAS, -0.50);
+            put(MAGNETIC, 0.0);
+            put(RADIATION, 0.0);
+            put(VIRAL, 0.0);
+        }};
+    }
+
+    private double getDamageTickModifier(DamageType statusProcType) {
+        return damageTickModifierMap.getOrDefault(statusProcType, 0.0);
     }
 }
