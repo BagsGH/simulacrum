@@ -1,10 +1,11 @@
 package com.bags.simulacrum.Weapon;
 
 import com.bags.simulacrum.Damage.Damage;
-import com.bags.simulacrum.Damage.DamageType;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.bags.simulacrum.Damage.DamageType.HEAT;
+import static com.bags.simulacrum.Damage.DamageType.PUNCTURE;
 import static org.junit.Assert.assertEquals;
 
 public class ModTest {
@@ -36,7 +37,7 @@ public class ModTest {
         subject.setDamageIncrease(1.25);
         subject.setMultishotIncrease(1.25);
         subject.setIndex(0);
-        subject.setDamage(new Damage(DamageType.HEAT, 0.0, 0.75));
+        subject.setDamage(new Damage(HEAT, 0.0, 0.75));
 
         assertEquals(1.25, subject.getRangeLimitIncrease(), 0.0);
         assertEquals(1.25, subject.getFireRateIncrease(), 0.0);
@@ -55,16 +56,16 @@ public class ModTest {
         assertEquals("Serration", subject.getName());
         assertEquals("Rare", subject.getRarity());
         assertEquals(Mod.Polarity.V, subject.getPolarity());
-        assertEquals(DamageType.HEAT, subject.getDamage().getType());
+        assertEquals(HEAT, subject.getDamage().getType());
         assertEquals(0.0, subject.getDamage().getDamageValue(), 0.0);
         assertEquals(0.75, subject.getDamage().getModAddedDamageRatio(), 0.0);
     }
 
     @Test
     public void itCanHaveConstructorTestCoverage() {
-        subject = new Mod(new Damage(DamageType.PUNCTURE, 0.0, 0.75));
+        subject = new Mod(new Damage(PUNCTURE, 0.0, 0.75));
 
-        assertEquals(DamageType.PUNCTURE, subject.getDamage().getType());
+        assertEquals(PUNCTURE, subject.getDamage().getType());
         assertEquals(0.0, subject.getDamage().getDamageValue(), 0.0);
         assertEquals(0.75, subject.getDamage().getModAddedDamageRatio(), 0.0);
     }

@@ -13,9 +13,9 @@ import static com.bags.simulacrum.Damage.DamageType.*;
 
 @Component
 @SuppressWarnings("MismatchedQueryAndUpdateOfCollection")
-public class StatusPropertyMapper {
+public class StatusFactory {
 
-    public Status getStatusProc(DamageSource damageSource, DamageType statusProcType) { //TODO: should not need this if.
+    public Status getStatusProc(DamageSource damageSource, DamageType statusProcType) {
         Class<?> clazz = null;
         try {
             clazz = Class.forName(statusTypeClassNameMap.getOrDefault(statusProcType, getClassName(UnimplementedStatus.class)));
@@ -96,7 +96,7 @@ public class StatusPropertyMapper {
     private static final Map<DamageType, Integer> numberOfDamageTicks;
 
     static {
-        numberOfDamageTicks = new HashMap<DamageType, Integer>() {{ //TODO: Flesh out map?
+        numberOfDamageTicks = new HashMap<DamageType, Integer>() {{
             put(IMPACT, 0);
             put(PUNCTURE, 0);
             put(SLASH, 7);
@@ -164,13 +164,13 @@ public class StatusPropertyMapper {
             put(PUNCTURE, new ArrayList<>());
             put(SLASH, new ArrayList<>());
             put(COLD, new ArrayList<>());
-            put(ELECTRICITY, Arrays.asList(ELECTRICITY));
-            put(HEAT, Arrays.asList(HEAT));
-            put(TOXIN, Arrays.asList(TOXIN));
+            put(ELECTRICITY, Collections.singletonList(ELECTRICITY));
+            put(HEAT, Collections.singletonList(HEAT));
+            put(TOXIN, Collections.singletonList(TOXIN));
             put(VOID, new ArrayList<>());
             put(BLAST, new ArrayList<>());
             put(CORROSIVE, new ArrayList<>());
-            put(GAS, Arrays.asList(TOXIN));
+            put(GAS, Collections.singletonList(TOXIN));
             put(MAGNETIC, new ArrayList<>());
             put(RADIATION, new ArrayList<>());
             put(VIRAL, new ArrayList<>());

@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public abstract class Status {
 
-    StatusPropertyMapper STATUS_PROPERTY_MAPPER = new StatusPropertyMapper();
+    StatusFactory STATUS_PROPERTY_MAPPER = new StatusFactory();
 
     protected double duration;
     protected int numberOfDamageTicks;

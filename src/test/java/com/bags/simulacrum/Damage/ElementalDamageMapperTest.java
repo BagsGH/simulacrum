@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 
+import static com.bags.simulacrum.Damage.DamageType.*;
 import static org.junit.Assert.assertEquals;
 
 public class ElementalDamageMapperTest {
@@ -18,12 +19,12 @@ public class ElementalDamageMapperTest {
 
     @Test
     public void itCanCombineTwoElementals() {
-        assertEquals(DamageType.GAS, subject.combineElements(DamageType.HEAT, DamageType.TOXIN));
+        assertEquals(GAS, subject.combineElements(HEAT, TOXIN));
     }
 
     @Test
     public void itCanCombineTwoElementalsOfTheSameType() {
-        assertEquals(DamageType.HEAT, subject.combineElements(DamageType.HEAT, DamageType.HEAT));
+        assertEquals(HEAT, subject.combineElements(HEAT, HEAT));
     }
 
 }

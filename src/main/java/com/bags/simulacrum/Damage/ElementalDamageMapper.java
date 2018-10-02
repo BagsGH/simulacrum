@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.bags.simulacrum.Damage.DamageType.*;
+
 @Component
 public class ElementalDamageMapper {
 
@@ -14,29 +16,29 @@ public class ElementalDamageMapper {
     static {
         damageCombinationMap = new HashMap<Pair<DamageType, DamageType>, DamageType>() {{
             /*Heat*/
-            put(new Pair<>(DamageType.HEAT, DamageType.HEAT), DamageType.HEAT);
-            put(new Pair<>(DamageType.HEAT, DamageType.ELECTRICITY), DamageType.RADIATION);
-            put(new Pair<>(DamageType.HEAT, DamageType.TOXIN), DamageType.GAS);
-            put(new Pair<>(DamageType.HEAT, DamageType.COLD), DamageType.BLAST);
+            put(new Pair<>(HEAT, HEAT), HEAT);
+            put(new Pair<>(HEAT, ELECTRICITY), RADIATION);
+            put(new Pair<>(HEAT, TOXIN), GAS);
+            put(new Pair<>(HEAT, COLD), BLAST);
 
             /*Electric*/
-            put(new Pair<>(DamageType.ELECTRICITY, DamageType.ELECTRICITY), DamageType.ELECTRICITY);
-            put(new Pair<>(DamageType.ELECTRICITY, DamageType.COLD), DamageType.MAGNETIC);
-            put(new Pair<>(DamageType.ELECTRICITY, DamageType.HEAT), DamageType.RADIATION);
-            put(new Pair<>(DamageType.ELECTRICITY, DamageType.TOXIN), DamageType.CORROSIVE);
+            put(new Pair<>(ELECTRICITY, ELECTRICITY), ELECTRICITY);
+            put(new Pair<>(ELECTRICITY, COLD), MAGNETIC);
+            put(new Pair<>(ELECTRICITY, HEAT), RADIATION);
+            put(new Pair<>(ELECTRICITY, TOXIN), CORROSIVE);
 
             /*Cold*/
-            put(new Pair<>(DamageType.COLD, DamageType.COLD), DamageType.COLD);
-            put(new Pair<>(DamageType.COLD, DamageType.ELECTRICITY), DamageType.MAGNETIC);
-            put(new Pair<>(DamageType.COLD, DamageType.HEAT), DamageType.BLAST);
-            put(new Pair<>(DamageType.COLD, DamageType.TOXIN), DamageType.VIRAL);
+            put(new Pair<>(COLD, COLD), COLD);
+            put(new Pair<>(COLD, ELECTRICITY), MAGNETIC);
+            put(new Pair<>(COLD, HEAT), BLAST);
+            put(new Pair<>(COLD, TOXIN), VIRAL);
 
 
             /*Toxin*/
-            put(new Pair<>(DamageType.TOXIN, DamageType.TOXIN), DamageType.TOXIN);
-            put(new Pair<>(DamageType.TOXIN, DamageType.ELECTRICITY), DamageType.CORROSIVE);
-            put(new Pair<>(DamageType.TOXIN, DamageType.HEAT), DamageType.GAS);
-            put(new Pair<>(DamageType.TOXIN, DamageType.COLD), DamageType.VIRAL);
+            put(new Pair<>(TOXIN, TOXIN), TOXIN);
+            put(new Pair<>(TOXIN, ELECTRICITY), CORROSIVE);
+            put(new Pair<>(TOXIN, HEAT), GAS);
+            put(new Pair<>(TOXIN, COLD), VIRAL);
         }};
     }
 

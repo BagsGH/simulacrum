@@ -16,7 +16,7 @@ public class StatusProcHelper {
 
     private final RandomNumberGenerator randomNumberGenerator;
 
-    private final StatusPropertyMapper statusPropertyMapper;
+    private final StatusFactory statusFactory;
 
     private final StatusProcConfig config;
 
@@ -26,9 +26,9 @@ public class StatusProcHelper {
     }
 
     @Autowired
-    public StatusProcHelper(RandomNumberGenerator randomNumberGenerator, StatusPropertyMapper statusPropertyMapper, StatusProcConfig config) {
+    public StatusProcHelper(RandomNumberGenerator randomNumberGenerator, StatusFactory statusFactory, StatusProcConfig config) {
         this.randomNumberGenerator = randomNumberGenerator;
-        this.statusPropertyMapper = statusPropertyMapper;
+        this.statusFactory = statusFactory;
         this.config = config;
     }
 
@@ -51,7 +51,7 @@ public class StatusProcHelper {
 
         double statusTypeRNG = randomNumberGenerator.getRandomPercentage();
 
-        return statusPropertyMapper.getStatusProc(damageSource, getStatusProcType(statusPROCChanceMap, statusTypeRNG));
+        return statusFactory.getStatusProc(damageSource, getStatusProcType(statusPROCChanceMap, statusTypeRNG));
     }
 
     private void populateDamageMaps(Map<DamageType, Double> damageDoneToHealth, Map<DamageType, Double> weightedDamagePerType, Map<DamageType, Double> damagePerType) {

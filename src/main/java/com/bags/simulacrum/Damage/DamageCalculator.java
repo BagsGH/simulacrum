@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
+import static com.bags.simulacrum.Damage.DamageType.GAS;
+
 @Component
 public class DamageCalculator {
 
@@ -71,7 +73,7 @@ public class DamageCalculator {
     }
 
     private boolean damagingShields(Health targetShield, double targetShieldValue, DamageType damageType) {
-        return targetShield != null && targetShieldValue > 0 && !damageType.equals(DamageType.GAS);
+        return targetShield != null && targetShieldValue > 0 && !damageType.equals(GAS);
     }
 
 }

@@ -5,7 +5,6 @@ import com.bags.simulacrum.Armor.HealthClass;
 import com.bags.simulacrum.Damage.Damage;
 import com.bags.simulacrum.Damage.DamageCalculator;
 import com.bags.simulacrum.Damage.DamageSource;
-import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Entity.Target;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static com.bags.simulacrum.Damage.DamageType.HEAT;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
@@ -67,8 +67,8 @@ public class TargetDamageHelperTest {
 
         assertExpectedHealthExists(damageMetrics.getTarget().getHealth(), new Health(HealthClass.SHIELD, 150.0), 0.0);
         verify(damageCalculatorMock).calculateDamage(eq(fakeHealth), eq(fakeShield), eq(fakeArmor), eq(fakeDamage), eq(fakeHitProperties));
-        assertEquals(50.0, damageMetrics.getDamageToShields().get(DamageType.HEAT), 0.0);
-        assertEquals(0.0, damageMetrics.getDamageToHealth().get(DamageType.HEAT), 0.0);
+        assertEquals(50.0, damageMetrics.getDamageToShields().get(HEAT), 0.0);
+        assertEquals(0.0, damageMetrics.getDamageToHealth().get(HEAT), 0.0);
     }
 
     @Test
@@ -81,8 +81,8 @@ public class TargetDamageHelperTest {
         DamageMetrics damageMetrics = subject.applyDamageSourceDamageToTarget(fakeDamageSource, fakeHitProperties, fakeTarget);
 
         assertExpectedHealthExists(damageMetrics.getTarget().getHealth(), new Health(HealthClass.MACHINERY, 150.0), 0.0);
-        assertEquals(50.0, damageMetrics.getDamageToHealth().get(DamageType.HEAT), 0.0);
-        assertEquals(0.0, damageMetrics.getDamageToShields().get(DamageType.HEAT), 0.0);
+        assertEquals(50.0, damageMetrics.getDamageToHealth().get(HEAT), 0.0);
+        assertEquals(0.0, damageMetrics.getDamageToShields().get(HEAT), 0.0);
     }
 
     @Test
@@ -94,11 +94,11 @@ public class TargetDamageHelperTest {
 
         DamageMetrics damageMetrics = subject.applyDamageSourceDamageToTarget(fakeDamageSource, fakeHitProperties, fakeTarget);
 
-        assertExpectedDamageExists(new Damage(DamageType.HEAT, 5.0), damageCaptor.getAllValues(), 0.001);
+        assertExpectedDamageExists(new Damage(HEAT, 5.0), damageCaptor.getAllValues(), 0.001);
         assertExpectedHealthExists(damageMetrics.getTarget().getHealth(), new Health(HealthClass.SHIELD, 0.0), 0.0);
         assertExpectedHealthExists(damageMetrics.getTarget().getHealth(), new Health(HealthClass.MACHINERY, 165.0), 0.0);
-        assertEquals(35.0, damageMetrics.getDamageToHealth().get(DamageType.HEAT), 0.0);
-        assertEquals(200.0, damageMetrics.getDamageToShields().get(DamageType.HEAT), 0.0);
+        assertEquals(35.0, damageMetrics.getDamageToHealth().get(HEAT), 0.0);
+        assertEquals(200.0, damageMetrics.getDamageToShields().get(HEAT), 0.0);
     }
 
     private void setupDefaultFakeHitProperties() {
@@ -111,7 +111,7 @@ public class TargetDamageHelperTest {
 
     private void setupDefaultFakeDamageSource() {
         fakeDamageSource = new DamageSource();
-        fakeDamage = new Damage(DamageType.HEAT, 25.0);
+        fakeDamage = new Damage(HEAT, 25.0);
         fakeDamageSource.setDamages(Collections.singletonList(fakeDamage));
     }
 

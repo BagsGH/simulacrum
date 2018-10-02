@@ -14,10 +14,10 @@ import static com.bags.simulacrum.Damage.DamageType.*;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 
-public class StatusPropertyMapperTest {
+public class StatusFactoryTest {
 
     @InjectMocks
-    private StatusPropertyMapper subject;
+    private StatusFactory subject;
 
     private DamageSource fakeDamageSource;
 

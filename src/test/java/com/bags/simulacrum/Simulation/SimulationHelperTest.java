@@ -24,6 +24,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
+import static com.bags.simulacrum.Damage.DamageType.HEAT;
+import static com.bags.simulacrum.Damage.DamageType.IMPACT;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -248,7 +250,7 @@ public class SimulationHelperTest {
     @Test
     public void itReturnsDelayedDamageSources() {
         fakeDamageSource.setDamageSourceType(DamageSourceType.DELAYED_AOE);
-        DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.DELAYED, Collections.singletonList(new Damage(DamageType.IMPACT, 50.0)));
+        DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.DELAYED, Collections.singletonList(new Damage(IMPACT, 50.0)));
         fakeWeapon.setDamageSources(Arrays.asList(fakeDamageSource, anotherFakeDamageSource));
 
         FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
@@ -268,58 +270,58 @@ public class SimulationHelperTest {
 
     @Test
     public void itReturnsADamageSummaryWithValuesReturnedByHelpers_Health() {
-        fakeDamageToHealth.put(DamageType.HEAT, 50.0);
+        fakeDamageToHealth.put(HEAT, 50.0);
 
         FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
         assertEquals(fakeDamageToHealth, firedWeaponMetrics.getDamageMetrics().getDamageToHealth());
         assertEquals(fakeDamageToShields, firedWeaponMetrics.getDamageMetrics().getDamageToShields());
 
-        assertEquals(50.0, firedWeaponMetrics.getDamageMetrics().getDamageToHealth().get(DamageType.HEAT), 0.0);
+        assertEquals(50.0, firedWeaponMetrics.getDamageMetrics().getDamageToHealth().get(HEAT), 0.0);
     }
 
     @Test
     public void itSumsDamageSummariesFromMultipleDamageSources_Health() {
-        fakeDamageToHealth.put(DamageType.HEAT, 50.0);
+        fakeDamageToHealth.put(HEAT, 50.0);
         Map<DamageType, Double> anotherFakeDamageToHealth = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> anotherFakeDamageToShields = DamageMetrics.initialDamageMap();
-        anotherFakeDamageToHealth.put(DamageType.HEAT, 75.0);
+        anotherFakeDamageToHealth.put(HEAT, 75.0);
         DamageMetrics anotherFakeDamageMetrics = new DamageMetrics(fakeTarget, anotherFakeDamageToHealth, anotherFakeDamageToShields);
         when(mockTargetDamageHelper.applyDamageSourceDamageToTarget(any(), any(), any())).thenReturn(fakeDamageMetrics).thenReturn(anotherFakeDamageMetrics);
-        DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.HEAT, 1234.0)));
+        DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(HEAT, 1234.0)));
         fakeWeapon.setDamageSources(Arrays.asList(fakeDamageSource, anotherFakeDamageSource));
 
         FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(125.0, firedWeaponMetrics.getDamageMetrics().getDamageToHealth().get(DamageType.HEAT), 0.0);
+        assertEquals(125.0, firedWeaponMetrics.getDamageMetrics().getDamageToHealth().get(HEAT), 0.0);
     }
 
     @Test
     public void itReturnsADamageSummaryWithValuesReturnedByHelpers_Shields() {
-        fakeDamageToShields.put(DamageType.HEAT, 50.0);
+        fakeDamageToShields.put(HEAT, 50.0);
 
         FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
         assertEquals(fakeDamageToHealth, firedWeaponMetrics.getDamageMetrics().getDamageToHealth());
         assertEquals(fakeDamageToShields, firedWeaponMetrics.getDamageMetrics().getDamageToShields());
 
-        assertEquals(50.0, firedWeaponMetrics.getDamageMetrics().getDamageToShields().get(DamageType.HEAT), 0.0);
+        assertEquals(50.0, firedWeaponMetrics.getDamageMetrics().getDamageToShields().get(HEAT), 0.0);
     }
 
     @Test
     public void itSumsDamageSummariesFromMultipleDamageSources_Shields() {
-        fakeDamageToShields.put(DamageType.HEAT, 50.0);
+        fakeDamageToShields.put(HEAT, 50.0);
         Map<DamageType, Double> anotherFakeDamageToHealth = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> anotherFakeDamageToShields = DamageMetrics.initialDamageMap();
-        anotherFakeDamageToShields.put(DamageType.HEAT, 75.0);
+        anotherFakeDamageToShields.put(HEAT, 75.0);
         DamageMetrics anotherFakeDamageMetrics = new DamageMetrics(fakeTarget, anotherFakeDamageToHealth, anotherFakeDamageToShields);
         when(mockTargetDamageHelper.applyDamageSourceDamageToTarget(any(), any(), any())).thenReturn(fakeDamageMetrics).thenReturn(anotherFakeDamageMetrics);
-        DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(DamageType.HEAT, 1234.0)));
+        DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(HEAT, 1234.0)));
         fakeWeapon.setDamageSources(Arrays.asList(fakeDamageSource, anotherFakeDamageSource));
 
         FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(125.0, firedWeaponMetrics.getDamageMetrics().getDamageToShields().get(DamageType.HEAT), 0.0);
+        assertEquals(125.0, firedWeaponMetrics.getDamageMetrics().getDamageToShields().get(HEAT), 0.0);
     }
 
     @Test
@@ -483,7 +485,7 @@ public class SimulationHelperTest {
         fakeWeapon.setCriticalChance(0.25);
         fakeWeapon.setCriticalDamage(2.0);
         fakeWeapon.setStatusChance(0.05);
-        fakeDamage = new Damage(DamageType.HEAT, 25.0);
+        fakeDamage = new Damage(HEAT, 25.0);
         fakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(fakeDamage));
         fakeWeapon.setDamageSources(Collections.singletonList(fakeDamageSource));
     }

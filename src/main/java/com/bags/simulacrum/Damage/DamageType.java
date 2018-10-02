@@ -20,7 +20,7 @@ public enum DamageType {
     RADIATION,
     VIRAL;
 
-    public final static List<DamageType> damageTypes = Arrays.asList(ELECTRICITY, COLD, HEAT, TOXIN,
+    public final static List<DamageType> elementalDamageTypes = Arrays.asList(ELECTRICITY, COLD, HEAT, TOXIN,
             BLAST, VOID, CORROSIVE, GAS, MAGNETIC, RADIATION, VIRAL);
 
     public static boolean isElemental(DamageType damageType) {

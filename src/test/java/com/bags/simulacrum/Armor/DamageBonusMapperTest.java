@@ -4,6 +4,7 @@ import com.bags.simulacrum.Damage.DamageType;
 import org.junit.Before;
 import org.junit.Test;
 
+import static com.bags.simulacrum.Damage.DamageType.*;
 import static org.junit.Assert.assertEquals;
 
 public class DamageBonusMapperTest {
@@ -18,7 +19,7 @@ public class DamageBonusMapperTest {
     @Test
     public void itMapsDamageBonusesCorrectly_1() {
         HealthClass healthClass = HealthClass.MACHINERY;
-        DamageType damageType = DamageType.BLAST;
+        DamageType damageType = BLAST;
 
         double bonus = damageBonusMapper.getBonusModifier(damageType, healthClass);
 
@@ -28,7 +29,7 @@ public class DamageBonusMapperTest {
     @Test
     public void itMapsDamageBonusesCorrectly_2() {
         HealthClass healthClass = HealthClass.SHIELD;
-        DamageType damageType = DamageType.RADIATION;
+        DamageType damageType = RADIATION;
 
         double bonus = damageBonusMapper.getBonusModifier(damageType, healthClass);
 
@@ -38,7 +39,7 @@ public class DamageBonusMapperTest {
     @Test
     public void itMapsDamageBonusesCorrectly_3() {
         HealthClass healthClass = HealthClass.ALLOY;
-        DamageType damageType = DamageType.MAGNETIC;
+        DamageType damageType = MAGNETIC;
 
         double bonus = damageBonusMapper.getBonusModifier(damageType, healthClass);
 

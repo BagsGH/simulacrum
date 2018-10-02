@@ -2,13 +2,13 @@ package com.bags.simulacrum.Weapon;
 
 import com.bags.simulacrum.Damage.Damage;
 import com.bags.simulacrum.Damage.DamageSource;
-import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Weapon.WeaponInformationEnums.TriggerType;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
 
+import static com.bags.simulacrum.Damage.DamageType.HEAT;
 import static org.junit.Assert.assertEquals;
 
 public class WeaponTest {
@@ -61,10 +61,10 @@ public class WeaponTest {
 
     @Test
     public void itCanAddAModToWeapon() {
-        subject.addMod(new Mod(new Damage(DamageType.HEAT, 0.0, 0.75)));
+        subject.addMod(new Mod(new Damage(HEAT, 0.0, 0.75)));
 
         assertEquals(1, subject.getMods().size());
-        assertEquals(DamageType.HEAT, subject.getMods().get(0).getDamage().getType());
+        assertEquals(HEAT, subject.getMods().get(0).getDamage().getType());
         assertEquals(0.75, subject.getMods().get(0).getDamage().getModAddedDamageRatio(), 0.0);
         assertEquals(0.0, subject.getMods().get(0).getDamage().getDamageValue(), 0.0);
     }

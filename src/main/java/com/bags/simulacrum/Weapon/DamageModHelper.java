@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.bags.simulacrum.Damage.DamageType.*;
+
 @Component
 public class DamageModHelper {
 
@@ -67,9 +69,9 @@ public class DamageModHelper {
     private List<Damage> calculateIPSDamageMods(List<Damage> baseDamagesAfterRawDamageMods) {
         List<Damage> ipsDamages = new ArrayList<>();
         Map<DamageType, Double> ipsDamageIncreaseMap = new HashMap<>();
-        ipsDamageIncreaseMap.put(DamageType.IMPACT, 0.0);
-        ipsDamageIncreaseMap.put(DamageType.PUNCTURE, 0.0);
-        ipsDamageIncreaseMap.put(DamageType.SLASH, 0.0);
+        ipsDamageIncreaseMap.put(IMPACT, 0.0);
+        ipsDamageIncreaseMap.put(PUNCTURE, 0.0);
+        ipsDamageIncreaseMap.put(SLASH, 0.0);
 
         populateIPSDamageIncreaseMap(ipsDamageIncreaseMap);
 
@@ -178,7 +180,7 @@ public class DamageModHelper {
 
     private List<Damage> sumIdenticalTypes(List<Damage> combinedElementalDamages) {
         List<Damage> finalizedDamageTypes = new ArrayList<>();
-        for (DamageType damageType : DamageType.damageTypes) {
+        for (DamageType damageType : DamageType.elementalDamageTypes) {
             double summedDamageForType = 0.0;
             int count = 0;
             Damage possibleLoner = null;

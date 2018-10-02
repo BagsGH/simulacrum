@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static com.bags.simulacrum.Damage.DamageType.*;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -77,7 +78,7 @@ public class DamageCalculatorTest {
     @Test
     public void itCanCalculateGasDamageIgnoringShields() {
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
-        fakeDamage.setType(DamageType.GAS);
+        fakeDamage.setType(GAS);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(75.0, actualDamage, 0.0);
@@ -93,7 +94,7 @@ public class DamageCalculatorTest {
 
     @Test
     public void itCanCalculateDamageWithANegativeBonusAgainstHealthClass() {
-        fakeDamage.setType(DamageType.VOID);
+        fakeDamage.setType(VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(25.0, actualDamage, 0.0);
@@ -129,7 +130,7 @@ public class DamageCalculatorTest {
     @Test
     public void itCanCalculateDamageWithANegativeBonusAgainstHealthClassWithAHeadshot() {
         fakeHitProperties = new HitProperties(0, 0.0, 2.0, 0.0);
-        fakeDamage.setType(DamageType.VOID);
+        fakeDamage.setType(VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(75.0, actualDamage, 0.0);
@@ -138,7 +139,7 @@ public class DamageCalculatorTest {
     @Test
     public void itCanCalculateDamageWithANegativeBonusAgainstHealthClassWithACriticalHeadshot() {
         fakeHitProperties = new HitProperties(1, 3.0, 2.0, 0.0);
-        fakeDamage.setType(DamageType.VOID);
+        fakeDamage.setType(VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeNoArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(450.0, actualDamage, 0.0);
@@ -241,7 +242,7 @@ public class DamageCalculatorTest {
         /* Gas has a 50% bonus against Infested Flesh, ignores shields, but there is a 50% reduction from the armor. */
         fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         fakeHealth.setHealthClass(HealthClass.INFESTED_FLESH);
-        fakeDamage.setType(DamageType.GAS);
+        fakeDamage.setType(GAS);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(38.0, actualDamage, 0.0);
@@ -259,7 +260,7 @@ public class DamageCalculatorTest {
     @Test
     public void itCanCalculateDamageWithANegativeBonusAgainstHealthClass_Armor() {
         fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
-        fakeDamage.setType(DamageType.VOID);
+        fakeDamage.setType(VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(13, actualDamage, 0.0);
@@ -294,7 +295,7 @@ public class DamageCalculatorTest {
     @Test
     public void itCanCalculateDamageWithANegativeBonusAgainstHealthClassWithAHeadshot_Armor() {
         fakeHitProperties = new HitProperties(0, 0.0, 2.0, 0.0);
-        fakeDamage.setType(DamageType.VOID);
+        fakeDamage.setType(VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(38, actualDamage, 0.0);
@@ -303,7 +304,7 @@ public class DamageCalculatorTest {
     @Test
     public void itCanCalculateDamageWithANegativeBonusAgainstHealthClassWithACriticalHeadshot_Armor() {
         fakeHitProperties = new HitProperties(1, 3.0, 2.0, 0.0);
-        fakeDamage.setType(DamageType.VOID);
+        fakeDamage.setType(VOID);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(225.0, actualDamage, 0.0);
@@ -370,7 +371,7 @@ public class DamageCalculatorTest {
     public void itCanCalculateDamageWithAPositiveBonusAgainstHealthAndArmorClass() {
         fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         fakeHealth.setHealthClass(HealthClass.SINEW);
-        fakeDamage.setType(DamageType.PUNCTURE);
+        fakeDamage.setType(PUNCTURE);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeNoShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(42.0, actualDamage, 0.0);
@@ -382,25 +383,25 @@ public class DamageCalculatorTest {
             However, it does 50% less against Proto Shields. Since we have shields, it will do 50% less damage because of the shields and ignore the other bonuses. */
         fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         fakeHealth.setHealthClass(HealthClass.SINEW);
-        fakeDamage.setType(DamageType.PUNCTURE);
+        fakeDamage.setType(PUNCTURE);
         double actualDamage = subject.calculateDamage(fakeHealth, fakeShield, fakeArmor, fakeDamage, fakeHitProperties);
 
         assertEquals(25.0, actualDamage, 0.0);
     }
 
     private void setupDamageBonusMapperMocks() {
-        when(damageBonusMapperMock.getBonusModifier(DamageType.HEAT, HealthClass.MACHINERY)).thenReturn(0.0);
-        when(damageBonusMapperMock.getBonusModifier(DamageType.VOID, HealthClass.MACHINERY)).thenReturn(-0.50);
-        when(damageBonusMapperMock.getBonusModifier(DamageType.HEAT, HealthClass.PROTO_SHIELD)).thenReturn(-0.50);
-        when(damageBonusMapperMock.getBonusModifier(DamageType.PUNCTURE, HealthClass.PROTO_SHIELD)).thenReturn(-0.50);
-        when(damageBonusMapperMock.getBonusModifier(DamageType.HEAT, HealthClass.INFESTED_FLESH)).thenReturn(0.50);
-        when(damageBonusMapperMock.getBonusModifier(DamageType.GAS, HealthClass.INFESTED_FLESH)).thenReturn(0.50);
-        when(damageBonusMapperMock.getBonusModifier(DamageType.PUNCTURE, HealthClass.SINEW)).thenReturn(0.25);
-        when(damageBonusMapperMock.getBonusModifier(DamageType.PUNCTURE, HealthClass.FERRITE)).thenReturn(0.50);
+        when(damageBonusMapperMock.getBonusModifier(HEAT, HealthClass.MACHINERY)).thenReturn(0.0);
+        when(damageBonusMapperMock.getBonusModifier(VOID, HealthClass.MACHINERY)).thenReturn(-0.50);
+        when(damageBonusMapperMock.getBonusModifier(HEAT, HealthClass.PROTO_SHIELD)).thenReturn(-0.50);
+        when(damageBonusMapperMock.getBonusModifier(PUNCTURE, HealthClass.PROTO_SHIELD)).thenReturn(-0.50);
+        when(damageBonusMapperMock.getBonusModifier(HEAT, HealthClass.INFESTED_FLESH)).thenReturn(0.50);
+        when(damageBonusMapperMock.getBonusModifier(GAS, HealthClass.INFESTED_FLESH)).thenReturn(0.50);
+        when(damageBonusMapperMock.getBonusModifier(PUNCTURE, HealthClass.SINEW)).thenReturn(0.25);
+        when(damageBonusMapperMock.getBonusModifier(PUNCTURE, HealthClass.FERRITE)).thenReturn(0.50);
     }
 
     private void setupDefaultFakeHealth() {
-        fakeDamage = new Damage(DamageType.HEAT, 50.0);
+        fakeDamage = new Damage(HEAT, 50.0);
         fakeHealth = new Health(HealthClass.MACHINERY, 200.0);
         fakeArmor = new Health(HealthClass.FERRITE, 300.0);
         fakeNoArmor = new Health(HealthClass.FERRITE, 0.0);
