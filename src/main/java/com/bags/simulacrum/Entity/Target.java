@@ -1,6 +1,7 @@
 package com.bags.simulacrum.Entity;
 
 import com.bags.simulacrum.Armor.Health;
+import com.bags.simulacrum.Armor.HealthClass;
 import com.bags.simulacrum.Status.Status;
 import lombok.Data;
 
@@ -59,6 +60,10 @@ public class Target {
             }
         });
         return procsToApply;
+    }
+
+    public Health getArmor() {
+        return this.health.stream().filter(h -> HealthClass.isArmor(h.getHealthClass())).findFirst().orElse(null);
     }
 
     public enum Faction {
