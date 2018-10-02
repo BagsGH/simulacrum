@@ -30,7 +30,6 @@ public abstract class StatusDotTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-
         setupDefaultSubject();
     }
 
@@ -137,5 +136,5 @@ public abstract class StatusDotTest {
         assertEquals(expectedTarget, fakeTarget);
     }
 
-    abstract void setupDefaultSubject();
+    protected abstract void setupDefaultSubject();
 }

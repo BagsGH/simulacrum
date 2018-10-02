@@ -31,20 +31,20 @@ public class BleedTest extends StatusDotTest {
     }
 
     @Override
-    void setupDefaultSubject() {
+    protected void setupDefaultSubject() {
         fakeDuration = 7.0;
         fakeNumberOfTicks = 8;
         fakeDeltaTime = 0.01;
         fakeDamagePerTick = 44;
         fakeDamageType = SLASH;
         this.specialCaseType = TRUE;
-        Bleed ignite = new Bleed();
-        ignite.setDuration(fakeDuration);
-        ignite.setNumberOfDamageTicks(fakeNumberOfTicks);
-        ignite.setDamagePerTick(fakeDamagePerTick);
-        ignite.setDamageType(fakeDamageType);
-        ignite.setupTimers();
-        when(statusFactory.getStatusProc(any(), eq(fakeDamageType))).thenReturn(ignite);
+        Bleed bleedProc = new Bleed();
+        bleedProc.setDuration(fakeDuration);
+        bleedProc.setNumberOfDamageTicks(fakeNumberOfTicks);
+        bleedProc.setDamagePerTick(fakeDamagePerTick);
+        bleedProc.setDamageType(fakeDamageType);
+        bleedProc.setupTimers();
+        when(statusFactory.getStatusProc(any(), eq(fakeDamageType))).thenReturn(bleedProc);
         subject = (Bleed) statusFactory.getStatusProc(new DamageSource(PROJECTILE, Collections.singletonList(new Damage(SLASH, 50.0))), fakeDamageType);
     }
 }

@@ -25,19 +25,19 @@ public class TeslaChainTest extends StatusDotTest {
     }
 
     @Override
-    void setupDefaultSubject() {
+    protected void setupDefaultSubject() {
         fakeDuration = 0.0;
         fakeNumberOfTicks = 1;
         fakeDeltaTime = 0.01;
         fakeDamagePerTick = 55;
         fakeDamageType = ELECTRICITY;
-        TeslaChain ignite = new TeslaChain();
-        ignite.setDuration(fakeDuration);
-        ignite.setNumberOfDamageTicks(fakeNumberOfTicks);
-        ignite.setDamagePerTick(fakeDamagePerTick);
-        ignite.setDamageType(fakeDamageType);
-        ignite.setupTimers();
-        when(statusFactory.getStatusProc(any(), eq(fakeDamageType))).thenReturn(ignite);
+        TeslaChain teslaProc = new TeslaChain();
+        teslaProc.setDuration(fakeDuration);
+        teslaProc.setNumberOfDamageTicks(fakeNumberOfTicks);
+        teslaProc.setDamagePerTick(fakeDamagePerTick);
+        teslaProc.setDamageType(fakeDamageType);
+        teslaProc.setupTimers();
+        when(statusFactory.getStatusProc(any(), eq(fakeDamageType))).thenReturn(teslaProc);
         subject = (TeslaChain) statusFactory.getStatusProc(new DamageSource(PROJECTILE, Collections.singletonList(new Damage(fakeDamageType, 50.0))), fakeDamageType);
     }
 }

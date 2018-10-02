@@ -14,19 +14,19 @@ import static org.mockito.Mockito.when;
 public class IgniteTest extends StatusDotTest {
 
     @Override
-    void setupDefaultSubject() {
+    protected void setupDefaultSubject() {
         fakeDuration = 5.0;
         fakeNumberOfTicks = 6;
         fakeDeltaTime = 0.01;
         fakeDamagePerTick = 22;
         fakeDamageType = HEAT;
-        Ignite ignite = new Ignite();
-        ignite.setDuration(fakeDuration);
-        ignite.setNumberOfDamageTicks(fakeNumberOfTicks);
-        ignite.setDamagePerTick(fakeDamagePerTick);
-        ignite.setDamageType(fakeDamageType);
-        ignite.setupTimers();
-        when(statusFactory.getStatusProc(any(), eq(fakeDamageType))).thenReturn(ignite);
+        Ignite igniteProc = new Ignite();
+        igniteProc.setDuration(fakeDuration);
+        igniteProc.setNumberOfDamageTicks(fakeNumberOfTicks);
+        igniteProc.setDamagePerTick(fakeDamagePerTick);
+        igniteProc.setDamageType(fakeDamageType);
+        igniteProc.setupTimers();
+        when(statusFactory.getStatusProc(any(), eq(fakeDamageType))).thenReturn(igniteProc);
         subject = (Ignite) statusFactory.getStatusProc(new DamageSource(PROJECTILE, Collections.singletonList(new Damage(HEAT, 50.0))), fakeDamageType);
     }
 }
