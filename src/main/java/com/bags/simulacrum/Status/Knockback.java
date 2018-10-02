@@ -55,4 +55,9 @@ public class Knockback extends Status {
     public boolean finished() {
         return false;
     }
+
+    @Override
+    public void removeStatusEffects() {
+
+    }
 }

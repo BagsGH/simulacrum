@@ -36,4 +36,6 @@ public abstract class Status {
     abstract public void setupTimers();
 
     abstract public boolean finished();
+
+    abstract public void removeStatusEffects();
 }

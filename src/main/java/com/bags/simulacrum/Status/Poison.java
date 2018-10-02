@@ -42,4 +42,9 @@ public class Poison extends Status {
     public boolean finished() {
         return false;
     }
+
+    @Override
+    public void removeStatusEffects() {
+
+    }
 }

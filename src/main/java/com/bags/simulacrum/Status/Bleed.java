@@ -64,6 +64,11 @@ public class Bleed extends Status {
         return this.tickProgress >= this.numberOfDamageTicks;
     }
 
+    @Override
+    public void removeStatusEffects() {
+
+    }
+
 
     /*
     Am I missing something with the slash proc?

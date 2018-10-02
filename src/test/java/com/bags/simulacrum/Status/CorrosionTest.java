@@ -78,6 +78,13 @@ public class CorrosionTest {
         assertEquals(expectedTarget, fakeTarget);
     }
 
+    @Test
+    public void itDoesNotReturnAnyDamages() {
+        DamageSource actualDamageSource = subject.getDamageSource();
+
+        assertEquals(0, actualDamageSource.getDamages().size());
+    }
+
     private void setupDefaultSubject() {
         Corrosion corr = new Corrosion();
         corr.setDuration(fakeDuration);

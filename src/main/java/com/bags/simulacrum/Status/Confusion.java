@@ -62,4 +62,9 @@ public class Confusion extends Status {
         return false;
     }
 
+    @Override
+    public void removeStatusEffects() {
+
+    }
+
 }

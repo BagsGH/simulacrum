@@ -66,6 +66,10 @@ public class Target {
         return this.health.stream().filter(h -> HealthClass.isArmor(h.getHealthClass())).findFirst().orElse(null);
     }
 
+    public Health getHealthHealth() {
+        return this.health.stream().filter(h -> (!HealthClass.isArmor(h.getHealthClass()) && !HealthClass.isShield(h.getHealthClass()))).findFirst().orElse(null);
+    }
+
     public enum Faction {
         GRINEER,
         CORPUS,

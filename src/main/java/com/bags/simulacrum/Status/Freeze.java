@@ -43,4 +43,9 @@ public class Freeze extends Status {
     public boolean finished() {
         return false;
     }
+
+    @Override
+    public void removeStatusEffects() {
+
+    }
 }
