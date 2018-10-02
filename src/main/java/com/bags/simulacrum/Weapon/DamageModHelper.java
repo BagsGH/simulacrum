@@ -180,7 +180,7 @@ public class DamageModHelper {
 
     private List<Damage> sumIdenticalTypes(List<Damage> combinedElementalDamages) {
         List<Damage> finalizedDamageTypes = new ArrayList<>();
-        for (DamageType damageType : DamageType.elementalDamageTypes) {
+        for (DamageType damageType : DamageType.getElementalDamageTypes()) {
             double summedDamageForType = 0.0;
             int count = 0;
             Damage possibleLoner = null;

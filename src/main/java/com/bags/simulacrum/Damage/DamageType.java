@@ -20,8 +20,12 @@ public enum DamageType {
     RADIATION,
     VIRAL;
 
-    public final static List<DamageType> elementalDamageTypes = Arrays.asList(ELECTRICITY, COLD, HEAT, TOXIN,
+    private final static List<DamageType> elementalDamageTypes = Arrays.asList(ELECTRICITY, COLD, HEAT, TOXIN,
             BLAST, VOID, CORROSIVE, GAS, MAGNETIC, RADIATION, VIRAL);
+
+    public static List<DamageType> getElementalDamageTypes() {
+        return elementalDamageTypes;
+    }
 
     public static boolean isElemental(DamageType damageType) {
         return damageType.equals(ELECTRICITY) || damageType.equals(COLD) || damageType.equals(HEAT) || damageType.equals(TOXIN) || damageType.equals(BLAST) ||
