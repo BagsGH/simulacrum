@@ -31,4 +31,14 @@ public class BulletAttractor extends Status {
     public boolean checkProgress() {
         return false;
     }
+
+    @Override
+    public void setupTimers() {
+
+    }
+
+    @Override
+    public boolean finished() {
+        return false;
+    }
 }

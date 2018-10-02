@@ -15,10 +15,13 @@ public abstract class Status {
     StatusFactory STATUS_PROPERTY_MAPPER = new StatusFactory();
 
     protected double duration;
-    protected int numberOfDamageTicks;
     protected DamageType damageType;
     protected double damagePerTick;
+    protected int numberOfDamageTicks;
     protected double progressToNextTick;
+    protected double durationPerTick;
+    protected int tickProgress;
+
 
     abstract public void apply(Target target);
 
@@ -29,4 +32,8 @@ public abstract class Status {
     abstract public void progressTime(double deltaTime);
 
     abstract public boolean checkProgress();
+
+    abstract public void setupTimers();
+
+    abstract public boolean finished();
 }

@@ -52,4 +52,14 @@ public class Confusion extends Status {
         return false;
     }
 
+    @Override
+    public void setupTimers() {
+
+    }
+
+    @Override
+    public boolean finished() {
+        return false;
+    }
+
 }

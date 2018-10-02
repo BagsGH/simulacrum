@@ -42,6 +42,7 @@ public class StatusFactory {
             proc.setDuration(statusProcDurationMap.getOrDefault(statusProcType, 0.0));
             proc.setNumberOfDamageTicks(numberOfDamageTicks.getOrDefault(statusProcType, 0));
             proc.setDamagePerTick(calculateProcTickDamage(damageSource, statusProcType));
+            proc.setupTimers();
         }
         return proc;
     }
