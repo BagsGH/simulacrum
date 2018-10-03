@@ -1,7 +1,6 @@
 package com.bags.simulacrum.Simulation;
 
 import com.bags.simulacrum.Armor.Health;
-import com.bags.simulacrum.Armor.HealthClass;
 import com.bags.simulacrum.Damage.Damage;
 import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageSourceType;
@@ -24,12 +23,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 
+import static com.bags.simulacrum.Armor.HealthClass.*;
 import static com.bags.simulacrum.Damage.DamageType.*;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+@SuppressWarnings("FieldCanBeLocal")
 public class SimulationHelperTest {
 
     @InjectMocks
@@ -525,9 +526,9 @@ public class SimulationHelperTest {
     }
 
     private void setupDefaultFakeTarget() {
-        fakeHealth = new Health(HealthClass.INFESTED_FLESH, 250.0);
-        fakeShields = new Health(HealthClass.SHIELD, 250.0);
-        fakeArmor = new Health(HealthClass.ALLOY, 300.0);
+        fakeHealth = new Health(INFESTED_FLESH, 250.0);
+        fakeShields = new Health(SHIELD, 250.0);
+        fakeArmor = new Health(ALLOY, 300.0);
         fakeTarget = new Target();
         fakeTarget.setHealth(Arrays.asList(fakeHealth, fakeShields, fakeArmor));
         fakeBodyModifier = new BodyModifier(BodyPart.GUN, -0.50, 0.50);

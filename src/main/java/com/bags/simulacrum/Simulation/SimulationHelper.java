@@ -64,7 +64,7 @@ public class SimulationHelper {
                     updateRunningTotalDamageToHealth(finalDamageMetrics, damageMetrics.getDamageToHealth());
                     updateRunningTotalDamageToShields(finalDamageMetrics, damageMetrics.getDamageToShields());
                     if (statusProcRNG < weapon.getStatusChance()) {
-                        handleStatusProc(target, damageSource, damageMetrics, finalDamageMetrics, statusProcsApplied);
+                        statusProcsApplied.add(getStatusProcAndApply(target, damageSource, damageMetrics, finalDamageMetrics));
                     }
                 } else {
                     delayedDamageSources.add(new DelayedDamageSource(damageSource.copy(), hitProperties, damageSource.getDelay()));
@@ -131,17 +131,18 @@ public class SimulationHelper {
         }
     }
 
-    private void handleStatusProc(Target target, DamageSource damageSource, DamageMetrics damageMetrics, DamageMetrics finalDamageMetrics, List<Status> statusProcsApplied) {
+    private Status getStatusProcAndApply(Target target, DamageSource damageSource, DamageMetrics damageMetrics, DamageMetrics finalDamageMetrics) {
         Status status = statusProcHelper.constructStatusProc(damageSource, damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
         target.addStatus(status);
         status.apply(target);
-        statusProcsApplied.add(status);
 
         HitProperties statusTickHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         DamageSource damageSourceForDamageTick = status.getDamageTickDamageSource();
         DamageMetrics damageMetricsFromDamageTick = targetDamageHelper.applyDamageSourceDamageToTarget(damageSourceForDamageTick, statusTickHitProperties, target);
         updateRunningTotalStatusDamageToHealth(finalDamageMetrics, damageMetricsFromDamageTick.getDamageToHealth()); //TODO: if i make it only do one status proc per hit, doesnt need this method any more
         updateRunningTotalStatusDamageToShields(finalDamageMetrics, damageMetricsFromDamageTick.getDamageToShields());
+
+        return status;
     }
 
     private void updateRunningTotalStatusDamageToHealth(DamageMetrics finalDamageMetrics, Map<DamageType, Double> damageToHealth) {
