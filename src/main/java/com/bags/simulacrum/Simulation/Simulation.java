@@ -2,6 +2,7 @@ package com.bags.simulacrum.Simulation;
 
 import com.bags.simulacrum.Configuration.SimulationConfig;
 import com.bags.simulacrum.Damage.DamageSource;
+import com.bags.simulacrum.Damage.DelayedDamageSource;
 import com.bags.simulacrum.Entity.Target;
 import com.bags.simulacrum.Status.Status;
 import com.bags.simulacrum.Weapon.State.Fired;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -52,22 +54,40 @@ public class Simulation {
 
         weapon.initializeFiringState();
         Target target = targetList.get(0);
-        for (int i = 1; i < timeTicks; i++) {
+        List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
+        for (int i = 0; i < timeTicks; i++) {
+            /*
+             * Handle delayed damages.
+             */
+            for (DelayedDamageSource delayedDamageSource : delayedDamageSources) {
+                delayedDamageSource.progressTime(deltaTime);
+                if (delayedDamageSource.delayOver()) {
+                    DamageMetrics damageMetricsFromDelayedDamage = targetDamageHelper.applyDamageSourceDamageToTarget(delayedDamageSource.getDamageSource(), delayedDamageSource.getHitProperties(), target);
+                }
+            }
+            delayedDamageSources.removeIf(DelayedDamageSource::delayOver);
 
+            /*
+             * Handle fired state.
+             */
             FiringState firingState = weapon.firingStateProgressTime(deltaTime);
             if (firingState instanceof Fired) {
                 FiredWeaponMetrics firedWeaponMetrics = simulationHelper.handleFireWeapon(weapon, target, simulationParameters.getHeadshotChance());
+                delayedDamageSources.addAll(firedWeaponMetrics.getDelayedDamageSources());
             }
 
             finalWeaponStateMetrics.add(firingState.getClass(), deltaTime);
 
-            List<Status> procsApplying = targetList.get(0).statusProgressTime(deltaTime);
+            /*
+             * Handle statuses over time.
+             */
+            List<Status> procsApplying = target.statusProgressTime(deltaTime);
             for (Status status : procsApplying) {
                 DamageSource statusDamageSource = status.getDamageTickDamageSource();
                 status.apply(target);
                 DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(statusDamageSource, statusTickHitProperties, target);
             }
-            // Handle delayed damage sources
+            target.getStatuses().removeIf(Status::finished);
         }
 
     }

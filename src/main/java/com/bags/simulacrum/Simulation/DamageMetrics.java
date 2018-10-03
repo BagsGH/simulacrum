@@ -77,7 +77,6 @@ public class DamageMetrics {
         private boolean withStatusDamageToHealth;
         private boolean withStatusDamageToShields;
 
-
         public DamageMetricsBuilder(Target target) {
             this.target = target;
         }
@@ -101,7 +100,6 @@ public class DamageMetrics {
             this.withStatusDamageToShields = true;
             return this;
         }
-
 
         public DamageMetrics build() {
             return new DamageMetrics(this);

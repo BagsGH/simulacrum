@@ -64,10 +64,10 @@ public class SimulationHelper {
                     updateRunningTotalDamageToHealth(finalDamageMetrics, damageMetrics.getDamageToHealth());
                     updateRunningTotalDamageToShields(finalDamageMetrics, damageMetrics.getDamageToShields());
                     if (statusProcRNG < weapon.getStatusChance()) {
-                        handleStatusProc(target, statusProcsApplied, finalDamageMetrics, damageSource, damageMetrics);
+                        handleStatusProc(target, damageSource, damageMetrics, finalDamageMetrics, statusProcsApplied);
                     }
                 } else {
-                    delayedDamageSources.add(new DelayedDamageSource(damageSource.copy(), damageSource.getDelay())); //TODO: calculate crits etc now or later?
+                    delayedDamageSources.add(new DelayedDamageSource(damageSource.copy(), hitProperties, damageSource.getDelay()));
                 }
             }
             hitPropertiesList.add(hitProperties);
@@ -131,7 +131,7 @@ public class SimulationHelper {
         }
     }
 
-    private void handleStatusProc(Target target, List<Status> statusProcsApplied, DamageMetrics finalDamageMetrics, DamageSource damageSource, DamageMetrics damageMetrics) {
+    private void handleStatusProc(Target target, DamageSource damageSource, DamageMetrics damageMetrics, DamageMetrics finalDamageMetrics, List<Status> statusProcsApplied) {
         Status status = statusProcHelper.constructStatusProc(damageSource, damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
         target.addStatus(status);
         status.apply(target);

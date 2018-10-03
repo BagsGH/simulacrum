@@ -11,7 +11,7 @@ public class DelayedDamageSourceTest {
 
     @Before
     public void setup() {
-        subject = new DelayedDamageSource(null, 0.0);
+        subject = new DelayedDamageSource(null, null, 0.0);
     }
 
     @Test
