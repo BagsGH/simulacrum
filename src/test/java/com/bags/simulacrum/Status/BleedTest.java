@@ -3,6 +3,7 @@ package com.bags.simulacrum.Status;
 import com.bags.simulacrum.Damage.Damage;
 import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageType;
+import com.bags.simulacrum.Entity.Target;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -23,11 +24,11 @@ public class BleedTest extends StatusDotTest {
     @Test
     @Override
     public void itStoresItsDamagePerTickAndCanReturnTheDamageSource() {
-        assertEquals(1, subject.getDamageTickDamageSource().getDamages().size());
-        assertEquals(fakeDamagePerTick, subject.getDamageTickDamageSource().getDamages().get(0).getDamageValue(), 0.0);
-        assertEquals(specialCaseType, subject.getDamageTickDamageSource().getDamages().get(0).getType());
-        assertNull(subject.getDamageTickDamageSource().getModifiedInnateDamages());
-        assertNull(subject.getDamageTickDamageSource().getAddedElementalDamages());
+        assertEquals(1, subject.apply(new Target()).getDamages().size());
+        assertEquals(fakeDamagePerTick, subject.apply(new Target()).getDamages().get(0).getDamageValue(), 0.0);
+        assertEquals(specialCaseType, subject.apply(new Target()).getDamages().get(0).getType());
+        assertNull(subject.apply(new Target()).getModifiedInnateDamages());
+        assertNull(subject.apply(new Target()).getAddedElementalDamages());
     }
 
     @Override

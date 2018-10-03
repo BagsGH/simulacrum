@@ -9,17 +9,8 @@ import static com.bags.simulacrum.Damage.DamageSourceType.DOT;
 
 public class Disrupt extends Status {
     @Override
-    public void apply(Target target) {
-    }
-
-    @Override
-    public DamageSource getDamageTickDamageSource() {
+    public DamageSource apply(Target target) {
         return new DamageSource(DOT, new ArrayList<>());
-    }
-
-
-    private boolean applyInstantly() {
-        return false;
     }
 
     @Override

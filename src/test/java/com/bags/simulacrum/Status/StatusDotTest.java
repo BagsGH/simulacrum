@@ -34,22 +34,17 @@ public abstract class StatusDotTest {
     }
 
     @Test
-    public void itAppliesInstantly() {
-        assertTrue(subject.applyInstantly());
-    }
-
-    @Test
     public void itStoresItsDamagePerTickAndCanReturnTheDamageSource() {
-        assertEquals(fakeDamagePerTick, subject.getDamageTickDamageSource().getDamages().get(0).getDamageValue(), 0.0);
-        assertEquals(fakeDamageType, subject.getDamageTickDamageSource().getDamages().get(0).getType());
-        assertEquals(1, subject.getDamageTickDamageSource().getDamages().size());
-        assertNull(subject.getDamageTickDamageSource().getModifiedInnateDamages());
-        assertNull(subject.getDamageTickDamageSource().getAddedElementalDamages());
+        assertEquals(fakeDamagePerTick, subject.apply(new Target()).getDamages().get(0).getDamageValue(), 0.0);
+        assertEquals(fakeDamageType, subject.apply(new Target()).getDamages().get(0).getType());
+        assertEquals(1, subject.apply(new Target()).getDamages().size());
+        assertNull(subject.apply(new Target()).getModifiedInnateDamages());
+        assertNull(subject.apply(new Target()).getAddedElementalDamages());
     }
 
     @Test
     public void itIsReadyToApplyAfterExpectedTime() {
-        for (int i = 0; i < (int) ((fakeDuration / (fakeNumberOfTicks - (subject.applyInstantly() ? 1 : 0))) / fakeDeltaTime); i++) {
+        for (int i = 0; i < (int) ((fakeDuration / (fakeNumberOfTicks - 1)) / fakeDeltaTime); i++) {
             subject.progressTime(fakeDeltaTime);
         }
         assertTrue(subject.checkProgress());
@@ -57,7 +52,7 @@ public abstract class StatusDotTest {
 
     @Test
     public void immediatelyAfterItAppliesItIsNoLongerReady() {
-        for (int i = 0; i < (int) ((fakeDuration / (fakeNumberOfTicks - (subject.applyInstantly() ? 1 : 0))) / fakeDeltaTime); i++) {
+        for (int i = 0; i < (int) ((fakeDuration / (fakeNumberOfTicks - 1)) / fakeDeltaTime); i++) {
             subject.progressTime(fakeDeltaTime);
         }
         subject.apply(null);
@@ -67,11 +62,9 @@ public abstract class StatusDotTest {
 
     @Test
     public void itAppliesTheRightNumberOfTotalTicks() {
-        int numberOfTicks = 0;
-        if (subject.applyInstantly()) {
-            subject.apply(null);
-            numberOfTicks++;
-        }
+        int numberOfTicks = 1;
+        subject.apply(null);
+
         for (int i = 0; i < fakeDuration / fakeDeltaTime; i++) {
             subject.progressTime(fakeDeltaTime);
             if (subject.checkProgress()) {
@@ -85,9 +78,7 @@ public abstract class StatusDotTest {
 
     @Test
     public void itIsFinishedAfterTheDuration() {
-        if (subject.applyInstantly()) {
-            subject.apply(null);
-        }
+        subject.apply(null);
         for (int i = 0; i < fakeDuration / fakeDeltaTime + 1; i++) {
             subject.progressTime(fakeDeltaTime);
             if (subject.checkProgress()) {
@@ -101,15 +92,13 @@ public abstract class StatusDotTest {
     @Test
     public void itReturnsTheTotalExpectedDamage() {
         double totalDamage = 0.0;
-        if (subject.applyInstantly()) {
-            subject.apply(null);
-            totalDamage += subject.getDamageTickDamageSource().getDamages().get(0).getDamageValue();
-        }
+        subject.apply(null);
+        totalDamage += subject.apply(new Target()).getDamages().get(0).getDamageValue();
         for (int i = 0; i < fakeDuration / fakeDeltaTime + 1; i++) {
             subject.progressTime(fakeDeltaTime);
             if (subject.checkProgress()) {
                 subject.apply(null);
-                totalDamage += subject.getDamageTickDamageSource().getDamages().get(0).getDamageValue();
+                totalDamage += subject.apply(new Target()).getDamages().get(0).getDamageValue();
             }
 
         }
@@ -123,9 +112,8 @@ public abstract class StatusDotTest {
         fakeTarget.setHealth(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200), new Health(ALLOY, 200)));
         expectedTarget.setHealth(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200), new Health(ALLOY, 200)));
 
-        if (subject.applyInstantly()) {
-            subject.apply(fakeTarget);
-        }
+        subject.apply(fakeTarget);
+
         for (int i = 0; i < fakeDuration / fakeDeltaTime + 1; i++) {
             subject.progressTime(fakeDeltaTime);
             if (subject.checkProgress()) {

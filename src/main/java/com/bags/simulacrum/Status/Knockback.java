@@ -23,16 +23,8 @@ public class Knockback extends Status {
     }
 
     @Override
-    public void apply(Target target) {
-    }
-
-    @Override
-    public DamageSource getDamageTickDamageSource() {
+    public DamageSource apply(Target target) {
         return new DamageSource(DOT, new ArrayList<>());
-    }
-
-    private boolean applyInstantly() {
-        return false;
     }
 
     @Override

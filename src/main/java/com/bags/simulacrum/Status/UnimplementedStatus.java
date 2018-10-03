@@ -29,19 +29,10 @@ public class UnimplementedStatus extends Status {
     }
 
     @Override
-    public DamageSource getDamageTickDamageSource() {
+    public DamageSource apply(Target target) {
         return new DamageSource(DOT, new ArrayList<>());
     }
 
-    @Override
-    public void apply(Target target) {
-
-    }
-
-
-    private boolean applyInstantly() {
-        return false;
-    }
 
     @Override
     public void progressTime(double deltaTime) {

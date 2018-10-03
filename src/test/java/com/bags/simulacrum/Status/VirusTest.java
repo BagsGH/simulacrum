@@ -44,13 +44,10 @@ public class VirusTest {
     }
 
     @Test
-    public void itAppliesInstantly() {
-        assertTrue(subject.applyInstantly());
-    }
-
-    @Test
     public void itDoesNotReturnAnyDamages() {
-        DamageSource actualDamageSource = subject.getDamageTickDamageSource();
+        Target fakeTarget = new Target();
+        fakeTarget.setHealth(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200)));
+        DamageSource actualDamageSource = subject.apply(fakeTarget);
 
         assertEquals(0, actualDamageSource.getDamages().size());
     }

@@ -21,7 +21,7 @@ public class TeslaChainTest extends StatusDotTest {
         /*
          * Tesla currently only has one tick, the initial tick, so it should never be ready for the next tick.
          */
-        for (int i = 0; i < (int) ((fakeDuration / (fakeNumberOfTicks - (subject.applyInstantly() ? 1 : 0))) / fakeDeltaTime); i++) {
+        for (int i = 0; i < (int) ((fakeDuration / (fakeNumberOfTicks - 1)) / fakeDeltaTime); i++) {
             subject.progressTime(fakeDeltaTime);
         }
         assertFalse(subject.checkProgress());

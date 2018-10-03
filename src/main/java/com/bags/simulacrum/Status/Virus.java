@@ -17,7 +17,7 @@ public class Virus extends Status {
     private Target affectedTarget;
 
     @Override
-    public void apply(Target target) {
+    public DamageSource apply(Target target) {
         Health targetHealth = target.getHealthHealth();
         double currentHealth = targetHealth.getHealthValue();
         double maxHealth = targetHealth.getHealthValueMax();
@@ -29,16 +29,8 @@ public class Virus extends Status {
         targetHealth.setHealthValue(currentHealth - this.currentHealthRemoved);
 
         this.affectedTarget = target;
-    }
 
-    @Override
-    public DamageSource getDamageTickDamageSource() {
         return new DamageSource(DOT, new ArrayList<>());
-    }
-
-
-    public boolean applyInstantly() {
-        return true;
     }
 
     @Override

@@ -134,10 +134,9 @@ public class SimulationHelper {
     private Status getStatusProcAndApply(Target target, DamageSource damageSource, DamageMetrics damageMetrics, DamageMetrics finalDamageMetrics) {
         Status status = statusProcHelper.constructStatusProc(damageSource, damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
         target.addStatus(status);
-        status.apply(target);
 
         HitProperties statusTickHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
-        DamageSource damageSourceForDamageTick = status.getDamageTickDamageSource();
+        DamageSource damageSourceForDamageTick = status.apply(target);
         DamageMetrics damageMetricsFromDamageTick = targetDamageHelper.applyDamageSourceDamageToTarget(damageSourceForDamageTick, statusTickHitProperties, target);
         updateRunningTotalStatusDamageToHealth(finalDamageMetrics, damageMetricsFromDamageTick.getDamageToHealth()); //TODO: if i make it only do one status proc per hit, doesnt need this method any more
         updateRunningTotalStatusDamageToShields(finalDamageMetrics, damageMetricsFromDamageTick.getDamageToShields());

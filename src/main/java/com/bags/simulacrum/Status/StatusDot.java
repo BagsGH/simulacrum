@@ -10,18 +10,10 @@ import static com.bags.simulacrum.Damage.DamageSourceType.DOT;
 
 public class StatusDot extends Status {
     @Override
-    public void apply(Target target) {
+    public DamageSource apply(Target target) {
         this.progressToNextTick = 0.0;
         this.tickProgress++;
-    }
-
-    @Override
-    public DamageSource getDamageTickDamageSource() {
         return new DamageSource(DOT, Arrays.asList(new Damage(this.damageType, this.getDamagePerTick())));
-    }
-
-    public boolean applyInstantly() {
-        return true;
     }
 
     @Override
@@ -36,7 +28,7 @@ public class StatusDot extends Status {
 
     @Override
     public void setupTimers() {
-        this.durationPerTick = this.duration / (this.numberOfDamageTicks - (applyInstantly() ? 1 : 0));
+        this.durationPerTick = this.duration / (this.numberOfDamageTicks - 1);
         this.progressToNextTick = 0.0;
         this.tickProgress = 0;
     }

@@ -454,7 +454,7 @@ public class SimulationHelperTest {
         Ignite fakeIgnite = mock(Ignite.class);
         when(mockStatusProcHelper.constructStatusProc(any(), any(), any())).thenReturn(fakeIgnite);
         DamageSource fakeIgniteDamageTickDamageSource = mock(DamageSource.class);
-        when(fakeIgnite.getDamageTickDamageSource()).thenReturn(fakeIgniteDamageTickDamageSource);
+        when(fakeIgnite.apply(fakeTarget)).thenReturn(fakeIgniteDamageTickDamageSource);
 
         Map<DamageType, Double> damageToShields = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> damageToHealth = DamageMetrics.initialDamageMap();
@@ -483,7 +483,7 @@ public class SimulationHelperTest {
         Corrosion fakeCorrosion = mock(Corrosion.class);
         when(mockStatusProcHelper.constructStatusProc(any(), any(), any())).thenReturn(fakeCorrosion);
         DamageSource fakeCorrosionTickDamageSource = mock(DamageSource.class);
-        when(fakeCorrosion.getDamageTickDamageSource()).thenReturn(fakeCorrosionTickDamageSource);
+        when(fakeCorrosion.apply(fakeTarget)).thenReturn(fakeCorrosionTickDamageSource);
 
         Map<DamageType, Double> damageToShields = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> damageToHealth = DamageMetrics.initialDamageMap();

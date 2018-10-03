@@ -83,8 +83,7 @@ public class Simulation {
              */
             List<Status> procsApplying = target.statusProgressTime(deltaTime);
             for (Status status : procsApplying) {
-                DamageSource statusDamageSource = status.getDamageTickDamageSource();
-                status.apply(target);
+                DamageSource statusDamageSource = status.apply(target);
                 DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(statusDamageSource, statusTickHitProperties, target);
             }
             target.getStatuses().removeIf(Status::finished);

@@ -15,7 +15,6 @@ import java.util.Collections;
 import static com.bags.simulacrum.Armor.HealthClass.*;
 import static com.bags.simulacrum.Damage.DamageSourceType.PROJECTILE;
 import static com.bags.simulacrum.Damage.DamageType.CORROSIVE;
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -38,11 +37,6 @@ public class CorrosionTest {
         fakeDuration = 999999.0;
         fakeNumberOfTicks = 0;
         setupDefaultSubject();
-    }
-
-    @Test
-    public void itAppliesInstantly() {
-        assertTrue(subject.applyInstantly());
     }
 
     @Test
@@ -80,7 +74,9 @@ public class CorrosionTest {
 
     @Test
     public void itDoesNotReturnAnyDamages() {
-        DamageSource actualDamageSource = subject.getDamageTickDamageSource();
+        Target fakeTarget = new Target();
+        fakeTarget.setHealth(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200)));
+        DamageSource actualDamageSource = subject.apply(fakeTarget);
 
         assertEquals(0, actualDamageSource.getDamages().size());
     }

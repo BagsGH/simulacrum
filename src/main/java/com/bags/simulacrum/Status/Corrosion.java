@@ -26,21 +26,14 @@ public class Corrosion extends Status {
     }
 
     @Override
-    public void apply(Target target) {
+    public DamageSource apply(Target target) {
         Health armor = target.getArmor();
         if (armor != null) {
             double currentArmor = armor.getHealthValue();
             armor.setHealthValue(currentArmor * (1 - ARMOR_REDUCTION_RATIO));
         }
-    }
 
-    @Override
-    public DamageSource getDamageTickDamageSource() {
         return new DamageSource(DOT, new ArrayList<>());
-    }
-
-    public boolean applyInstantly() {
-        return true;
     }
 
     @Override

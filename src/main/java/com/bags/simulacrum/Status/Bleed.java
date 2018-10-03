@@ -3,6 +3,7 @@ package com.bags.simulacrum.Status;
 import com.bags.simulacrum.Damage.Damage;
 import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageType;
+import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
 import java.util.Collections;
@@ -24,7 +25,9 @@ public class Bleed extends StatusDot {
     }
 
     @Override
-    public DamageSource getDamageTickDamageSource() {
+    public DamageSource apply(Target target) {
+        this.progressToNextTick = 0.0;
+        this.tickProgress++;
         Damage dealsTrueDamage = new Damage(TRUE, this.damagePerTick);
         return new DamageSource(DOT, Collections.singletonList(dealsTrueDamage));
     }

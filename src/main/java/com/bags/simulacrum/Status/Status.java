@@ -22,10 +22,7 @@ public abstract class Status {
     protected double durationPerTick;
     protected int tickProgress;
 
-
-    abstract public void apply(Target target);
-
-    abstract public DamageSource getDamageTickDamageSource();
+    abstract public DamageSource apply(Target target);
 
     abstract public void progressTime(double deltaTime);
 
