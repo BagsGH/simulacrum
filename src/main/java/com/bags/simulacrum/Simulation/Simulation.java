@@ -38,7 +38,7 @@ public class Simulation {
         System.out.println("config.getDeltaTime(): " + config.getDeltaTime());
     }
 
-    public void runSimulation(SimulationParameters simulationParameters) {
+    public SimulationSummary runSimulation(SimulationParameters simulationParameters) {
         Weapon weapon = simulationParameters.getModdedWeapon();
         List<Target> targetList = simulationParameters.getTargetList();
 
@@ -47,7 +47,7 @@ public class Simulation {
         int timeTicks = (int) (simulationDuration / deltaTime);
 
         WeaponStateMetrics finalWeaponStateMetrics = new WeaponStateMetrics();
-        FiredWeaponSummary finalFiredWeaponSummary = new FiredWeaponSummary();
+        FiredWeaponSummary finalFiredWeaponSummary = new FiredWeaponSummary().getEmptySummary();
 
         HitProperties statusTickHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
 
@@ -55,21 +55,12 @@ public class Simulation {
         Target target = targetList.get(0);
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         for (int i = 0; i < timeTicks; i++) {
-            /*
-             * Handle delayed damages.
-             */
-            for (DelayedDamageSource delayedDamageSource : delayedDamageSources) {
-                delayedDamageSource.progressTime(deltaTime);
-                if (delayedDamageSource.delayOver()) {
-                    DamageMetrics damageMetricsFromDelayedDamage = targetDamageHelper.applyDamageSourceDamageToTarget(delayedDamageSource.getDamageSource(), delayedDamageSource.getHitProperties(), target);
-                    finalFiredWeaponSummary.addDamageMetrics(damageMetricsFromDelayedDamage);
-                }
+            List<DamageMetrics> damageMetricsFromDelayedDamages = simulationHelper.handleDelayedDamageSources(delayedDamageSources, target, deltaTime);
+            for (DamageMetrics individualDamageMetrics : damageMetricsFromDelayedDamages) {
+                finalFiredWeaponSummary.addDamageMetrics(individualDamageMetrics);
             }
             delayedDamageSources.removeIf(DelayedDamageSource::delayOver);
 
-            /*
-             * Handle fired state.
-             */
             FiringState firingState = weapon.firingStateProgressTime(deltaTime);
             if (firingState instanceof Fired) {
                 FiredWeaponSummary firedWeaponSummary = simulationHelper.handleFireWeapon(weapon, target, simulationParameters.getHeadshotChance());
@@ -79,20 +70,18 @@ public class Simulation {
 
                 delayedDamageSources.addAll(firedWeaponSummary.getDelayedDamageSources());
             }
-
             finalWeaponStateMetrics.add(firingState.getClass(), deltaTime);
 
-            /*
-             * Handle statusesApplied over time.
-             */
-            List<Status> procsApplying = target.statusProgressTime(deltaTime);
-            for (Status status : procsApplying) {
-                DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(status.apply(target), statusTickHitProperties, target);
-                finalFiredWeaponSummary.addStatusDamageToHealth(damageMetricsFromStatusTick.getDamageToHealth());
-                finalFiredWeaponSummary.addStatusDamageToShields(damageMetricsFromStatusTick.getDamageToShields());
+            List<DamageMetrics> damageMetricsFromAppliedStatuses = simulationHelper.handleApplyingStatuses(target, statusTickHitProperties, deltaTime);
+            for (DamageMetrics individualDamageMetrics : damageMetricsFromAppliedStatuses) {
+                finalFiredWeaponSummary.addStatusDamageToHealth(individualDamageMetrics.getDamageToHealth());
+                finalFiredWeaponSummary.addStatusDamageToShields(individualDamageMetrics.getDamageToShields());
             }
             target.getStatuses().removeIf(Status::finished);
         }
+        SimulationSummary simulationSummary = new SimulationSummary();
+        simulationSummary.setWeaponStateMetrics(finalWeaponStateMetrics);
 
+        return simulationSummary;
     }
 }

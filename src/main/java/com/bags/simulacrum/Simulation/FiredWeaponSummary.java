@@ -5,6 +5,7 @@ import com.bags.simulacrum.Damage.DelayedDamageSource;
 import com.bags.simulacrum.Status.Status;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,10 @@ public class FiredWeaponSummary {
         this.damageMetrics = damageMetrics;
         this.delayedDamageSources = delayedDamageSources;
         this.statusesApplied = statusesApplied;
+    }
+
+    public FiredWeaponSummary getEmptySummary() {
+        return new FiredWeaponSummary(new ArrayList<>(), new DamageMetrics.DamageMetricsBuilder().withDamageToShields().withDamageToHealth().withStatusDamageToHealth().withStatusDamageToShields().build(), new ArrayList<>(), new ArrayList<>());
     }
 
     public void addHitPropertiesList(List<HitProperties> hitPropertiesList) {

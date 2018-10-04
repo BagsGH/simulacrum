@@ -18,8 +18,7 @@ public class DamageMetrics {
     private Map<DamageType, Double> statusDamageToHealth;
 
 
-    public DamageMetrics(Target target, Map<DamageType, Double> damageToHealth, Map<DamageType, Double> damageToShields) {
-        this.target = target;
+    public DamageMetrics(Map<DamageType, Double> damageToHealth, Map<DamageType, Double> damageToShields) {
         this.damageToShields = damageToShields;
         this.damageToHealth = damageToHealth;
     }
@@ -53,7 +52,6 @@ public class DamageMetrics {
     }
 
     private DamageMetrics(DamageMetricsBuilder builder) {
-        this.target = builder.target;
         if (builder.withDamageToHealth) {
             this.damageToHealth = initialDamageMap();
         }
@@ -70,15 +68,13 @@ public class DamageMetrics {
 
     public static class DamageMetricsBuilder {
 
-        private Target target;
 
         private boolean withDamageToHealth;
         private boolean withDamageToShields;
         private boolean withStatusDamageToHealth;
         private boolean withStatusDamageToShields;
 
-        public DamageMetricsBuilder(Target target) {
-            this.target = target;
+        public DamageMetricsBuilder() {
         }
 
         public DamageMetricsBuilder withDamageToHealth() {

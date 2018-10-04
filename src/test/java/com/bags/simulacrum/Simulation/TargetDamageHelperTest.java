@@ -65,7 +65,7 @@ public class TargetDamageHelperTest {
     public void itCanApplyDamageToShields() {
         DamageMetrics damageMetrics = subject.applyDamageSourceDamageToTarget(fakeDamageSource, fakeHitProperties, fakeTarget);
 
-        assertExpectedHealthExists(damageMetrics.getTarget().getHealth(), new Health(HealthClass.SHIELD, 150.0), 0.0);
+        assertExpectedHealthExists(fakeTarget.getHealth(), new Health(HealthClass.SHIELD, 150.0), 0.0);
         verify(damageCalculatorMock).calculateDamage(eq(fakeHealth), eq(fakeShield), eq(fakeArmor), eq(fakeDamage), eq(fakeHitProperties));
         assertEquals(50.0, damageMetrics.getDamageToShields().get(HEAT), 0.0);
         assertEquals(0.0, damageMetrics.getDamageToHealth().get(HEAT), 0.0);
@@ -80,7 +80,7 @@ public class TargetDamageHelperTest {
 
         DamageMetrics damageMetrics = subject.applyDamageSourceDamageToTarget(fakeDamageSource, fakeHitProperties, fakeTarget);
 
-        assertExpectedHealthExists(damageMetrics.getTarget().getHealth(), new Health(HealthClass.MACHINERY, 150.0), 0.0);
+        assertExpectedHealthExists(fakeTarget.getHealth(), new Health(HealthClass.MACHINERY, 150.0), 0.0);
         assertEquals(50.0, damageMetrics.getDamageToHealth().get(HEAT), 0.0);
         assertEquals(0.0, damageMetrics.getDamageToShields().get(HEAT), 0.0);
     }
@@ -95,8 +95,8 @@ public class TargetDamageHelperTest {
         DamageMetrics damageMetrics = subject.applyDamageSourceDamageToTarget(fakeDamageSource, fakeHitProperties, fakeTarget);
 
         assertExpectedDamageExists(new Damage(HEAT, 5.0), damageCaptor.getAllValues(), 0.001);
-        assertExpectedHealthExists(damageMetrics.getTarget().getHealth(), new Health(HealthClass.SHIELD, 0.0), 0.0);
-        assertExpectedHealthExists(damageMetrics.getTarget().getHealth(), new Health(HealthClass.MACHINERY, 165.0), 0.0);
+        assertExpectedHealthExists(fakeTarget.getHealth(), new Health(HealthClass.SHIELD, 0.0), 0.0);
+        assertExpectedHealthExists(fakeTarget.getHealth(), new Health(HealthClass.MACHINERY, 165.0), 0.0);
         assertEquals(35.0, damageMetrics.getDamageToHealth().get(HEAT), 0.0);
         assertEquals(200.0, damageMetrics.getDamageToShields().get(HEAT), 0.0);
     }

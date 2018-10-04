@@ -15,7 +15,7 @@ public class DamageMetricsTest {
 
     @Before
     public void setup() {
-        subject = new DamageMetrics(null, null, null);
+        subject = new DamageMetrics(null, null);
     }
 
     @Test

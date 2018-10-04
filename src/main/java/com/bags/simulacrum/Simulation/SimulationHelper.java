@@ -33,7 +33,7 @@ public class SimulationHelper {
     public FiredWeaponSummary handleFireWeapon(Weapon weapon, Target target, double headshotChance) { //tODO: secondary targets for aoe...?
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         List<Status> statusProcsApplied = new ArrayList<>();
-        DamageMetrics finalDamageMetrics = new DamageMetrics.DamageMetricsBuilder(target)
+        DamageMetrics finalDamageMetrics = new DamageMetrics.DamageMetricsBuilder()
                 .withDamageToHealth()
                 .withDamageToShields()
                 .withStatusDamageToHealth()
@@ -154,5 +154,29 @@ public class SimulationHelper {
         for (DamageType damageType : damageToShields.keySet()) {
             finalDamageMetrics.addStatusDamageToShields(damageType, damageToShields.get(damageType));
         }
+    }
+
+
+    //TODO: Test
+    public List<DamageMetrics> handleDelayedDamageSources(List<DelayedDamageSource> delayedDamageSources, Target target, double deltaTime) {
+        List<DamageMetrics> listOfDamageMetrics = new ArrayList<>();
+        for (DelayedDamageSource delayedDamageSource : delayedDamageSources) {
+            delayedDamageSource.progressTime(deltaTime);
+            if (delayedDamageSource.delayOver()) {
+                DamageMetrics damageMetricsFromDelayedDamage = targetDamageHelper.applyDamageSourceDamageToTarget(delayedDamageSource.getDamageSource(), delayedDamageSource.getHitProperties(), target); //TODO: delayed damage source keeps track of which target to apply to?
+                listOfDamageMetrics.add(damageMetricsFromDelayedDamage);
+            }
+        }
+        return listOfDamageMetrics;
+    }
+
+    public List<DamageMetrics> handleApplyingStatuses(Target target, HitProperties statusTickHitProperties, double deltaTime) {
+        List<DamageMetrics> listOfDamageMetrics = new ArrayList<>();
+        List<Status> procsApplying = target.statusProgressTime(deltaTime);
+        for (Status status : procsApplying) {
+            DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(status.apply(target), statusTickHitProperties, target);
+            listOfDamageMetrics.add(damageMetricsFromStatusTick);
+        }
+        return listOfDamageMetrics;
     }
 }

@@ -286,7 +286,7 @@ public class SimulationHelperTest {
         Map<DamageType, Double> anotherFakeDamageToHealth = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> anotherFakeDamageToShields = DamageMetrics.initialDamageMap();
         anotherFakeDamageToHealth.put(HEAT, 75.0);
-        DamageMetrics anotherFakeDamageMetrics = new DamageMetrics(fakeTarget, anotherFakeDamageToHealth, anotherFakeDamageToShields);
+        DamageMetrics anotherFakeDamageMetrics = new DamageMetrics(anotherFakeDamageToHealth, anotherFakeDamageToShields);
         when(mockTargetDamageHelper.applyDamageSourceDamageToTarget(any(), any(), any())).thenReturn(fakeDamageMetrics).thenReturn(anotherFakeDamageMetrics);
         DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(HEAT, 1234.0)));
         fakeWeapon.setDamageSources(Arrays.asList(fakeDamageSource, anotherFakeDamageSource));
@@ -314,7 +314,7 @@ public class SimulationHelperTest {
         Map<DamageType, Double> anotherFakeDamageToHealth = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> anotherFakeDamageToShields = DamageMetrics.initialDamageMap();
         anotherFakeDamageToShields.put(HEAT, 75.0);
-        DamageMetrics anotherFakeDamageMetrics = new DamageMetrics(fakeTarget, anotherFakeDamageToHealth, anotherFakeDamageToShields);
+        DamageMetrics anotherFakeDamageMetrics = new DamageMetrics(anotherFakeDamageToHealth, anotherFakeDamageToShields);
         when(mockTargetDamageHelper.applyDamageSourceDamageToTarget(any(), any(), any())).thenReturn(fakeDamageMetrics).thenReturn(anotherFakeDamageMetrics);
         DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(HEAT, 1234.0)));
         fakeWeapon.setDamageSources(Arrays.asList(fakeDamageSource, anotherFakeDamageSource));
@@ -458,7 +458,7 @@ public class SimulationHelperTest {
 
         Map<DamageType, Double> damageToShields = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> damageToHealth = DamageMetrics.initialDamageMap();
-        DamageMetrics fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget = new DamageMetrics(fakeTarget, damageToHealth, damageToShields);
+        DamageMetrics fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget = new DamageMetrics(damageToHealth, damageToShields);
         fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget.addDamageToShields(HEAT, 22.0);
         when(mockTargetDamageHelper.applyDamageSourceDamageToTarget(eq(fakeIgniteDamageTickDamageSource), hitPropertiesCaptor.capture(), eq(fakeTarget))).thenReturn(fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget);
 
@@ -487,7 +487,7 @@ public class SimulationHelperTest {
 
         Map<DamageType, Double> damageToShields = DamageMetrics.initialDamageMap();
         Map<DamageType, Double> damageToHealth = DamageMetrics.initialDamageMap();
-        DamageMetrics fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget = new DamageMetrics(fakeTarget, damageToHealth, damageToShields);
+        DamageMetrics fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget = new DamageMetrics(damageToHealth, damageToShields);
         fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget.addDamageToShields(CORROSIVE, 0.0);
         when(mockTargetDamageHelper.applyDamageSourceDamageToTarget(eq(fakeCorrosionTickDamageSource), hitPropertiesCaptor.capture(), eq(fakeTarget))).thenReturn(fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget);
 
@@ -522,7 +522,7 @@ public class SimulationHelperTest {
     private void setupDefaultFakeDamageSummary() {
         fakeDamageToHealth = DamageMetrics.initialDamageMap();
         fakeDamageToShields = DamageMetrics.initialDamageMap();
-        fakeDamageMetrics = new DamageMetrics(fakeTarget, fakeDamageToHealth, fakeDamageToShields);
+        fakeDamageMetrics = new DamageMetrics(fakeDamageToHealth, fakeDamageToShields);
     }
 
     private void setupDefaultFakeTarget() {
