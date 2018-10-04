@@ -158,21 +158,32 @@ public class SimulationHelper {
 
 
     //TODO: Test
-    public List<DamageMetrics> handleDelayedDamageSources(List<DelayedDamageSource> delayedDamageSources, Target target, double deltaTime) {
-        List<DamageMetrics> listOfDamageMetrics = new ArrayList<>();
+    public FiredWeaponSummary handleDelayedDamageSources(List<DelayedDamageSource> delayedDamageSources, Target target, double statusChance) {
+        if (delayedDamageSources.size() == 0) {
+            return new FiredWeaponSummary().getEmptySummary();
+        }
+        DamageMetrics finalDamageMetricsFromDelayedDamageSources = new DamageMetrics.DamageMetricsBuilder().withDamageToHealth().withDamageToShields().withStatusDamageToHealth().withStatusDamageToShields().build();
+        List<HitProperties> hitPropertiesList = new ArrayList<>();
+        List<Status> statusProcsApplied = new ArrayList<>();
         for (DelayedDamageSource delayedDamageSource : delayedDamageSources) {
-            delayedDamageSource.progressTime(deltaTime);
             if (delayedDamageSource.delayOver()) {
-                DamageMetrics damageMetricsFromDelayedDamage = targetDamageHelper.applyDamageSourceDamageToTarget(delayedDamageSource.getDamageSource(), delayedDamageSource.getHitProperties(), target); //TODO: delayed damage source keeps track of which target to apply to?
-                listOfDamageMetrics.add(damageMetricsFromDelayedDamage);
+                HitProperties delayedDamageSourceHitProperties = delayedDamageSource.getHitProperties();
+                DamageMetrics damageMetricsFromDelayedDamage = targetDamageHelper.applyDamageSourceDamageToTarget(delayedDamageSource.getDamageSource(), delayedDamageSourceHitProperties, target); //TODO: delayed damage source keeps track of which target to apply to?
+                hitPropertiesList.add(delayedDamageSourceHitProperties);
+                updateRunningTotalDamageToHealth(finalDamageMetricsFromDelayedDamageSources, damageMetricsFromDelayedDamage.getDamageToHealth());
+                updateRunningTotalDamageToShields(finalDamageMetricsFromDelayedDamageSources, damageMetricsFromDelayedDamage.getDamageToShields());
+                if (randomNumberGenerator.getRandomPercentage() < statusChance) //if status proc
+                {
+                    Status status = getStatusProcAndApply(target, delayedDamageSource.getDamageSource(), damageMetricsFromDelayedDamage, finalDamageMetricsFromDelayedDamageSources);
+                    statusProcsApplied.add(status);
+                }
             }
         }
-        return listOfDamageMetrics;
+        return new FiredWeaponSummary(hitPropertiesList, finalDamageMetricsFromDelayedDamageSources, statusProcsApplied, new ArrayList<>());
     }
 
-    public List<DamageMetrics> handleApplyingStatuses(Target target, HitProperties statusTickHitProperties, double deltaTime) {
+    public List<DamageMetrics> handleApplyingStatuses(List<Status> procsApplying, HitProperties statusTickHitProperties, Target target) {
         List<DamageMetrics> listOfDamageMetrics = new ArrayList<>();
-        List<Status> procsApplying = target.statusProgressTime(deltaTime);
         for (Status status : procsApplying) {
             DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(status.apply(target), statusTickHitProperties, target);
             listOfDamageMetrics.add(damageMetricsFromStatusTick);

@@ -6,4 +6,5 @@ import lombok.Data;
 public class SimulationSummary {
 
     private WeaponStateMetrics weaponStateMetrics;
+    private FiredWeaponSummary firedWeaponSummary;
 }

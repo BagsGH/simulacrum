@@ -9,6 +9,7 @@ import java.util.Arrays;
 import static com.bags.simulacrum.Damage.DamageSourceType.DOT;
 
 public class StatusDot extends Status {
+
     @Override
     public DamageSource apply(Target target) {
         this.progressToNextTick = 0.0;

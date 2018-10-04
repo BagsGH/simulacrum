@@ -1,7 +1,6 @@
 package com.bags.simulacrum.Simulation;
 
 import com.bags.simulacrum.Damage.DamageType;
-import com.bags.simulacrum.Entity.Target;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -10,7 +9,6 @@ import java.util.Map;
 @Data
 public class DamageMetrics {
 
-    private Target target;
     private Map<DamageType, Double> damageToShields;
     private Map<DamageType, Double> damageToHealth;
 

@@ -1,6 +1,5 @@
 package com.bags.simulacrum.Simulation;
 
-import com.bags.simulacrum.Entity.Target;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,18 +21,15 @@ public class DamageMetricsTest {
     public void itCanHaveTestCoverage_1() {
         assertNull(subject.getDamageToHealth());
         assertNull(subject.getDamageToShields());
-        assertNull(subject.getTarget());
     }
 
     @Test
     public void itCanHaveTestCoverage_2() {
-        subject.setTarget(new Target());
         subject.setDamageToHealth(new HashMap<>());
         subject.setDamageToShields(new HashMap<>());
 
         assertNotNull(subject.getDamageToHealth());
         assertNotNull(subject.getDamageToShields());
-        assertNotNull(subject.getTarget());
     }
 
 }

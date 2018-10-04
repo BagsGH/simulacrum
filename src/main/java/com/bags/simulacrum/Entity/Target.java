@@ -46,6 +46,10 @@ public class Target {
         this.statuses.add(Status);
     }
 
+    public void setStatuses(List<Status> statuses) {
+        this.statuses = new ArrayList<>(statuses);
+    }
+
 //    public void applyStatus() {
 //        this.statusesApplied.get(this.statusesApplied.size() - 1).apply(this);
 //    }

@@ -51,8 +51,8 @@ public class FiredWeaponSummary {
     public void addDamageToHealth(Map<DamageType, Double> damageToHealth) {
         for (DamageType damageType : damageToHealth.keySet()) {
             double addendValue = damageToHealth.get(damageType);
-            double currentValue = this.damageMetrics.getDamageToShields().get(damageType);
-            this.damageMetrics.getDamageToShields().put(damageType, currentValue + addendValue);
+            double currentValue = this.damageMetrics.getDamageToHealth().get(damageType);
+            this.damageMetrics.getDamageToHealth().put(damageType, currentValue + addendValue);
         }
     }
 
