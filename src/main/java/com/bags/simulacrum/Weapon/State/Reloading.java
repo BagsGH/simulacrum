@@ -13,6 +13,9 @@ public class Reloading implements FiringState {
 
     @Override
     public FiringState progressTime(double deltaTime) {
+        if (this.fireStateProperties.getCurrentAmmo() <= 0) {
+            return new OutOfAmmo(this.fireStateProperties);
+        }
         reloadingProgress += deltaTime;
         if (reloadingProgress >= fireStateProperties.getReloadTime()) {
             fireStateProperties.loadMagazine();

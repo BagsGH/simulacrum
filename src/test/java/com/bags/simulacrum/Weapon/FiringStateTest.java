@@ -18,6 +18,7 @@ public class FiringStateTest {
     private double fakeAutoFireRate;
     private double fakeBurstFireRate;
     private double fakeChargingTime;
+    private DecimalFormat df = new DecimalFormat("0.00");
 
     @Before
     public void before() {
@@ -62,6 +63,7 @@ public class FiringStateTest {
 
         for (int i = 0; i < 3; i++) {
             subject = subject.progressTime(fakeDeltaT);
+            System.out.println(subject.getClass());
 
             if (subject instanceof Auto) {
                 autoCount++;
@@ -113,6 +115,7 @@ public class FiringStateTest {
 
         for (int i = 0; i < 2; i++) {
             subject = subject.progressTime(fakeDeltaT);
+            System.out.println(subject.getClass());
 
             if (subject instanceof Reloading) {
                 reloadTime++;
@@ -180,17 +183,18 @@ public class FiringStateTest {
 
     @Test
     public void itChargesFiresAndThenReloadsABow() {
-        subject = new Ready(setupChargingWeapon(TriggerType.CHARGE, 0.25, 1, fakeChargingTime));
+        subject = new Ready(setupChargingBowWeapon(TriggerType.CHARGE, 0.25, 1, fakeChargingTime));
 
         int chargingTime = 0;
         int firedCount = 0;
         int reloadTime = 0;
 
+        double time = 0.0;
         for (int i = 0; i < 50; i++) {
             subject = subject.progressTime(fakeDeltaT);
 
-            System.out.println(subject.getClass());
-
+            time += 0.01;
+            System.out.println(df.format(time) + " " + subject.getClass());
 
             if (subject instanceof Charging) {
                 chargingTime++;
@@ -234,7 +238,6 @@ public class FiringStateTest {
                 .withSpoolThreshold(spoolThreshold)
                 .withSpoolingSpeedDecreaseModifier(spoolingDecrease)
                 .build();
-        props.loadMagazine();
 
         return props;
     }
@@ -243,7 +246,6 @@ public class FiringStateTest {
         FireStateProperties props = new FireStateProperties.FireStatePropertiesBuilder(triggerType, reloadTime, magazineSize, 200)
                 .withFireRate(fireRate)
                 .build();
-        props.loadMagazine();
 
         return props;
     }
@@ -253,16 +255,14 @@ public class FiringStateTest {
                 .withFireRate(fireRate)
                 .withBurstCount(burstCount)
                 .build();
-        props.loadMagazine();
 
         return props;
     }
 
-    private FireStateProperties setupChargingWeapon(TriggerType triggerType, double reloadTime, int magazineSize, double chargeTime) {
+    private FireStateProperties setupChargingBowWeapon(TriggerType triggerType, double reloadTime, int magazineSize, double chargeTime) {
         FireStateProperties props = new FireStateProperties.FireStatePropertiesBuilder(triggerType, reloadTime, magazineSize, 200)
                 .withChargingProperties(new ChargingProperties(chargeTime, 0.0, 0.0, 0.0))
                 .build();
-        props.loadMagazine();
 
         return props;
     }

@@ -11,7 +11,10 @@ public class OutOfAmmo implements FiringState {
 
     @Override
     public FiringState progressTime(double deltaTime) {
-
+        if (this.fireStateProperties.getCurrentAmmo() > 0) {
+            this.fireStateProperties.loadMagazine();
+            return new Ready(this.fireStateProperties);
+        }
         return this;
     }
 }

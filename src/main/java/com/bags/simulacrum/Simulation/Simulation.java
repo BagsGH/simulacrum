@@ -1,7 +1,6 @@
 package com.bags.simulacrum.Simulation;
 
 import com.bags.simulacrum.Configuration.SimulationConfig;
-import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DelayedDamageSource;
 import com.bags.simulacrum.Entity.Target;
 import com.bags.simulacrum.Status.Status;
@@ -83,8 +82,7 @@ public class Simulation {
              */
             List<Status> procsApplying = target.statusProgressTime(deltaTime);
             for (Status status : procsApplying) {
-                DamageSource statusDamageSource = status.apply(target);
-                DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(statusDamageSource, statusTickHitProperties, target);
+                DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(status.apply(target), statusTickHitProperties, target);
             }
             target.getStatuses().removeIf(Status::finished);
         }

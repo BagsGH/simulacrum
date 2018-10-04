@@ -47,10 +47,6 @@ public class StatusFactory {
         return proc;
     }
 
-    private static String getClassName(Class clazz) {
-        return clazz.getName().replace("class ", "");
-    }
-
     private static final Map<DamageType, String> statusTypeClassNameMap;
 
     static {
@@ -71,6 +67,10 @@ public class StatusFactory {
             put(VIRAL, getClassName(Virus.class));
             put(null, getClassName(UnimplementedStatus.class));
         }};
+    }
+
+    private static String getClassName(Class clazz) {
+        return clazz.getName().replace("class ", "");
     }
 
     private static final Map<DamageType, Double> statusProcDurationMap;
@@ -198,26 +198,4 @@ public class StatusFactory {
             put(VIRAL, 0.0);
         }};
     }
-
-    //    private static final Map<DamageType, Double> statusProcModifierMap;
-//
-//    static {
-//        statusProcModifierMap = new HashMap<DamageType, Double>() {{
-//            put(PUNCTURE, 0.70);
-//            put(SLASH, 1.45);
-//            put(COLD, -0.50);
-//            put(ELECTRICITY, 0.50);
-//            put(HEAT, 2.50);
-//            put(TOXIN, 3.50);
-//            put(CORROSIVE, 0.25);
-//            put(GAS, 3.50);
-//            put(MAGNETIC, -0.75);
-//            put(VIRAL, -0.50);
-//        }};
-//    }
-//
-//    public Double getStatusProcModifier(DamageType statusPROCType) {
-//        return statusProcModifierMap.getOrDefault(statusPROCType, 0.0);
-
-//    }
 }

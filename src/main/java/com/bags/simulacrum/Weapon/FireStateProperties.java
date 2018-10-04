@@ -20,13 +20,18 @@ public class FireStateProperties {
     private int spoolThreshold;
 
     private int currentMagazineSize;
+    private int currentAmmo;
 
     public void subtractAmmo() {
         this.currentMagazineSize--;
     }
 
     public void loadMagazine() {
-        this.currentMagazineSize = magazineSize;
+        if (this.currentAmmo > 0) {
+            int freshMagazineSize = this.magazineSize < this.currentAmmo ? this.magazineSize : this.currentAmmo;
+            this.currentMagazineSize = freshMagazineSize;
+            this.currentAmmo -= freshMagazineSize;
+        }
     }
 
     private FireStateProperties(FireStatePropertiesBuilder builder) {
@@ -39,8 +44,9 @@ public class FireStateProperties {
         this.spoolingSpeedDecreaseModifier = builder.spoolingSpeedDecreaseModifier;
         this.spoolThreshold = builder.spoolThreshold;
         this.chargingProperties = (builder.chargingProperties != null ? builder.chargingProperties.copy() : new ChargingProperties(0.0, 0.0, 0.0, 0.0));
-        this.currentMagazineSize = builder.currentMagazineSize;
         this.percentToCharge = builder.percentToCharge;
+        this.currentMagazineSize = builder.currentMagazineSize;
+        this.currentAmmo = builder.currentAmmo;
     }
 
     public FireStateProperties copy() {
@@ -52,6 +58,7 @@ public class FireStateProperties {
                 .withChargingProperties(this.chargingProperties.copy())
                 .withPercentToCharge(this.percentToCharge)
                 .withCurrentMagazineSize(this.currentMagazineSize)
+                .withCurrentAmmo(this.currentAmmo)
                 .build();
     }
 
@@ -68,6 +75,7 @@ public class FireStateProperties {
         private int spoolThreshold;
 
         private int currentMagazineSize;
+        private int currentAmmo;
         private double percentToCharge;
 
         private ChargingProperties chargingProperties;
@@ -77,6 +85,8 @@ public class FireStateProperties {
             this.reloadTime = reloadTime;
             this.magazineSize = magazineSize;
             this.maxAmmo = maxAmmo;
+            this.currentAmmo = maxAmmo;
+            this.currentMagazineSize = magazineSize;
         }
 
         public FireStatePropertiesBuilder withFireRate(double fireRate) {
@@ -111,6 +121,11 @@ public class FireStateProperties {
 
         public FireStatePropertiesBuilder withCurrentMagazineSize(int currentMagazineSize) {
             this.currentMagazineSize = currentMagazineSize;
+            return this;
+        }
+
+        public FireStatePropertiesBuilder withCurrentAmmo(int currentAmmo) {
+            this.currentAmmo = currentAmmo;
             return this;
         }
 
