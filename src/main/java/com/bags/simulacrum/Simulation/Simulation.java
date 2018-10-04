@@ -55,12 +55,14 @@ public class Simulation {
         Target target = targetList.get(0);
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         for (int i = 0; i < timeTicks; i++) {
-            delayedDamageSources.forEach(ds -> ds.progressTime(deltaTime));
-            FiredWeaponSummary summaryFromHandlingDelayedDamageSources = simulationHelper.handleDelayedDamageSources(delayedDamageSources, target, weapon.getStatusChance());
-            finalFiredWeaponSummary.addHitPropertiesList(summaryFromHandlingDelayedDamageSources.getHitPropertiesList());
-            finalFiredWeaponSummary.addStatusesApplied(summaryFromHandlingDelayedDamageSources.getStatusesApplied());
-            finalFiredWeaponSummary.addDamageMetrics(summaryFromHandlingDelayedDamageSources.getDamageMetrics());
-            delayedDamageSources.removeIf(DelayedDamageSource::delayOver);
+            if (delayedDamageSources.size() > 0) {
+                delayedDamageSources.forEach(ds -> ds.progressTime(deltaTime));
+                FiredWeaponSummary summaryFromHandlingDelayedDamageSources = simulationHelper.handleDelayedDamageSources(delayedDamageSources, target, weapon.getStatusChance());
+                finalFiredWeaponSummary.addHitPropertiesList(summaryFromHandlingDelayedDamageSources.getHitPropertiesList());
+                finalFiredWeaponSummary.addStatusesApplied(summaryFromHandlingDelayedDamageSources.getStatusesApplied());
+                finalFiredWeaponSummary.addDamageMetrics(summaryFromHandlingDelayedDamageSources.getDamageMetrics());
+                delayedDamageSources.removeIf(DelayedDamageSource::delayOver);
+            }
 
             FiringState firingState = weapon.firingStateProgressTime(deltaTime);
             if (firingState instanceof Fired) {

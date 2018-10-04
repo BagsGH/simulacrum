@@ -159,9 +159,6 @@ public class SimulationHelper {
 
     //TODO: Test
     public FiredWeaponSummary handleDelayedDamageSources(List<DelayedDamageSource> delayedDamageSources, Target target, double statusChance) {
-        if (delayedDamageSources.size() == 0) {
-            return new FiredWeaponSummary().getEmptySummary();
-        }
         DamageMetrics finalDamageMetricsFromDelayedDamageSources = new DamageMetrics.DamageMetricsBuilder().withDamageToHealth().withDamageToShields().withStatusDamageToHealth().withStatusDamageToShields().build();
         List<HitProperties> hitPropertiesList = new ArrayList<>();
         List<Status> statusProcsApplied = new ArrayList<>();
