@@ -47,7 +47,7 @@ public class Target {
     }
 
 //    public void applyStatus() {
-//        this.statuses.get(this.statuses.size() - 1).apply(this);
+//        this.statusesApplied.get(this.statusesApplied.size() - 1).apply(this);
 //    }
 
     public List<Status> statusProgressTime(double deltaTime) {

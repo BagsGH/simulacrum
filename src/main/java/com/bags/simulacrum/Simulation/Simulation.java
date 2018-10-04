@@ -47,7 +47,7 @@ public class Simulation {
         int timeTicks = (int) (simulationDuration / deltaTime);
 
         WeaponStateMetrics finalWeaponStateMetrics = new WeaponStateMetrics();
-        FiredWeaponMetrics finalFiredWeaponMetrics = new FiredWeaponMetrics();
+        FiredWeaponSummary finalFiredWeaponSummary = new FiredWeaponSummary();
 
         HitProperties statusTickHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
 
@@ -62,6 +62,7 @@ public class Simulation {
                 delayedDamageSource.progressTime(deltaTime);
                 if (delayedDamageSource.delayOver()) {
                     DamageMetrics damageMetricsFromDelayedDamage = targetDamageHelper.applyDamageSourceDamageToTarget(delayedDamageSource.getDamageSource(), delayedDamageSource.getHitProperties(), target);
+                    finalFiredWeaponSummary.addDamageMetrics(damageMetricsFromDelayedDamage);
                 }
             }
             delayedDamageSources.removeIf(DelayedDamageSource::delayOver);
@@ -71,18 +72,24 @@ public class Simulation {
              */
             FiringState firingState = weapon.firingStateProgressTime(deltaTime);
             if (firingState instanceof Fired) {
-                FiredWeaponMetrics firedWeaponMetrics = simulationHelper.handleFireWeapon(weapon, target, simulationParameters.getHeadshotChance());
-                delayedDamageSources.addAll(firedWeaponMetrics.getDelayedDamageSources());
+                FiredWeaponSummary firedWeaponSummary = simulationHelper.handleFireWeapon(weapon, target, simulationParameters.getHeadshotChance());
+                finalFiredWeaponSummary.addHitPropertiesList(firedWeaponSummary.getHitPropertiesList());
+                finalFiredWeaponSummary.addStatusesApplied(firedWeaponSummary.getStatusesApplied());
+                finalFiredWeaponSummary.addDamageMetrics(firedWeaponSummary.getDamageMetrics());
+
+                delayedDamageSources.addAll(firedWeaponSummary.getDelayedDamageSources());
             }
 
             finalWeaponStateMetrics.add(firingState.getClass(), deltaTime);
 
             /*
-             * Handle statuses over time.
+             * Handle statusesApplied over time.
              */
             List<Status> procsApplying = target.statusProgressTime(deltaTime);
             for (Status status : procsApplying) {
                 DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(status.apply(target), statusTickHitProperties, target);
+                finalFiredWeaponSummary.addStatusDamageToHealth(damageMetricsFromStatusTick.getDamageToHealth());
+                finalFiredWeaponSummary.addStatusDamageToShields(damageMetricsFromStatusTick.getDamageToShields());
             }
             target.getStatuses().removeIf(Status::finished);
         }

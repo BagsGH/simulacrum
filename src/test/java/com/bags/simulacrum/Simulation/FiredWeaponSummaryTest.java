@@ -5,20 +5,20 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertNull;
 
-public class FiredWeaponMetricsTest {
+public class FiredWeaponSummaryTest {
 
-    private FiredWeaponMetrics subject;
+    private FiredWeaponSummary subject;
 
     @Before
     public void setup() {
-        subject = new FiredWeaponMetrics(null, null, null, null);
+        subject = new FiredWeaponSummary(null, null, null, null);
     }
 
     @Test
     public void itCanHaveTestCoverage() {
         assertNull(subject.getHitPropertiesList());
         assertNull(subject.getDamageMetrics());
-        assertNull(subject.getStatuses());
+        assertNull(subject.getStatusesApplied());
         assertNull(subject.getDelayedDamageSources());
     }
 
@@ -27,11 +27,11 @@ public class FiredWeaponMetricsTest {
         subject.setDamageMetrics(null);
         subject.setDelayedDamageSources(null);
         subject.setHitPropertiesList(null);
-        subject.setStatuses(null);
+        subject.setStatusesApplied(null);
         assertNull(subject.getHitPropertiesList());
         assertNull(subject.getDamageMetrics());
         assertNull(subject.getDelayedDamageSources());
-        assertNull(subject.getStatuses());
+        assertNull(subject.getStatusesApplied());
     }
 
 

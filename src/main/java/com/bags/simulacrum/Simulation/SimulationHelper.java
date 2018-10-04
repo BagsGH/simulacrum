@@ -30,7 +30,7 @@ public class SimulationHelper {
         this.statusProcHelper = statusProcHelper;
     }
 
-    public FiredWeaponMetrics handleFireWeapon(Weapon weapon, Target target, double headshotChance) { //tODO: secondary targets for aoe...?
+    public FiredWeaponSummary handleFireWeapon(Weapon weapon, Target target, double headshotChance) { //tODO: secondary targets for aoe...?
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         List<Status> statusProcsApplied = new ArrayList<>();
         DamageMetrics finalDamageMetrics = new DamageMetrics.DamageMetricsBuilder(target)
@@ -73,7 +73,7 @@ public class SimulationHelper {
             hitPropertiesList.add(hitProperties);
         }
 
-        return new FiredWeaponMetrics(hitPropertiesList, finalDamageMetrics, statusProcsApplied, delayedDamageSources);
+        return new FiredWeaponSummary(hitPropertiesList, finalDamageMetrics, statusProcsApplied, delayedDamageSources);
     }
 
     private int getMultishotLevel(double weaponMultishotChance, double multishotRNG) {

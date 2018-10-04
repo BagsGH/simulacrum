@@ -94,9 +94,7 @@ public class FireStateProperties {
         private int spoolThreshold;
 
         private double percentToCharge;
-
         private Ammunition ammunition;
-
         private ChargingProperties chargingProperties;
 
         public FireStatePropertiesBuilder(TriggerType triggerType, double reloadTime, int maxAmmo, int magazineSize) {

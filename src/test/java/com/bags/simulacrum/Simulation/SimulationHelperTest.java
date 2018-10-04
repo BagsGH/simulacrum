@@ -241,10 +241,10 @@ public class SimulationHelperTest {
     public void itReturnsADelayedDamageSource() {
         fakeDamageSource.setDamageSourceType(DamageSourceType.DELAYED_AOE);
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(1, firedWeaponMetrics.getDelayedDamageSources().size());
-        assertEquals(fakeDamageSource, firedWeaponMetrics.getDelayedDamageSources().get(0).getDamageSource());
+        assertEquals(1, firedWeaponSummary.getDelayedDamageSources().size());
+        assertEquals(fakeDamageSource, firedWeaponSummary.getDelayedDamageSources().get(0).getDamageSource());
     }
 
     @Test
@@ -253,31 +253,31 @@ public class SimulationHelperTest {
         DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.DELAYED, Collections.singletonList(new Damage(IMPACT, 50.0)));
         fakeWeapon.setDamageSources(Arrays.asList(fakeDamageSource, anotherFakeDamageSource));
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(2, firedWeaponMetrics.getDelayedDamageSources().size());
-        assertEquals(fakeDamageSource, firedWeaponMetrics.getDelayedDamageSources().get(0).getDamageSource());
-        assertEquals(anotherFakeDamageSource, firedWeaponMetrics.getDelayedDamageSources().get(1).getDamageSource()); //TODO: don't assume order?
+        assertEquals(2, firedWeaponSummary.getDelayedDamageSources().size());
+        assertEquals(fakeDamageSource, firedWeaponSummary.getDelayedDamageSources().get(0).getDamageSource());
+        assertEquals(anotherFakeDamageSource, firedWeaponSummary.getDelayedDamageSources().get(1).getDamageSource()); //TODO: don't assume order?
     }
 
     @Test
     public void itReturnsADamageSummary() {
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(fakeDamageToHealth, firedWeaponMetrics.getDamageMetrics().getDamageToHealth());
-        assertEquals(fakeDamageToShields, firedWeaponMetrics.getDamageMetrics().getDamageToShields());
+        assertEquals(fakeDamageToHealth, firedWeaponSummary.getDamageMetrics().getDamageToHealth());
+        assertEquals(fakeDamageToShields, firedWeaponSummary.getDamageMetrics().getDamageToShields());
     }
 
     @Test
     public void itReturnsADamageSummaryWithValuesReturnedByHelpers_Health() {
         fakeDamageToHealth.put(HEAT, 50.0);
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(fakeDamageToHealth, firedWeaponMetrics.getDamageMetrics().getDamageToHealth());
-        assertEquals(fakeDamageToShields, firedWeaponMetrics.getDamageMetrics().getDamageToShields());
+        assertEquals(fakeDamageToHealth, firedWeaponSummary.getDamageMetrics().getDamageToHealth());
+        assertEquals(fakeDamageToShields, firedWeaponSummary.getDamageMetrics().getDamageToShields());
 
-        assertEquals(50.0, firedWeaponMetrics.getDamageMetrics().getDamageToHealth().get(HEAT), 0.0);
+        assertEquals(50.0, firedWeaponSummary.getDamageMetrics().getDamageToHealth().get(HEAT), 0.0);
     }
 
     @Test
@@ -291,21 +291,21 @@ public class SimulationHelperTest {
         DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(HEAT, 1234.0)));
         fakeWeapon.setDamageSources(Arrays.asList(fakeDamageSource, anotherFakeDamageSource));
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(125.0, firedWeaponMetrics.getDamageMetrics().getDamageToHealth().get(HEAT), 0.0);
+        assertEquals(125.0, firedWeaponSummary.getDamageMetrics().getDamageToHealth().get(HEAT), 0.0);
     }
 
     @Test
     public void itReturnsADamageSummaryWithValuesReturnedByHelpers_Shields() {
         fakeDamageToShields.put(HEAT, 50.0);
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(fakeDamageToHealth, firedWeaponMetrics.getDamageMetrics().getDamageToHealth());
-        assertEquals(fakeDamageToShields, firedWeaponMetrics.getDamageMetrics().getDamageToShields());
+        assertEquals(fakeDamageToHealth, firedWeaponSummary.getDamageMetrics().getDamageToHealth());
+        assertEquals(fakeDamageToShields, firedWeaponSummary.getDamageMetrics().getDamageToShields());
 
-        assertEquals(50.0, firedWeaponMetrics.getDamageMetrics().getDamageToShields().get(HEAT), 0.0);
+        assertEquals(50.0, firedWeaponSummary.getDamageMetrics().getDamageToShields().get(HEAT), 0.0);
     }
 
     @Test
@@ -319,70 +319,70 @@ public class SimulationHelperTest {
         DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(HEAT, 1234.0)));
         fakeWeapon.setDamageSources(Arrays.asList(fakeDamageSource, anotherFakeDamageSource));
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(125.0, firedWeaponMetrics.getDamageMetrics().getDamageToShields().get(HEAT), 0.0);
+        assertEquals(125.0, firedWeaponSummary.getDamageMetrics().getDamageToShields().get(HEAT), 0.0);
     }
 
     @Test
     public void itReturnsMetrics() {
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(1, firedWeaponMetrics.getHitPropertiesList().size());
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
-        assertEquals(0, firedWeaponMetrics.getHitPropertiesList().get(0).getCritLevel());
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
+        assertEquals(1, firedWeaponSummary.getHitPropertiesList().size());
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
+        assertEquals(0, firedWeaponSummary.getHitPropertiesList().get(0).getCritLevel());
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
     }
 
     @Test
     public void itReturnsMetrics_Headshot() {
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.60);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.60);
 
-        assertEquals(1, firedWeaponMetrics.getHitPropertiesList().size());
-        assertEquals(1.0, firedWeaponMetrics.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
-        assertEquals(0, firedWeaponMetrics.getHitPropertiesList().get(0).getCritLevel());
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
+        assertEquals(1, firedWeaponSummary.getHitPropertiesList().size());
+        assertEquals(1.0, firedWeaponSummary.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
+        assertEquals(0, firedWeaponSummary.getHitPropertiesList().get(0).getCritLevel());
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
     }
 
     @Test
     public void itReturnsMetrics_Bodyshot() {
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.40);
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(1, firedWeaponMetrics.getHitPropertiesList().size());
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
-        assertEquals(-0.50, firedWeaponMetrics.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
-        assertEquals(0, firedWeaponMetrics.getHitPropertiesList().get(0).getCritLevel());
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
+        assertEquals(1, firedWeaponSummary.getHitPropertiesList().size());
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
+        assertEquals(-0.50, firedWeaponSummary.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
+        assertEquals(0, firedWeaponSummary.getHitPropertiesList().get(0).getCritLevel());
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
     }
 
     @Test
     public void itReturnsMetrics_Critical() {
         fakeWeapon.setCriticalChance(0.70);
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.40);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.40);
 
-        assertEquals(1, firedWeaponMetrics.getHitPropertiesList().size());
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
-        assertEquals(1, firedWeaponMetrics.getHitPropertiesList().get(0).getCritLevel());
-        assertEquals(fakeWeapon.getCriticalDamage(), firedWeaponMetrics.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
+        assertEquals(1, firedWeaponSummary.getHitPropertiesList().size());
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
+        assertEquals(1, firedWeaponSummary.getHitPropertiesList().get(0).getCritLevel());
+        assertEquals(fakeWeapon.getCriticalDamage(), firedWeaponSummary.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
     }
 
     @Test
     public void itReturnsMetrics_Critical_Headshot() {
         fakeWeapon.setCriticalChance(0.70);
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.60);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.60);
 
-        assertEquals(1, firedWeaponMetrics.getHitPropertiesList().size());
-        assertEquals(1.0, firedWeaponMetrics.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
-        assertEquals(1, firedWeaponMetrics.getHitPropertiesList().get(0).getCritLevel());
-        assertEquals(fakeWeapon.getCriticalDamage(), firedWeaponMetrics.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
+        assertEquals(1, firedWeaponSummary.getHitPropertiesList().size());
+        assertEquals(1.0, firedWeaponSummary.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
+        assertEquals(1, firedWeaponSummary.getHitPropertiesList().get(0).getCritLevel());
+        assertEquals(fakeWeapon.getCriticalDamage(), firedWeaponSummary.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
     }
 
     @Test
@@ -390,31 +390,31 @@ public class SimulationHelperTest {
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.40);
         fakeWeapon.setCriticalChance(0.70);
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(1, firedWeaponMetrics.getHitPropertiesList().size());
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
-        assertEquals(-0.50, firedWeaponMetrics.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
-        assertEquals(1, firedWeaponMetrics.getHitPropertiesList().get(0).getCritLevel());
-        assertEquals(fakeWeapon.getCriticalDamage(), firedWeaponMetrics.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
+        assertEquals(1, firedWeaponSummary.getHitPropertiesList().size());
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
+        assertEquals(-0.50, firedWeaponSummary.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
+        assertEquals(1, firedWeaponSummary.getHitPropertiesList().get(0).getCritLevel());
+        assertEquals(fakeWeapon.getCriticalDamage(), firedWeaponSummary.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
     }
 
     @Test
     public void itReturnsMetrics_Multishot() {
         fakeWeapon.setMultishot(2.0);
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(2, firedWeaponMetrics.getHitPropertiesList().size());
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
-        assertEquals(0, firedWeaponMetrics.getHitPropertiesList().get(0).getCritLevel());
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
+        assertEquals(2, firedWeaponSummary.getHitPropertiesList().size());
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
+        assertEquals(0, firedWeaponSummary.getHitPropertiesList().get(0).getCritLevel());
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
 
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(1).getHeadshotModifier(), 0.0);
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(1).getBodyPartModifier(), 0.0);
-        assertEquals(0, firedWeaponMetrics.getHitPropertiesList().get(1).getCritLevel());
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(1).getCriticalDamageMultiplier(), 0.0);
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(1).getHeadshotModifier(), 0.0);
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(1).getBodyPartModifier(), 0.0);
+        assertEquals(0, firedWeaponSummary.getHitPropertiesList().get(1).getCritLevel());
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(1).getCriticalDamageMultiplier(), 0.0);
     }
 
     @Test
@@ -422,18 +422,18 @@ public class SimulationHelperTest {
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.10).thenReturn(0.50);
         fakeWeapon.setMultishot(2.0);
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(2, firedWeaponMetrics.getHitPropertiesList().size());
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
-        assertEquals(0, firedWeaponMetrics.getHitPropertiesList().get(0).getCritLevel());
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
+        assertEquals(2, firedWeaponSummary.getHitPropertiesList().size());
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getHeadshotModifier(), 0.0);
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getBodyPartModifier(), 0.0);
+        assertEquals(0, firedWeaponSummary.getHitPropertiesList().get(0).getCritLevel());
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(0).getCriticalDamageMultiplier(), 0.0);
 
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(1).getHeadshotModifier(), 0.0);
-        assertEquals(0.0, firedWeaponMetrics.getHitPropertiesList().get(1).getBodyPartModifier(), 0.0);
-        assertEquals(1, firedWeaponMetrics.getHitPropertiesList().get(1).getCritLevel());
-        assertEquals(fakeWeapon.getCriticalDamage(), firedWeaponMetrics.getHitPropertiesList().get(1).getCriticalDamageMultiplier(), 0.0);
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(1).getHeadshotModifier(), 0.0);
+        assertEquals(0.0, firedWeaponSummary.getHitPropertiesList().get(1).getBodyPartModifier(), 0.0);
+        assertEquals(1, firedWeaponSummary.getHitPropertiesList().get(1).getCritLevel());
+        assertEquals(fakeWeapon.getCriticalDamage(), firedWeaponSummary.getHitPropertiesList().get(1).getCriticalDamageMultiplier(), 0.0);
     }
 
     @Test
@@ -442,10 +442,10 @@ public class SimulationHelperTest {
         fakeWeapon.setStatusChance(0.75);
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.74);
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(1, firedWeaponMetrics.getStatuses().size());
-        assertTrue(firedWeaponMetrics.getStatuses().get(0) instanceof Ignite);
+        assertEquals(1, firedWeaponSummary.getStatusesApplied().size());
+        assertTrue(firedWeaponSummary.getStatusesApplied().get(0) instanceof Ignite);
     }
 
     @Test
@@ -467,13 +467,13 @@ public class SimulationHelperTest {
 
         HitProperties expectedHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
         verify(mockTargetDamageHelper).applyDamageSourceDamageToTarget(eq(fakeIgniteDamageTickDamageSource), hitPropertiesCaptor.capture(), eq(fakeTarget));
         HitProperties actualHitProperties = hitPropertiesCaptor.getValue();
-        assertEquals(1, firedWeaponMetrics.getStatuses().size());
-        assertEquals(22.0, firedWeaponMetrics.getDamageMetrics().getStatusDamageToShields().get(HEAT), 0.0);
-        assertTrue(firedWeaponMetrics.getStatuses().get(0) instanceof Ignite);
+        assertEquals(1, firedWeaponSummary.getStatusesApplied().size());
+        assertEquals(22.0, firedWeaponSummary.getDamageMetrics().getStatusDamageToShields().get(HEAT), 0.0);
+        assertTrue(firedWeaponSummary.getStatusesApplied().get(0) instanceof Ignite);
         assertEquals(expectedHitProperties, actualHitProperties);
     }
 
@@ -496,13 +496,13 @@ public class SimulationHelperTest {
 
         HitProperties expectedHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
         verify(mockTargetDamageHelper).applyDamageSourceDamageToTarget(eq(fakeCorrosionTickDamageSource), hitPropertiesCaptor.capture(), eq(fakeTarget));
         HitProperties actualHitProperties = hitPropertiesCaptor.getValue();
-        assertEquals(1, firedWeaponMetrics.getStatuses().size());
-        assertEquals(0.0, firedWeaponMetrics.getDamageMetrics().getStatusDamageToShields().get(CORROSIVE), 0.0);
-        assertTrue(firedWeaponMetrics.getStatuses().get(0) instanceof Corrosion);
+        assertEquals(1, firedWeaponSummary.getStatusesApplied().size());
+        assertEquals(0.0, firedWeaponSummary.getDamageMetrics().getStatusDamageToShields().get(CORROSIVE), 0.0);
+        assertTrue(firedWeaponSummary.getStatusesApplied().get(0) instanceof Corrosion);
         assertEquals(expectedHitProperties, actualHitProperties);
     }
 
@@ -513,10 +513,10 @@ public class SimulationHelperTest {
         fakeWeapon.setStatusChance(0.05);
         fakeWeapon.setMultishot(2.0);
 
-        FiredWeaponMetrics firedWeaponMetrics = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
+        FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeTarget, 0.0);
 
-        assertEquals(1, firedWeaponMetrics.getStatuses().size());
-        assertTrue(firedWeaponMetrics.getStatuses().get(0) instanceof Corrosion);
+        assertEquals(1, firedWeaponSummary.getStatusesApplied().size());
+        assertTrue(firedWeaponSummary.getStatusesApplied().get(0) instanceof Corrosion);
     }
 
     private void setupDefaultFakeDamageSummary() {

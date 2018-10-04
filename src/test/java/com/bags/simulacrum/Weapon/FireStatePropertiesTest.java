@@ -12,13 +12,12 @@ public class FireStatePropertiesTest {
 
     @Before
     public void setup() {
-        subject = new FireStateProperties.FireStatePropertiesBuilder(TriggerType.HELD, 1.25, 1, 1).build();
+        subject = new FireStateProperties.FireStatePropertiesBuilder(TriggerType.HELD, 1.25, 25, 1).build();
     }
 
     @Test
     public void itCanExpendAmmo() {
         subject.setMagazineSize(5);
-        subject.setCurrentAmmo(50);
         subject.loadMagazine();
         subject.subtractAmmo();
 
@@ -28,7 +27,6 @@ public class FireStatePropertiesTest {
     @Test
     public void itCanLoadNewMagazine() {
         subject.setMagazineSize(5);
-        subject.setCurrentAmmo(50);
         subject.loadMagazine();
         subject.subtractAmmo();
         subject.loadMagazine();
