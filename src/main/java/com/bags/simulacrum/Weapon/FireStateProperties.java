@@ -7,9 +7,7 @@ import lombok.Data;
 @Data
 public class FireStateProperties {
 
-    private int magazineSize;
     private double reloadTime;
-    private int maxAmmo;
     private TriggerType triggerType;
 
     private double fireRate;
@@ -19,54 +17,75 @@ public class FireStateProperties {
     private double spoolingSpeedDecreaseModifier;
     private int spoolThreshold;
 
-    private int currentMagazineSize;
-    private int currentAmmo;
+    private Ammunition ammunition;
 
     public void subtractAmmo() {
-        this.currentMagazineSize--;
+        this.ammunition.subtractAmmo();
     }
 
     public void loadMagazine() {
-        if (this.currentAmmo > 0) {
-            int freshMagazineSize = this.magazineSize < this.currentAmmo ? this.magazineSize : this.currentAmmo;
-            this.currentMagazineSize = freshMagazineSize;
-            this.currentAmmo -= freshMagazineSize;
-        }
+        this.ammunition.loadMagazine();
+    }
+
+    public int getCurrentAmmo() {
+        return this.ammunition.getCurrentAmmo();
+    }
+
+    public int getMaxAmmo() {
+        return this.ammunition.getMaxAmmo();
+    }
+
+    public int getCurrentMagazineSize() {
+        return this.ammunition.getCurrentMagazineSize();
+    }
+
+    public int getMagazineSize() {
+        return this.ammunition.getMagazineSize();
+    }
+
+    public void setMagazineSize(int newMagazineSize) {
+        this.ammunition.setMagazineSize(newMagazineSize);
+    }
+
+    public void setCurrentMagazineSize(int currentMagazineSize) {
+        this.ammunition.setCurrentMagazineSize(currentMagazineSize);
+    }
+
+    public void setMaxAmmo(int maxAmmo) {
+        this.ammunition.setMaxAmmo(maxAmmo);
+    }
+
+    public void setCurrentAmmo(int currentAmmo) {
+        this.ammunition.setCurrentAmmo(currentAmmo);
     }
 
     private FireStateProperties(FireStatePropertiesBuilder builder) {
         this.fireRate = builder.fireRate;
-        this.magazineSize = builder.magazineSize;
         this.reloadTime = builder.reloadTime;
-        this.maxAmmo = builder.maxAmmo;
         this.triggerType = builder.triggerType;
         this.burstCount = builder.burstCount;
         this.spoolingSpeedDecreaseModifier = builder.spoolingSpeedDecreaseModifier;
         this.spoolThreshold = builder.spoolThreshold;
         this.chargingProperties = (builder.chargingProperties != null ? builder.chargingProperties.copy() : new ChargingProperties(0.0, 0.0, 0.0, 0.0));
         this.percentToCharge = builder.percentToCharge;
-        this.currentMagazineSize = builder.currentMagazineSize;
-        this.currentAmmo = builder.currentAmmo;
+        this.ammunition = builder.ammunition.copy();
     }
 
     public FireStateProperties copy() {
-        return new FireStateProperties.FireStatePropertiesBuilder(this.triggerType, this.reloadTime, this.magazineSize, this.maxAmmo)
+        return new FireStateProperties.FireStatePropertiesBuilder(this.triggerType, this.reloadTime)
                 .withFireRate(this.fireRate)
                 .withBurstCount(this.burstCount)
                 .withSpoolingSpeedDecreaseModifier(this.spoolingSpeedDecreaseModifier)
                 .withSpoolThreshold(this.spoolThreshold)
                 .withChargingProperties(this.chargingProperties.copy())
                 .withPercentToCharge(this.percentToCharge)
-                .withCurrentMagazineSize(this.currentMagazineSize)
-                .withCurrentAmmo(this.currentAmmo)
+                .withAmmunition(this.ammunition.copy())
                 .build();
     }
 
     public static class FireStatePropertiesBuilder {
 
-        private int magazineSize;
         private double reloadTime;
-        private int maxAmmo;
         private TriggerType triggerType;
 
         private double fireRate;
@@ -74,19 +93,21 @@ public class FireStateProperties {
         private double spoolingSpeedDecreaseModifier;
         private int spoolThreshold;
 
-        private int currentMagazineSize;
-        private int currentAmmo;
         private double percentToCharge;
+
+        private Ammunition ammunition;
 
         private ChargingProperties chargingProperties;
 
-        public FireStatePropertiesBuilder(TriggerType triggerType, double reloadTime, int magazineSize, int maxAmmo) {
+        public FireStatePropertiesBuilder(TriggerType triggerType, double reloadTime, int maxAmmo, int magazineSize) {
             this.triggerType = triggerType;
             this.reloadTime = reloadTime;
-            this.magazineSize = magazineSize;
-            this.maxAmmo = maxAmmo;
-            this.currentAmmo = maxAmmo;
-            this.currentMagazineSize = magazineSize;
+            this.ammunition = new Ammunition(maxAmmo, maxAmmo, magazineSize, magazineSize);
+        }
+
+        private FireStatePropertiesBuilder(TriggerType triggerType, double reloadTime) {
+            this.triggerType = triggerType;
+            this.reloadTime = reloadTime;
         }
 
         public FireStatePropertiesBuilder withFireRate(double fireRate) {
@@ -119,13 +140,8 @@ public class FireStateProperties {
             return this;
         }
 
-        public FireStatePropertiesBuilder withCurrentMagazineSize(int currentMagazineSize) {
-            this.currentMagazineSize = currentMagazineSize;
-            return this;
-        }
-
-        public FireStatePropertiesBuilder withCurrentAmmo(int currentAmmo) {
-            this.currentAmmo = currentAmmo;
+        public FireStatePropertiesBuilder withAmmunition(Ammunition ammunition) {
+            this.ammunition = ammunition;
             return this;
         }
 

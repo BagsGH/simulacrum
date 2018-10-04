@@ -18,6 +18,7 @@ public class FireStatePropertiesTest {
     @Test
     public void itCanExpendAmmo() {
         subject.setMagazineSize(5);
+        subject.setCurrentAmmo(50);
         subject.loadMagazine();
         subject.subtractAmmo();
 
@@ -27,6 +28,7 @@ public class FireStatePropertiesTest {
     @Test
     public void itCanLoadNewMagazine() {
         subject.setMagazineSize(5);
+        subject.setCurrentAmmo(50);
         subject.loadMagazine();
         subject.subtractAmmo();
         subject.loadMagazine();

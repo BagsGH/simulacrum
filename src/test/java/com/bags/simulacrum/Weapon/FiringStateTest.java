@@ -233,7 +233,7 @@ public class FiringStateTest {
 //    }
 
     private FireStateProperties setupSpoolWeapon(TriggerType triggerType, double fireRate, double reloadTime, int magazineSize, int spoolThreshold, double spoolingDecrease) {
-        FireStateProperties props = new FireStateProperties.FireStatePropertiesBuilder(triggerType, reloadTime, magazineSize, 200)
+        FireStateProperties props = new FireStateProperties.FireStatePropertiesBuilder(triggerType, reloadTime, 200, magazineSize)
                 .withFireRate(fireRate)
                 .withSpoolThreshold(spoolThreshold)
                 .withSpoolingSpeedDecreaseModifier(spoolingDecrease)
@@ -243,7 +243,7 @@ public class FiringStateTest {
     }
 
     private FireStateProperties setupAutoWeapon(TriggerType triggerType, double fireRate, double reloadTime, int magazineSize) {
-        FireStateProperties props = new FireStateProperties.FireStatePropertiesBuilder(triggerType, reloadTime, magazineSize, 200)
+        FireStateProperties props = new FireStateProperties.FireStatePropertiesBuilder(triggerType, reloadTime, 200, magazineSize)
                 .withFireRate(fireRate)
                 .build();
 
@@ -251,7 +251,7 @@ public class FiringStateTest {
     }
 
     private FireStateProperties setupBurstWeapon(TriggerType triggerType, double fireRate, double reloadTime, int magazineSize, int burstCount) {
-        FireStateProperties props = new FireStateProperties.FireStatePropertiesBuilder(triggerType, reloadTime, magazineSize, 200)
+        FireStateProperties props = new FireStateProperties.FireStatePropertiesBuilder(triggerType, reloadTime, 200, magazineSize)
                 .withFireRate(fireRate)
                 .withBurstCount(burstCount)
                 .build();
@@ -260,7 +260,7 @@ public class FiringStateTest {
     }
 
     private FireStateProperties setupChargingBowWeapon(TriggerType triggerType, double reloadTime, int magazineSize, double chargeTime) {
-        FireStateProperties props = new FireStateProperties.FireStatePropertiesBuilder(triggerType, reloadTime, magazineSize, 200)
+        FireStateProperties props = new FireStateProperties.FireStatePropertiesBuilder(triggerType, reloadTime, 200, magazineSize)
                 .withChargingProperties(new ChargingProperties(chargeTime, 0.0, 0.0, 0.0))
                 .build();
 

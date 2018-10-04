@@ -215,7 +215,7 @@ public class Engine {
 
     private Weapon setupIgnis() {
         Weapon ignisWraith = new Weapon(); //TriggerType triggerType, double reloadTime, int magazineSize, int maxAmmo
-        ignisWraith.setFireStateProperties(new FireStateProperties.FireStatePropertiesBuilder(TriggerType.HELD, 1.70, 200, 800)
+        ignisWraith.setFireStateProperties(new FireStateProperties.FireStatePropertiesBuilder(TriggerType.HELD, 1.70, 800, 200)
                 .withFireRate(8.0)
                 .build());
         /* Important weapon stuff. **/

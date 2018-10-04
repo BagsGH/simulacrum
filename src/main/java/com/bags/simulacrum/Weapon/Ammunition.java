@@ -17,6 +17,10 @@ public class Ammunition {
         this.currentMagazineSize = currentMagazineSize;
     }
 
+    public Ammunition copy() {
+        return new Ammunition(this.maxAmmo, this.currentAmmo, this.magazineSize, this.currentMagazineSize);
+    }
+
     public void subtractAmmo() {
         this.currentMagazineSize--;
     }
