@@ -19,18 +19,13 @@ public class Simulation {
 
     private final SimulationConfig config;
 
-    private final RandomNumberGenerator randomNumberGenerator;
-
     private final SimulationHelper simulationHelper;
 
-    private final TargetDamageHelper targetDamageHelper;
 
     @Autowired
-    public Simulation(SimulationConfig config, RandomNumberGenerator randomNumberGenerator, SimulationHelper simulationHelper, TargetDamageHelper targetDamageHelper) {
+    public Simulation(SimulationConfig config, SimulationHelper simulationHelper) {
         this.config = config;
-        this.randomNumberGenerator = randomNumberGenerator;
         this.simulationHelper = simulationHelper;
-        this.targetDamageHelper = targetDamageHelper;
     }
 
     @PostConstruct
