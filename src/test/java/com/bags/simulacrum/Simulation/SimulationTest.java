@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static com.bags.simulacrum.Armor.HealthClass.*;
+import static com.bags.simulacrum.Damage.DamageType.CORROSIVE;
 import static com.bags.simulacrum.Damage.DamageType.HEAT;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -260,23 +261,122 @@ public class SimulationTest {
                 .thenReturn(fakeCharging);
 
         FiredWeaponSummary fakeFiredWeaponSummary = new FiredWeaponSummary().getEmptySummary();
-        Ignite fakeIgnite = new Ignite();
-        fakeIgnite.setTickProgress(1);
-        fakeIgnite.setDamageType(HEAT);
-        fakeIgnite.setDamagePerTick(25.0);
+        Ignite fakeIgnite = new Ignite(); //TODO: not a huge fan of how hard to make one of these from scartch. Lots of methods.
+        fakeIgnite.setDamageType(CORROSIVE); //Realistically this value would be HEAT, but it doesn't matter.
+        fakeIgnite.setDamagePerTick(1234.0); //Realistically this value would be 25.0, but it doesn't matter.
+        fakeIgnite.setDuration(0.01);
+        fakeIgnite.setNumberOfDamageTicks(2);
+        fakeIgnite.setupTimers();
         fakeFiredWeaponSummary.setStatusesApplied(Collections.singletonList(fakeIgnite));
-        when(mockSimulationHelper.handleFireWeapon(fakeWeapon, fakeTarget, fakeHeadshotChance)).thenReturn(fakeFiredWeaponSummary);
+        doAnswer(invocation -> {
+            fakeTarget.setStatuses(Collections.singletonList(fakeIgnite));
+            fakeIgnite.setTickProgress(fakeIgnite.getTickProgress() + 1);
+            return fakeFiredWeaponSummary;
+        }).when(mockSimulationHelper).handleFireWeapon(fakeWeapon, fakeTarget, fakeHeadshotChance);
+
 
         DamageMetrics fakeDamageMetrics = new DamageMetrics.DamageMetricsBuilder().withDamageToHealth().withDamageToShields().withStatusDamageToHealth().withStatusDamageToShields().build();
         fakeDamageMetrics.addDamageToHealth(HEAT, 25.0);
         when(mockSimulationHelper.handleApplyingStatuses(eq(Collections.singletonList(fakeIgnite)), any(), eq(fakeTarget))).thenReturn(Collections.singletonList(fakeDamageMetrics));
-        fakeTarget.setStatuses(Collections.singletonList(fakeIgnite));
 
         SimulationSummary summary = subject.runSimulation(fakeSimulationParameters);
 
         assertEquals(25.0, summary.getFiredWeaponSummary().getDamageMetrics().getStatusDamageToHealth().get(HEAT), 0.0);
         assertEquals(fakeIgnite, summary.getFiredWeaponSummary().getStatusesApplied().get(0));
         assertEquals(0, summary.getFiredWeaponSummary().getHitPropertiesList().size());
+    }
+
+    @Test
+    public void itAddsDamagedAppliedByWeaponFiredToRunningTotal() {
+        fakeSimulationParameters.setDuration(fakeDeltaTime);
+        Fired fakeFired = new Fired(null, null);
+        Charging fakeCharging = new Charging(null);
+        when(fakeWeapon.firingStateProgressTime(anyDouble()))
+                .thenReturn(fakeFired);
+
+        FiredWeaponSummary fakeFiredWeaponSummary = new FiredWeaponSummary().getEmptySummary();
+        HitProperties fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
+        fakeFiredWeaponSummary.setDelayedDamageSources(new ArrayList<>());
+        DamageMetrics fakeDamageMetrics = new DamageMetrics.DamageMetricsBuilder().withDamageToHealth().withDamageToShields().withStatusDamageToHealth().withStatusDamageToShields().build();
+        fakeDamageMetrics.addDamageToHealth(HEAT, 25.0);
+        fakeFiredWeaponSummary.setDamageMetrics(fakeDamageMetrics);
+        fakeFiredWeaponSummary.setHitPropertiesList(Collections.singletonList(fakeHitProperties));
+
+        when(mockSimulationHelper.handleFireWeapon(fakeWeapon, fakeTarget, fakeHeadshotChance)).thenReturn(fakeFiredWeaponSummary);
+
+        SimulationSummary summary = subject.runSimulation(fakeSimulationParameters);
+
+        assertEquals(25.0, summary.getFiredWeaponSummary().getDamageMetrics().getDamageToHealth().get(HEAT), 0.0);
+        assertEquals(1, summary.getFiredWeaponSummary().getHitPropertiesList().size());
+    }
+
+    @Test
+    public void itAddsAllDamageReturnedByHelperCalls() {
+        fakeSimulationParameters.setDuration(fakeDeltaTime + fakeDeltaTime);
+        Fired fakeFired = new Fired(null, null);
+        Charging fakeCharging = new Charging(null);
+        when(fakeWeapon.firingStateProgressTime(anyDouble()))
+                .thenReturn(fakeFired)
+                .thenReturn(fakeCharging);
+
+        /*
+         * Setup the mock return for the first handleFireWeapon call.
+         */
+        //Setup the status effect.
+        FiredWeaponSummary fakeFiredWeaponSummary = new FiredWeaponSummary().getEmptySummary();
+
+        Ignite fakeIgnite = new Ignite();
+        fakeIgnite.setDamageType(CORROSIVE); //Realistically this value would be HEAT, but it doesn't matter.
+        fakeIgnite.setDamagePerTick(1234.0); //Realistically this value would be 25.0, but it doesn't matter.
+        fakeIgnite.setDuration(0.01);
+        fakeIgnite.setNumberOfDamageTicks(2);
+        fakeIgnite.setupTimers();
+        fakeFiredWeaponSummary.setStatusesApplied(Collections.singletonList(fakeIgnite));
+        //Hit properties to be used for the hit and the delay.
+        HitProperties fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
+        fakeFiredWeaponSummary.setHitPropertiesList(Collections.singletonList(fakeHitProperties));
+
+        //DelayedDamageSource and its DamageSource to be returned by the call to handleFireWeapon.
+        DamageSource fakeDamageSource = new DamageSource(DamageSourceType.DELAYED, Collections.singletonList(new Damage(HEAT, 25)), 0.01, 0.0);
+        DelayedDamageSource fakeDelayedDamageSource = new DelayedDamageSource(fakeDamageSource, fakeHitProperties, fakeDamageSource.getDelay());
+        fakeFiredWeaponSummary.setDelayedDamageSources(Collections.singletonList(fakeDelayedDamageSource));
+
+        //The DamageMetrics to be returned for the original call to handleFireWeapon. This says the call did 25 HEAT damage to health.
+        DamageMetrics fakeDamageMetrics = new DamageMetrics.DamageMetricsBuilder().withDamageToHealth().withDamageToShields().withStatusDamageToHealth().withStatusDamageToShields().build();
+        fakeDamageMetrics.addDamageToHealth(HEAT, 25.0);
+        fakeFiredWeaponSummary.setDamageMetrics(fakeDamageMetrics);
+        // when(mockSimulationHelper.handleFireWeapon(fakeWeapon, fakeTarget, fakeHeadshotChance)).thenReturn(fakeFiredWeaponSummary);
+
+        doAnswer(invocation -> {
+            fakeTarget.setStatuses(Collections.singletonList(fakeIgnite));
+            fakeIgnite.setTickProgress(fakeIgnite.getTickProgress() + 1);
+            return fakeFiredWeaponSummary;
+        }).when(mockSimulationHelper).handleFireWeapon(fakeWeapon, fakeTarget, fakeHeadshotChance);
+
+        /*
+         * Setup the mock return for the call for handling the delayed damage sources.
+         */
+        FiredWeaponSummary fakeDelayedDamageFiredSummary = new FiredWeaponSummary().getEmptySummary();
+        fakeDelayedDamageFiredSummary.setHitPropertiesList(Collections.singletonList(fakeHitProperties));
+
+        //The DamageMetrics to be returned for the call to handleDelayedDamageSources. This says the call did 35 HEAT damage to health.
+        DamageMetrics fakeDelayedDamageMetrics = new DamageMetrics.DamageMetricsBuilder().withDamageToHealth().withDamageToShields().withStatusDamageToHealth().withStatusDamageToShields().build();
+        fakeDelayedDamageMetrics.addDamageToHealth(HEAT, 35.0);
+        fakeDelayedDamageFiredSummary.setDamageMetrics(fakeDelayedDamageMetrics);
+        when(mockSimulationHelper.handleDelayedDamageSources(eq(Collections.singletonList(fakeDelayedDamageSource)), eq(fakeTarget), anyDouble())).thenReturn(fakeDelayedDamageFiredSummary);
+
+        /*
+         * Setup the mock return for the call to handle applying the status procs. This says the call did 25 HEAT damage to health, but since it was a status the Simulation will add it to statusDamageToHealth.
+         */
+        DamageMetrics fakeStatusDamageMetrics = new DamageMetrics.DamageMetricsBuilder().withDamageToHealth().withDamageToShields().withStatusDamageToHealth().withStatusDamageToShields().build();
+        fakeStatusDamageMetrics.addDamageToHealth(HEAT, 25.0);
+        when(mockSimulationHelper.handleApplyingStatuses(eq(Collections.singletonList(fakeIgnite)), any(), eq(fakeTarget))).thenReturn(Collections.singletonList(fakeStatusDamageMetrics));
+
+        SimulationSummary summary = subject.runSimulation(fakeSimulationParameters);
+
+        assertEquals(60.0, summary.getFiredWeaponSummary().getDamageMetrics().getDamageToHealth().get(HEAT), 0.0);
+        assertEquals(25.0, summary.getFiredWeaponSummary().getDamageMetrics().getStatusDamageToHealth().get(HEAT), 0.0);
+        assertEquals(2, summary.getFiredWeaponSummary().getHitPropertiesList().size());
     }
 
     private void setupDefaultSimulationHelperMocks() {

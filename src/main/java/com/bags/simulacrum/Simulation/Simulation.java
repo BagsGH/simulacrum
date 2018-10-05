@@ -55,6 +55,7 @@ public class Simulation {
         Target target = targetList.get(0);
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         for (int i = 0; i < timeTicks; i++) {
+            List<Status> procsApplying = target.statusProgressTime(deltaTime); //TODO: leave this in charge of target?
             if (delayedDamageSources.size() > 0) {
                 delayedDamageSources.forEach(ds -> ds.progressTime(deltaTime));
                 FiredWeaponSummary summaryFromHandlingDelayedDamageSources = simulationHelper.handleDelayedDamageSources(delayedDamageSources, target, weapon.getStatusChance());
@@ -75,7 +76,6 @@ public class Simulation {
             }
             finalWeaponStateMetrics.add(firingState.getClass(), deltaTime);
 
-            List<Status> procsApplying = target.statusProgressTime(deltaTime); //TODO: leave this in charge of target?
             List<DamageMetrics> damageMetricsFromAppliedStatuses = simulationHelper.handleApplyingStatuses(procsApplying, statusTickHitProperties, target);
             for (DamageMetrics individualDamageMetrics : damageMetricsFromAppliedStatuses) {
                 finalFiredWeaponSummary.addStatusDamageToHealth(individualDamageMetrics.getDamageToHealth());
