@@ -345,8 +345,6 @@ public class SimulationTest {
         DamageMetrics fakeDamageMetrics = new DamageMetrics.DamageMetricsBuilder().withDamageToHealth().withDamageToShields().withStatusDamageToHealth().withStatusDamageToShields().build();
         fakeDamageMetrics.addDamageToHealth(HEAT, 25.0);
         fakeFiredWeaponSummary.setDamageMetrics(fakeDamageMetrics);
-        // when(mockSimulationHelper.handleFireWeapon(fakeWeapon, fakeTarget, fakeHeadshotChance)).thenReturn(fakeFiredWeaponSummary);
-
         doAnswer(invocation -> {
             fakeTarget.setStatuses(Collections.singletonList(fakeIgnite));
             fakeIgnite.setTickProgress(fakeIgnite.getTickProgress() + 1);
