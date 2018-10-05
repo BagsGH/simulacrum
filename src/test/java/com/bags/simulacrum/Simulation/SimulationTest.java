@@ -220,6 +220,25 @@ public class SimulationTest {
     }
 
     @Test
+    public void itReturnsSimulationSummaryWithListOfDeadTargets() {
+        fakeSimulationParameters.setDuration(fakeDeltaTime);
+        Fired fakeFired = new Fired(null, null);
+        when(fakeWeapon.firingStateProgressTime(anyDouble()))
+                .thenReturn(fakeFired);
+
+        FiredWeaponSummary fakeFiredWeaponSummary = new FiredWeaponSummary().getEmptySummary();
+        doAnswer(invocation -> {
+            fakeTarget.getHealthHealth().setHealthValue(0.0);
+            return fakeFiredWeaponSummary;
+        }).when(mockSimulationHelper).handleFireWeapon(fakeWeapon, fakeTarget, fakeHeadshotChance);
+
+        SimulationSummary summary = subject.runSimulation(fakeSimulationParameters);
+
+        assertEquals(1, summary.getKilledTargets().size());
+        assertEquals(fakeTarget, summary.getKilledTargets().get(0));
+    }
+
+    @Test
     public void itAddsDamageAppliedByADelayedDamageSourceToTheRunningTotal() {
         fakeSimulationParameters.setDuration(fakeDeltaTime + fakeDeltaTime);
         Fired fakeFired = new Fired(null, null);
@@ -403,7 +422,7 @@ public class SimulationTest {
 
     private void setupDefaultSimulationParameters() {
         fakeSimulationParameters = new SimulationParameters();
-        fakeSimulationParameters.setTargetList(Arrays.asList(fakeTarget));
+        fakeSimulationParameters.setTargetList(new ArrayList<>(Arrays.asList(fakeTarget)));
         fakeSimulationParameters.setDuration(fakeDuration);
         fakeSimulationParameters.setIterations(1);
         fakeSimulationParameters.setLimitAmmo(false);

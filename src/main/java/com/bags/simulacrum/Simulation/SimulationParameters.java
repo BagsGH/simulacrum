@@ -12,6 +12,7 @@ public class SimulationParameters {
     private double duration;
     private double headshotChance;
     private boolean limitAmmo;
+    private boolean replaceDeadTargets;
     private int iterations;
     private Weapon moddedWeapon;
     private List<Target> targetList;

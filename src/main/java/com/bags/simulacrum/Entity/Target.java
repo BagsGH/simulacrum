@@ -50,6 +50,10 @@ public class Target {
         this.statuses = new ArrayList<>(statuses);
     }
 
+    public boolean isDead() {
+        return this.getHealthHealth().getHealthValue() <= 0.0;
+    }
+
 //    public void applyStatus() {
 //        this.statusesApplied.get(this.statusesApplied.size() - 1).apply(this);
 //    }

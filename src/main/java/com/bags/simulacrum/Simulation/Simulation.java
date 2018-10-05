@@ -36,6 +36,7 @@ public class Simulation {
     public SimulationSummary runSimulation(SimulationParameters simulationParameters) {
         Weapon weapon = simulationParameters.getModdedWeapon();
         List<Target> targetList = simulationParameters.getTargetList();
+        SimulationSummary simulationSummary = new SimulationSummary();
 
         double deltaTime = config.getDeltaTime();
         double simulationDuration = simulationParameters.getDuration(); //60s //.01s == 6000
@@ -67,7 +68,6 @@ public class Simulation {
             }
             target.getStatuses().removeIf(Status::finished);
 
-
             FiringState firingState = weapon.firingStateProgressTime(deltaTime);
             if (firingState instanceof Fired) {
                 FiredWeaponSummary firedWeaponSummary = simulationHelper.handleFireWeapon(weapon, target, simulationParameters.getHeadshotChance());
@@ -78,8 +78,14 @@ public class Simulation {
                 delayedDamageSources.addAll(firedWeaponSummary.getDelayedDamageSources());
             }
             finalWeaponStateMetrics.add(firingState.getClass(), deltaTime);
+            if (target.isDead()) {
+                simulationSummary.addKilledTarget(target);
+                targetList.removeIf(Target::isDead);
+                if (simulationParameters.isReplaceDeadTargets()) {
+                    targetList.add(new Target()); //TODO: copy target implementation
+                }
+            }
         }
-        SimulationSummary simulationSummary = new SimulationSummary();
         simulationSummary.setWeaponStateMetrics(finalWeaponStateMetrics);
         simulationSummary.setFiredWeaponSummary(finalFiredWeaponSummary);
 
