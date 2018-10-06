@@ -65,7 +65,7 @@ public class TargetDamageHelperTest {
     public void itCanApplyDamageToShields() {
         DamageMetrics damageMetrics = subject.applyDamageSourceDamageToTarget(fakeDamageSource, fakeHitProperties, fakeTarget);
 
-        assertExpectedHealthExists(fakeTarget.getHealth(), new Health(HealthClass.SHIELD, 150.0), 0.0);
+        assertExpectedHealthExists(fakeTarget.getHealths(), new Health(HealthClass.SHIELD, 150.0), 0.0);
         verify(damageCalculatorMock).calculateDamage(eq(fakeHealth), eq(fakeShield), eq(fakeArmor), eq(fakeDamage), eq(fakeHitProperties));
         assertEquals(50.0, damageMetrics.getDamageToShields().get(HEAT), 0.0);
         assertEquals(0.0, damageMetrics.getDamageToHealth().get(HEAT), 0.0);
@@ -75,12 +75,12 @@ public class TargetDamageHelperTest {
     public void itCanApplyDamageToHealth() {
         fakeTarget = new Target();
         fakeHealth = new Health(HealthClass.MACHINERY, 200.0);
-        fakeTarget.setHealth(Arrays.asList(fakeHealth, new Health(HealthClass.SHIELD, 0.0), new Health(HealthClass.ALLOY, 0.0)));
+        fakeTarget.setHealths(Arrays.asList(fakeHealth, new Health(HealthClass.SHIELD, 0.0), new Health(HealthClass.ALLOY, 0.0)));
         when(damageCalculatorMock.calculateDamage(any(Health.class), argThat(deadShieldsMatcher), argThat(deadArmorMatcher), any(Damage.class), any(HitProperties.class))).thenReturn(50.0);
 
         DamageMetrics damageMetrics = subject.applyDamageSourceDamageToTarget(fakeDamageSource, fakeHitProperties, fakeTarget);
 
-        assertExpectedHealthExists(fakeTarget.getHealth(), new Health(HealthClass.MACHINERY, 150.0), 0.0);
+        assertExpectedHealthExists(fakeTarget.getHealths(), new Health(HealthClass.MACHINERY, 150.0), 0.0);
         assertEquals(50.0, damageMetrics.getDamageToHealth().get(HEAT), 0.0);
         assertEquals(0.0, damageMetrics.getDamageToShields().get(HEAT), 0.0);
     }
@@ -95,8 +95,8 @@ public class TargetDamageHelperTest {
         DamageMetrics damageMetrics = subject.applyDamageSourceDamageToTarget(fakeDamageSource, fakeHitProperties, fakeTarget);
 
         assertExpectedDamageExists(new Damage(HEAT, 5.0), damageCaptor.getAllValues(), 0.001);
-        assertExpectedHealthExists(fakeTarget.getHealth(), new Health(HealthClass.SHIELD, 0.0), 0.0);
-        assertExpectedHealthExists(fakeTarget.getHealth(), new Health(HealthClass.MACHINERY, 165.0), 0.0);
+        assertExpectedHealthExists(fakeTarget.getHealths(), new Health(HealthClass.SHIELD, 0.0), 0.0);
+        assertExpectedHealthExists(fakeTarget.getHealths(), new Health(HealthClass.MACHINERY, 165.0), 0.0);
         assertEquals(35.0, damageMetrics.getDamageToHealth().get(HEAT), 0.0);
         assertEquals(200.0, damageMetrics.getDamageToShields().get(HEAT), 0.0);
     }
@@ -120,7 +120,7 @@ public class TargetDamageHelperTest {
         fakeHealth = new Health(HealthClass.MACHINERY, 200.0);
         fakeShield = new Health(HealthClass.SHIELD, 200.0);
         fakeArmor = new Health(HealthClass.ALLOY, 300.0);
-        fakeTarget.setHealth(Arrays.asList(fakeArmor, fakeShield, fakeHealth));
+        fakeTarget.setHealths(Arrays.asList(fakeArmor, fakeShield, fakeHealth));
     }
 
     private void assertExpectedHealthExists(List<Health> targetHealth, Health health, double threshold) {

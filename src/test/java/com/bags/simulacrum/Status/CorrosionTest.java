@@ -42,17 +42,17 @@ public class CorrosionTest {
     @Test
     public void itReducesTargetArmorWhenApplied() {
         Target fakeTarget = new Target();
-        fakeTarget.setHealth(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200), new Health(ALLOY, 200)));
+        fakeTarget.setHealths(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200), new Health(ALLOY, 200)));
 
         subject.apply(fakeTarget);
 
-        assertEquals(150.0, fakeTarget.getHealth().get(2).getHealthValue(), 0.0);
+        assertEquals(150.0, fakeTarget.getHealths().get(2).getHealthValue(), 0.0);
     }
 
     @Test
     public void itReducesArmorBasedOnCurrentArmor() {
         Target fakeTarget = new Target();
-        fakeTarget.setHealth(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200), new Health(ALLOY, 200)));
+        fakeTarget.setHealths(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200), new Health(ALLOY, 200)));
 
         subject.apply(fakeTarget);
         subject.apply(fakeTarget);
@@ -64,8 +64,8 @@ public class CorrosionTest {
     public void itDoesNotAffectTargetsWithoutArmor() {
         Target fakeTarget = new Target();
         Target expectedTarget = new Target();
-        fakeTarget.setHealth(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200)));
-        expectedTarget.setHealth(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200)));
+        fakeTarget.setHealths(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200)));
+        expectedTarget.setHealths(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200)));
 
         subject.apply(fakeTarget);
 
@@ -75,7 +75,7 @@ public class CorrosionTest {
     @Test
     public void itDoesNotReturnAnyDamages() {
         Target fakeTarget = new Target();
-        fakeTarget.setHealth(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200)));
+        fakeTarget.setHealths(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200)));
         DamageSource actualDamageSource = subject.apply(fakeTarget);
 
         assertEquals(0, actualDamageSource.getDamages().size());

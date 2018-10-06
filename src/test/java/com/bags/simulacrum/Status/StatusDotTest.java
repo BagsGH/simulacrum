@@ -109,8 +109,8 @@ public abstract class StatusDotTest {
     public void itDoesNotAffectTargetWhenApplied() {
         Target fakeTarget = new Target();
         Target expectedTarget = new Target();
-        fakeTarget.setHealth(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200), new Health(ALLOY, 200)));
-        expectedTarget.setHealth(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200), new Health(ALLOY, 200)));
+        fakeTarget.setHealths(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200), new Health(ALLOY, 200)));
+        expectedTarget.setHealths(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200), new Health(ALLOY, 200)));
 
         subject.apply(fakeTarget);
 

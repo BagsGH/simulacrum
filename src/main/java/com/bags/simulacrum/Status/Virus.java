@@ -18,7 +18,7 @@ public class Virus extends Status {
 
     @Override
     public DamageSource apply(Target target) {
-        Health targetHealth = target.getHealthHealth();
+        Health targetHealth = target.getHealth();
         double currentHealth = targetHealth.getHealthValue();
         double maxHealth = targetHealth.getHealthValueMax();
 
@@ -55,7 +55,7 @@ public class Virus extends Status {
 
     @Override
     public void removeStatusEffects() {
-        Health targetHealth = this.affectedTarget.getHealthHealth();
+        Health targetHealth = this.affectedTarget.getHealth();
         double currentHealth = targetHealth.getHealthValue();
         double maxHealth = targetHealth.getHealthValueMax();
 

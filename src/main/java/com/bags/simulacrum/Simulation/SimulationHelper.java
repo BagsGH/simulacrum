@@ -31,7 +31,7 @@ public class SimulationHelper {
     }
 
     //TODO: Test
-    public List<DamageMetrics> handleApplyingStatuses(List<Status> procsApplying, HitProperties statusTickHitProperties, Target target) {
+    public List<DamageMetrics> handleApplyingStatuses(List<Status> procsApplying, HitProperties statusTickHitProperties, Target target) { //TODO: bleed apply directly ohealth
         List<DamageMetrics> listOfDamageMetrics = new ArrayList<>();
         for (Status status : procsApplying) {
             DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(status.apply(target), statusTickHitProperties, target);

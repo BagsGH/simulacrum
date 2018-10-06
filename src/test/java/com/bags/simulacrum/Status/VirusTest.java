@@ -46,7 +46,7 @@ public class VirusTest {
     @Test
     public void itDoesNotReturnAnyDamages() {
         Target fakeTarget = new Target();
-        fakeTarget.setHealth(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200)));
+        fakeTarget.setHealths(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200)));
         DamageSource actualDamageSource = subject.apply(fakeTarget);
 
         assertEquals(0, actualDamageSource.getDamages().size());
@@ -57,12 +57,12 @@ public class VirusTest {
         Target fakeTarget = new Target();
         Health fakeHealth = new Health(FLESH, 200);
         fakeHealth.setHealthValue(150);
-        fakeTarget.setHealth(Arrays.asList(fakeHealth, new Health(SHIELD, 200)));
+        fakeTarget.setHealths(Arrays.asList(fakeHealth, new Health(SHIELD, 200)));
 
         subject.apply(fakeTarget);
 
-        assertEquals(75.0, fakeTarget.getHealthHealth().getHealthValue(), 0.0);
-        assertEquals(100, fakeTarget.getHealthHealth().getHealthValueMax(), 0.0);
+        assertEquals(75.0, fakeTarget.getHealth().getHealthValue(), 0.0);
+        assertEquals(100, fakeTarget.getHealth().getHealthValueMax(), 0.0);
 
     }
 
@@ -70,12 +70,12 @@ public class VirusTest {
     public void itAddsRemovedCurrentAndMaxHealthWhenRemoved() {
         Target fakeTarget = new Target();
         Target expectedTarget = new Target();
-        fakeTarget.setHealth(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200)));
-        expectedTarget.setHealth(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200)));
+        fakeTarget.setHealths(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200)));
+        expectedTarget.setHealths(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200)));
 
         subject.apply(fakeTarget);
 
-        assertEquals(100, fakeTarget.getHealthHealth().getHealthValueMax(), 0.0);
+        assertEquals(100, fakeTarget.getHealth().getHealthValueMax(), 0.0);
 
         subject.removeStatusEffects();
 

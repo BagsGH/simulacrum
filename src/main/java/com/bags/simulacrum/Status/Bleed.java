@@ -12,7 +12,7 @@ import static com.bags.simulacrum.Damage.DamageSourceType.DOT;
 import static com.bags.simulacrum.Damage.DamageType.TRUE;
 
 @Data
-public class Bleed extends StatusDot {
+public class Bleed extends StatusDot { //TODO: find a way to make this hit directly to healths
 
     private Bleed(DamageType damageType, double duration, int damageTicks) {
         this.damageType = damageType;

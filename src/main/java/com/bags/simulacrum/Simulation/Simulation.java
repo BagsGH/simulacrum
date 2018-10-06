@@ -48,7 +48,8 @@ public class Simulation {
         HitProperties statusTickHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
 
         weapon.initializeFiringState();
-        Target target = targetList.get(0);
+        Target target = targetList.get(0); //TODO: pass in list to the calls below, and if the DamageSource is AOE, hit all, else... first?
+        //Target targetCopy = target.copy(); //TODO: handle for multiple targets
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         for (int i = 0; i < timeTicks; i++) {
             if (delayedDamageSources.size() > 0) {
@@ -60,7 +61,7 @@ public class Simulation {
                 delayedDamageSources.removeIf(DelayedDamageSource::delayOver);
             }
 
-            List<Status> procsApplying = target.statusProgressTime(deltaTime); //TODO: leave this in charge of target?
+            List<Status> procsApplying = getProcsApplyingToTarget(target, deltaTime);
             List<DamageMetrics> damageMetricsFromAppliedStatuses = simulationHelper.handleApplyingStatuses(procsApplying, statusTickHitProperties, target);
             for (DamageMetrics individualDamageMetrics : damageMetricsFromAppliedStatuses) {
                 finalFiredWeaponSummary.addStatusDamageToHealth(individualDamageMetrics.getDamageToHealth());
@@ -82,7 +83,8 @@ public class Simulation {
                 simulationSummary.addKilledTarget(target);
                 targetList.removeIf(Target::isDead);
                 if (simulationParameters.isReplaceDeadTargets()) {
-                    targetList.add(new Target()); //TODO: copy target implementation
+                    targetList.add(new Target());
+                    //targetList.add(targetCopy.copy()); //TODO: copy target implementation
                 }
             }
         }
@@ -90,5 +92,17 @@ public class Simulation {
         simulationSummary.setFiredWeaponSummary(finalFiredWeaponSummary);
 
         return simulationSummary;
+    }
+
+    private List<Status> getProcsApplyingToTarget(Target target, double deltaTime) {
+        List<Status> statusesOnTarget = target.getStatuses();
+        List<Status> procsApplying = new ArrayList<>();
+        statusesOnTarget.forEach(status -> {
+            status.progressTime(deltaTime);
+            if (status.checkProgress()) {
+                procsApplying.add(status);
+            }
+        });
+        return procsApplying;
     }
 }

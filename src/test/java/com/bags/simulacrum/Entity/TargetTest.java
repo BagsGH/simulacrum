@@ -22,14 +22,14 @@ public class TargetTest {
     public void itCanHaveSetterTestCoverage() {
         subject.setAbilities(Collections.singletonList("Charge"));
         subject.setWeapons(Collections.singletonList("Rifle"));
-        subject.setHealth(Collections.singletonList(new Health(HealthClass.MACHINERY, 200.0)));
+        subject.setHealths(Collections.singletonList(new Health(HealthClass.MACHINERY, 200.0)));
         subject.setName("Moa");
         subject.setBaseLevel(1);
         subject.setLevel(1);
 
         assertEquals(1, subject.getAbilities().size());
         assertEquals(1, subject.getWeapons().size());
-        assertEquals(1, subject.getHealth().size());
+        assertEquals(1, subject.getHealths().size());
         assertEquals("Moa", subject.getName());
         assertEquals(1, subject.getBaseLevel());
         assertEquals(1, subject.getLevel());
@@ -39,6 +39,6 @@ public class TargetTest {
     public void itCanAddHealthToTarget() {
         subject.addHealth(new Health(HealthClass.MACHINERY, 200.0));
 
-        assertEquals(HealthClass.MACHINERY, subject.getHealth().get(0).getHealthClass());
+        assertEquals(HealthClass.MACHINERY, subject.getHealths().get(0).getHealthClass());
     }
 }

@@ -28,7 +28,7 @@ public class TargetDamageHelper {
                 .withDamageToShields()
                 .build();
 
-        List<Health> targetHealthClasses = target.getHealth();
+        List<Health> targetHealthClasses = target.getHealths();
         Health targetHealth = findBaseHealth(targetHealthClasses);
         Health targetShield = findShields(targetHealthClasses);
         Health targetArmor = findArmor(targetHealthClasses);
