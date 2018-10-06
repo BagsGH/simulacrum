@@ -74,7 +74,8 @@ public class Target {
 
         copy.setHeadBodyModifier(this.headBodyModifier.copy());
 
-        copy.setStatuses(this.statuses); // TODO: implement copy for statuses, I guess.
+        List<Status> deepCopiedStatuses = this.statuses.stream().map(Status::copy).collect(Collectors.toList());
+        copy.setStatuses(deepCopiedStatuses);
 
         return copy;
     }

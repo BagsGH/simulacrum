@@ -49,7 +49,7 @@ public class Simulation {
 
         weapon.initializeFiringState();
         Target target = targetList.get(0); //TODO: pass in list to the calls below, and if the DamageSource is AOE, hit all, else... first?
-        //Target targetCopy = target.copy(); //TODO: handle for multiple targets
+        //Target targetCopy = target.copy(); //TODO: commented out because its not 100% implemented //TODO: handle for multiple targets
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         for (int i = 0; i < timeTicks; i++) {
             if (delayedDamageSources.size() > 0) {
@@ -79,6 +79,7 @@ public class Simulation {
                 delayedDamageSources.addAll(firedWeaponSummary.getDelayedDamageSources());
             }
             finalWeaponStateMetrics.add(firingState.getClass(), deltaTime);
+
             if (target.isDead()) {
                 simulationSummary.addKilledTarget(target);
                 targetList.removeIf(Target::isDead);
@@ -95,9 +96,8 @@ public class Simulation {
     }
 
     private List<Status> getProcsApplyingToTarget(Target target, double deltaTime) {
-        List<Status> statusesOnTarget = target.getStatuses();
         List<Status> procsApplying = new ArrayList<>();
-        statusesOnTarget.forEach(status -> {
+        target.getStatuses().forEach(status -> {
             status.progressTime(deltaTime);
             if (status.checkProgress()) {
                 procsApplying.add(status);
