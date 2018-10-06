@@ -43,7 +43,7 @@ public class DamageSource {
         List<Damage> damagesList = this.damages.stream().map(Damage::copy).collect(Collectors.toList());
         copiedDamageSource.setDamages(damagesList);
 
-        List<Damage> modifiedInnateDamageList = emptyIfNull(this.modifiedInnateDamages).stream().map(Damage::copy).collect(Collectors.toList());
+        List<Damage> modifiedInnateDamageList = emptyIfNull(this.modifiedInnateDamages).stream().map(Damage::copy).collect(Collectors.toList()); //TODO: empty if null will cause an issie if something is removed from it!!
         copiedDamageSource.setModifiedInnateDamages((modifiedInnateDamageList.isEmpty() ? null : modifiedInnateDamageList)); //TODO: shouldnt need this weird thing, but it made a test fail.
 
         List<Damage> addedElementalDamageList = emptyIfNull(this.addedElementalDamages).stream().map(Damage::copy).collect(Collectors.toList());

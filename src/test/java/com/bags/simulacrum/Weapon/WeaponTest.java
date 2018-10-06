@@ -62,7 +62,7 @@ public class WeaponTest {
         subject.addMod(new Mod(new Damage(HEAT, 0.0, 0.75)));
 
         assertEquals(1, subject.getMods().size());
-        assertEquals(HEAT, subject.getMods().get(0).getDamage().getType());
+        assertEquals(HEAT, subject.getMods().get(0).getDamage().getDamageType());
         assertEquals(0.75, subject.getMods().get(0).getDamage().getModAddedDamageRatio(), 0.0);
         assertEquals(0.0, subject.getMods().get(0).getDamage().getDamageValue(), 0.0);
     }

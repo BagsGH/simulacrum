@@ -505,6 +505,6 @@ public class WeaponModifierTest {
     }
 
     private void assertExpectedDamageExists(Damage damageExpected, List<Damage> actualDamages, double accuracyThreshold) {
-        assertTrue(actualDamages.stream().anyMatch(damage -> damage.getType().equals(damageExpected.getType()) && Math.abs(damage.getDamageValue() - damageExpected.getDamageValue()) < accuracyThreshold));
+        assertTrue(actualDamages.stream().anyMatch(damage -> damage.getDamageType().equals(damageExpected.getDamageType()) && Math.abs(damage.getDamageValue() - damageExpected.getDamageValue()) < accuracyThreshold));
     }
 }

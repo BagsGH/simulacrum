@@ -36,7 +36,7 @@ public abstract class StatusDotTest {
     @Test
     public void itStoresItsDamagePerTickAndCanReturnTheDamageSource() {
         assertEquals(fakeDamagePerTick, subject.apply(new Target()).getDamages().get(0).getDamageValue(), 0.0);
-        assertEquals(fakeDamageType, subject.apply(new Target()).getDamages().get(0).getType());
+        assertEquals(fakeDamageType, subject.apply(new Target()).getDamages().get(0).getDamageType());
         assertEquals(1, subject.apply(new Target()).getDamages().size());
         assertNull(subject.apply(new Target()).getModifiedInnateDamages());
         assertNull(subject.apply(new Target()).getAddedElementalDamages());

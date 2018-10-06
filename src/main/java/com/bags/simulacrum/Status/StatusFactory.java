@@ -125,11 +125,11 @@ public class StatusFactory {
         double damageValuePerTick = 0.0;
 
         for (DamageType damageType : innateDamageTypesUsed) {
-            damageValuePerTick += innateDamages.stream().filter(damage -> damage.getType().equals(damageType)).mapToDouble(Damage::getDamageValue).sum();
+            damageValuePerTick += innateDamages.stream().filter(damage -> damage.getDamageType().equals(damageType)).mapToDouble(Damage::getDamageValue).sum();
         }
         if (addedElementalDamages != null) {
             for (DamageType damageType : addedElementalDamageTypesUsed) {
-                damageValuePerTick += addedElementalDamages.stream().filter(damage -> damage.getType().equals(damageType)).mapToDouble(Damage::getDamageValue).sum();
+                damageValuePerTick += addedElementalDamages.stream().filter(damage -> damage.getDamageType().equals(damageType)).mapToDouble(Damage::getDamageValue).sum();
             }
         }
 

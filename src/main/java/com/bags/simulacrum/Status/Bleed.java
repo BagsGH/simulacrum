@@ -60,7 +60,7 @@ SmilingMadToday at 12:58 PM
     slash procs counterintuitively do not care about slash damage specifically
     so adding slash damage through a slash mod doesnt actually add any damage to the proc
 SmilingMadToday at 1:00 PM
-    all it actually does is increase the amount of non-proc slash damage, which in turn increases the damage type's status bias
+    all it actually does is increase the amount of non-proc slash damage, which in turn increases the damage damageType's status bias
     so you will proc slash more often
     of course, this is meaningless on a weapon that doesnt have slash in the first place, because in that case the mod does nothing
     to give a practical example of why you should  use such mods, the 120% slash damage mod is often added to the tigris prime to increase the amount of slash procs it gets

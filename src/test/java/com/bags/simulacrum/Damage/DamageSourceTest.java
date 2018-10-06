@@ -26,7 +26,7 @@ public class DamageSourceTest {
 
         assertEquals(75.0, subject.getAoe(), 0.0);
         assertEquals(2.0, subject.getDelay(), 0.0);
-        assertEquals(PUNCTURE, subject.getDamages().get(0).getType());
+        assertEquals(PUNCTURE, subject.getDamages().get(0).getDamageType());
         assertEquals(DamageSourceType.PROJECTILE, subject.getDamageSourceType());
     }
 
@@ -34,7 +34,7 @@ public class DamageSourceTest {
     public void itCanHaveConstructorTestCoverage_1() {
         subject = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(PUNCTURE)));
 
-        assertEquals(PUNCTURE, subject.getDamages().get(0).getType());
+        assertEquals(PUNCTURE, subject.getDamages().get(0).getDamageType());
         assertEquals(DamageSourceType.PROJECTILE, subject.getDamageSourceType());
     }
 
@@ -42,7 +42,7 @@ public class DamageSourceTest {
     public void itCanHaveConstructorTestCoverage_2() {
         subject = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(PUNCTURE)), 2.0, 75.0);
 
-        assertEquals(PUNCTURE, subject.getDamages().get(0).getType());
+        assertEquals(PUNCTURE, subject.getDamages().get(0).getDamageType());
         assertEquals(DamageSourceType.PROJECTILE, subject.getDamageSourceType());
         assertEquals(75.0, subject.getAoe(), 0.0);
         assertEquals(2.0, subject.getDelay(), 0.0);
@@ -63,7 +63,7 @@ public class DamageSourceTest {
     public void itCanAddDamagesToList() {
         subject.addDamage(new Damage(PUNCTURE));
 
-        assertEquals(PUNCTURE, subject.getDamages().get(0).getType());
+        assertEquals(PUNCTURE, subject.getDamages().get(0).getDamageType());
     }
 
 }

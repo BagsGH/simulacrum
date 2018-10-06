@@ -61,7 +61,7 @@ public class DamageModHelper {
 
         List<Damage> moddedBaseDamagesFromSource = new ArrayList<>();
         damagesFromSource.forEach(damage -> {
-            moddedBaseDamagesFromSource.add(new Damage(damage.getType(), damage.getDamageValue() * (1 + rawDamageIncrease)));
+            moddedBaseDamagesFromSource.add(new Damage(damage.getDamageType(), damage.getDamageValue() * (1 + rawDamageIncrease)));
         });
         return moddedBaseDamagesFromSource;
     }
@@ -76,7 +76,7 @@ public class DamageModHelper {
         populateIPSDamageIncreaseMap(ipsDamageIncreaseMap);
 
         for (Damage damage : baseDamagesAfterRawDamageMods) {
-            DamageType damageType = damage.getType();
+            DamageType damageType = damage.getDamageType();
             if (DamageType.isIPS(damageType)) {
                 ipsDamages.add(new Damage(damageType, damage.getDamageValue() * (1 + ipsDamageIncreaseMap.get(damageType)), 0.0));
             }
@@ -88,8 +88,8 @@ public class DamageModHelper {
     private void populateIPSDamageIncreaseMap(Map<DamageType, Double> ipsDamageIncreaseMap) {
         for (Mod mod : originalWeaponMods) {
             Damage modDamage = mod.getDamage();
-            if (modDamage != null && DamageType.isIPS(modDamage.getType())) {
-                DamageType modIPSDamageType = modDamage.getType();
+            if (modDamage != null && DamageType.isIPS(modDamage.getDamageType())) {
+                DamageType modIPSDamageType = modDamage.getDamageType();
                 ipsDamageIncreaseMap.put(modIPSDamageType, ipsDamageIncreaseMap.get(modIPSDamageType) + modDamage.getModAddedDamageRatio());
             }
         }
@@ -101,7 +101,7 @@ public class DamageModHelper {
         for (Mod mod : originalWeaponMods) {
             if (modAddsElementalDamage(mod)) {
                 Damage modDamage = mod.getDamage();
-                elementalDamagesAddedByMods.add(new Damage(modDamage.getType(), baseDamage * modDamage.getModAddedDamageRatio()));
+                elementalDamagesAddedByMods.add(new Damage(modDamage.getDamageType(), baseDamage * modDamage.getModAddedDamageRatio()));
             }
         }
 
@@ -109,13 +109,13 @@ public class DamageModHelper {
     }
 
     private boolean modAddsElementalDamage(Mod mod) {
-        return mod.getDamage() != null && DamageType.isElemental(mod.getDamage().getType());
+        return mod.getDamage() != null && DamageType.isElemental(mod.getDamage().getDamageType());
     }
 
     private List<Damage> orderDamageTypesBasedOnModIndex(List<Damage> moddedBaseDamages, List<Damage> modAddedElementalDamages) {
         List<Damage> elementalDamagesMergedList = new ArrayList<>(modAddedElementalDamages);
         for (Damage baseDamage : moddedBaseDamages) {
-            if (DamageType.isElemental(baseDamage.getType())) {
+            if (DamageType.isElemental(baseDamage.getDamageType())) {
                 boolean thereIsAModAddedDamageThatIsTheSameTypeAsABaseDamage = false;
                 for (Damage modAddedDamage : elementalDamagesMergedList) {
                     if (modAddedElementalDamageHasMatchOnBase(baseDamage, modAddedDamage)) {
@@ -133,7 +133,7 @@ public class DamageModHelper {
     }
 
     private boolean modAddedElementalDamageHasMatchOnBase(Damage damage1, Damage damage2) {
-        return damage2.getType().equals(damage1.getType());
+        return damage2.getDamageType().equals(damage1.getDamageType());
     }
 
     private void sumDamagesOfSameType(Damage baseDamage, Damage modAddedDamage) {
@@ -153,11 +153,11 @@ public class DamageModHelper {
                 combinedElementalDamages.add(damage1);
                 break;
             }
-            if (DamageType.isCombinedElemental(damage1.getType())) {
+            if (DamageType.isCombinedElemental(damage1.getDamageType())) {
                 combinedElementalDamages.add(damage1);
             } else {
                 Damage damage2 = orderedElementalDamages.get(i + 1);
-                DamageType combinedDamageType = elementalDamageMapper.combineElements(damage1.getType(), damage2.getType());
+                DamageType combinedDamageType = elementalDamageMapper.combineElements(damage1.getDamageType(), damage2.getDamageType());
                 if (validCombination(combinedDamageType)) {
                     Damage combinedDamage = new Damage(combinedDamageType, damage1.getDamageValue() + damage2.getDamageValue(), 0.00);
                     combinedElementalDamages.add(combinedDamage);
@@ -185,7 +185,7 @@ public class DamageModHelper {
             int count = 0;
             Damage possibleLoner = null;
             for (Damage damage : combinedElementalDamages) {
-                if (damage.getType().equals(damageType)) {
+                if (damage.getDamageType().equals(damageType)) {
                     possibleLoner = damage;
                     summedDamageForType += damage.getDamageValue();
                     count++;

@@ -5,33 +5,33 @@ import lombok.Data;
 @Data
 public class Damage {
 
-    private DamageType type;
+    private DamageType damageType;
     private double damageValue;
     private double modAddedDamageRatio;
 
-    public Damage(DamageType type, double damageValue, double modAddedDamageRatio) {
-        this.type = type;
+    public Damage(DamageType damageType, double damageValue, double modAddedDamageRatio) {
+        this.damageType = damageType;
         this.damageValue = damageValue;
         this.modAddedDamageRatio = modAddedDamageRatio;
     }
 
-    public Damage(DamageType type, double damageValue) {
-        this.type = type;
+    public Damage(DamageType damageType, double damageValue) {
+        this.damageType = damageType;
         this.damageValue = damageValue;
     }
 
-    public Damage(DamageType type) {
-        this.type = type;
+    public Damage(DamageType damageType) {
+        this.damageType = damageType;
     }
 
     public Damage(Damage damage) {
-        this.type = damage.getType();
+        this.damageType = damage.getDamageType();
         this.damageValue = damage.getDamageValue();
         this.modAddedDamageRatio = damage.getModAddedDamageRatio();
     }
 
     public Damage copy() {
-        return new Damage(this.type, this.damageValue, this.modAddedDamageRatio);
+        return new Damage(this.damageType, this.damageValue, this.modAddedDamageRatio);
     }
 
     public Damage() {

@@ -31,7 +31,7 @@ public class DamageCalculator {
     }
 
     public double calculateDamage(Health baseHealth, Health targetShield, Health targetArmor, Damage damage, HitProperties hitProperties) {
-        DamageType damageType = damage.getType();
+        DamageType damageType = damage.getDamageType();
         boolean damagingShields = damagingShields(targetShield, targetShield.getHealthValue(), damageType);
 
         double shieldMultiplier = damagingShields ? 1 + damageBonusMapper.getBonusModifier(damageType, targetShield.getHealthClass()) : 1.0;

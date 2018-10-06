@@ -92,7 +92,7 @@ public class StatusProcHelper {
 /*
 
 BagsToday at 9:03 AM
-if you have 50% status, and 2+ elemental damage types, how does that work? Was reading the wiki and not 100% sure. do each status type have a 50% chance, or is it a 50% chance that one ofthem happens, or what?
+if you have 50% status, and 2+ elemental damage types, how does that work? Was reading the wiki and not 100% sure. do each status damageType have a 50% chance, or is it a 50% chance that one ofthem happens, or what?
 JaristysToday at 9:06 AM
 how ive understood it: 50% status chance means what is says, 50% chance for a status proc to occur. what proc is then applied depends on the ratios of different types of damage.
 so say you have a gun with 1 slash 10 corrosive damage, the corrosive is much more likely to be the proc that occurs

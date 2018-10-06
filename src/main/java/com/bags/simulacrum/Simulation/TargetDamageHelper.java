@@ -34,7 +34,7 @@ public class TargetDamageHelper {
         Health targetArmor = findArmor(targetHealthClasses);
 
         for (Damage damage : damageSource.getDamages()) {
-            DamageType damageType = damage.getType();
+            DamageType damageType = damage.getDamageType();
             //TODO: Find way for BLEED to ignore shields
             double damageDealt = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, damage, hitProperties);
 
@@ -82,7 +82,7 @@ public class TargetDamageHelper {
         double shieldValue = targetShield.getHealthValue();
         targetShield.setHealthValue(0.0);
         double percentSpilloverDamage = 1 - (shieldValue / damageDealt);
-        Damage remainingDamage = new Damage(damage.getType(), Math.round(damage.getDamageValue() * percentSpilloverDamage));
+        Damage remainingDamage = new Damage(damage.getDamageType(), Math.round(damage.getDamageValue() * percentSpilloverDamage));
         double damageDoneToHealth = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, remainingDamage, hitProperties);
         targetHealth.subtractHealthValue(damageDoneToHealth);
         return damageDoneToHealth;

@@ -17,11 +17,11 @@ public class DamageTest {
 
     @Test
     public void itCanHaveSetterTestCoverage() {
-        subject.setType(PUNCTURE);
+        subject.setDamageType(PUNCTURE);
         subject.setDamageValue(5.0);
         subject.setModAddedDamageRatio(0.75);
 
-        assertEquals(PUNCTURE, subject.getType());
+        assertEquals(PUNCTURE, subject.getDamageType());
         assertEquals(5.0, subject.getDamageValue(), 0.001);
         assertEquals(0.75, subject.getModAddedDamageRatio(), 0.001);
     }
@@ -30,14 +30,14 @@ public class DamageTest {
     public void itCanHaveConstructorTestCoverage_1() {
         subject = new Damage(PUNCTURE);
 
-        assertEquals(PUNCTURE, subject.getType());
+        assertEquals(PUNCTURE, subject.getDamageType());
     }
 
     @Test
     public void itCanHaveConstructorTestCoverage_2() {
         subject = new Damage(PUNCTURE, 5.0);
 
-        assertEquals(PUNCTURE, subject.getType());
+        assertEquals(PUNCTURE, subject.getDamageType());
         assertEquals(5.0, subject.getDamageValue(), 0.001);
     }
 
@@ -45,7 +45,7 @@ public class DamageTest {
     public void itCanHaveConstructorTestCoverage_3() {
         subject = new Damage(PUNCTURE, 5.0, 0.75);
 
-        assertEquals(PUNCTURE, subject.getType());
+        assertEquals(PUNCTURE, subject.getDamageType());
         assertEquals(5.0, subject.getDamageValue(), 0.001);
         assertEquals(0.75, subject.getModAddedDamageRatio(), 0.001);
     }
@@ -54,7 +54,7 @@ public class DamageTest {
     public void itCanHaveCopyConstructorTestCoverage_3() {
         subject = new Damage(new Damage(PUNCTURE, 5.0, 0.75));
 
-        assertEquals(PUNCTURE, subject.getType());
+        assertEquals(PUNCTURE, subject.getDamageType());
         assertEquals(5.0, subject.getDamageValue(), 0.001);
         assertEquals(0.75, subject.getModAddedDamageRatio(), 0.001);
     }

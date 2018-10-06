@@ -56,7 +56,7 @@ public class ModTest {
         assertEquals("Serration", subject.getName());
         assertEquals("Rare", subject.getRarity());
         assertEquals(Mod.Polarity.V, subject.getPolarity());
-        assertEquals(HEAT, subject.getDamage().getType());
+        assertEquals(HEAT, subject.getDamage().getDamageType());
         assertEquals(0.0, subject.getDamage().getDamageValue(), 0.0);
         assertEquals(0.75, subject.getDamage().getModAddedDamageRatio(), 0.0);
     }
@@ -65,7 +65,7 @@ public class ModTest {
     public void itCanHaveConstructorTestCoverage() {
         subject = new Mod(new Damage(PUNCTURE, 0.0, 0.75));
 
-        assertEquals(PUNCTURE, subject.getDamage().getType());
+        assertEquals(PUNCTURE, subject.getDamage().getDamageType());
         assertEquals(0.0, subject.getDamage().getDamageValue(), 0.0);
         assertEquals(0.75, subject.getDamage().getModAddedDamageRatio(), 0.0);
     }
