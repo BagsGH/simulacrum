@@ -35,7 +35,7 @@ public class Simulation {
 
     public SimulationSummary runSimulation(SimulationParameters simulationParameters) {
         Weapon weapon = simulationParameters.getModdedWeapon();
-        List<Target> targetList = simulationParameters.getTargetList();
+        List<Target> targetList = simulationParameters.getSimulationTargets().getAllTargets();
         SimulationSummary simulationSummary = new SimulationSummary();
 
         double deltaTime = config.getDeltaTime();
@@ -48,30 +48,30 @@ public class Simulation {
         HitProperties statusTickHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
 
         weapon.initializeFiringState();
-        Target target = targetList.get(0); //TODO: pass in list to the calls below, and if the DamageSource is AOE, hit all, else... first?
-        //Target targetCopy = target.copy(); //TODO: commented out because its not 100% implemented //TODO: handle for multiple targets
+        Target primaryTarget = simulationParameters.getSimulationTargets().getPrimaryTarget(); //TODO: pass in list to the calls below, and if the DamageSource is AOE, hit all, else... first?
+        Target targetCopy = primaryTarget.copy(); //TODO: commented out because its not 100% implemented //TODO: handle for multiple targets
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         for (int i = 0; i < timeTicks; i++) {
             if (delayedDamageSources.size() > 0) {
                 delayedDamageSources.forEach(ds -> ds.progressTime(deltaTime));
-                FiredWeaponSummary summaryFromHandlingDelayedDamageSources = simulationHelper.handleDelayedDamageSources(delayedDamageSources, target, weapon.getStatusChance());
+                FiredWeaponSummary summaryFromHandlingDelayedDamageSources = simulationHelper.handleDelayedDamageSources(delayedDamageSources, primaryTarget, weapon.getStatusChance());
                 finalFiredWeaponSummary.addHitPropertiesList(summaryFromHandlingDelayedDamageSources.getHitPropertiesList());
                 finalFiredWeaponSummary.addStatusesApplied(summaryFromHandlingDelayedDamageSources.getStatusesApplied());
                 finalFiredWeaponSummary.addDamageMetrics(summaryFromHandlingDelayedDamageSources.getDamageMetrics());
                 delayedDamageSources.removeIf(DelayedDamageSource::delayOver);
             }
 
-            List<Status> procsApplying = getProcsApplyingToTarget(target, deltaTime);
-            List<DamageMetrics> damageMetricsFromAppliedStatuses = simulationHelper.handleApplyingStatuses(procsApplying, statusTickHitProperties, target);
+            List<Status> procsApplying = getProcsApplyingToTarget(primaryTarget, deltaTime);
+            List<DamageMetrics> damageMetricsFromAppliedStatuses = simulationHelper.handleApplyingStatuses(procsApplying, statusTickHitProperties, primaryTarget);
             for (DamageMetrics individualDamageMetrics : damageMetricsFromAppliedStatuses) {
                 finalFiredWeaponSummary.addStatusDamageToHealth(individualDamageMetrics.getDamageToHealth());
                 finalFiredWeaponSummary.addStatusDamageToShields(individualDamageMetrics.getDamageToShields());
             }
-            target.getStatuses().removeIf(Status::finished);
+            primaryTarget.getStatuses().removeIf(Status::finished);
 
             FiringState firingState = weapon.firingStateProgressTime(deltaTime);
             if (firingState instanceof Fired) {
-                FiredWeaponSummary firedWeaponSummary = simulationHelper.handleFireWeapon(weapon, target, simulationParameters.getHeadshotChance());
+                FiredWeaponSummary firedWeaponSummary = simulationHelper.handleFireWeapon(weapon, primaryTarget, simulationParameters.getHeadshotChance());
                 finalFiredWeaponSummary.addHitPropertiesList(firedWeaponSummary.getHitPropertiesList());
                 finalFiredWeaponSummary.addStatusesApplied(firedWeaponSummary.getStatusesApplied());
                 finalFiredWeaponSummary.addDamageMetrics(firedWeaponSummary.getDamageMetrics());
@@ -80,12 +80,12 @@ public class Simulation {
             }
             finalWeaponStateMetrics.add(firingState.getClass(), deltaTime);
 
-            if (target.isDead()) {
-                simulationSummary.addKilledTarget(target);
+            if (primaryTarget.isDead()) {
+                simulationSummary.addKilledTarget(primaryTarget);
                 targetList.removeIf(Target::isDead);
                 if (simulationParameters.isReplaceDeadTargets()) {
                     targetList.add(new Target());
-                    //targetList.add(targetCopy.copy()); //TODO: copy target implementation
+                    targetList.add(targetCopy.copy()); //TODO: copy target implementation
                 }
             }
         }

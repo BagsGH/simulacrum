@@ -1,10 +1,7 @@
 package com.bags.simulacrum.Simulation;
 
-import com.bags.simulacrum.Entity.Target;
 import com.bags.simulacrum.Weapon.Weapon;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 public class SimulationParameters {
@@ -15,6 +12,6 @@ public class SimulationParameters {
     private boolean replaceDeadTargets;
     private int iterations;
     private Weapon moddedWeapon;
-    private List<Target> targetList;
+    private SimulationTargets simulationTargets;
 
 }

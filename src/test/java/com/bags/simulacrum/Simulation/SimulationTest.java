@@ -44,6 +44,7 @@ public class SimulationTest {
     private double fakeDuration;
     private double fakeHeadshotChance;
     private Weapon fakeWeapon;
+    private SimulationTargets fakeSimulationTargets;
 
     private SimulationParameters fakeSimulationParameters;
 
@@ -422,7 +423,8 @@ public class SimulationTest {
 
     private void setupDefaultSimulationParameters() {
         fakeSimulationParameters = new SimulationParameters();
-        fakeSimulationParameters.setTargetList(new ArrayList<>(Arrays.asList(fakeTarget)));
+        fakeSimulationTargets = new SimulationTargets(fakeTarget, null);
+        fakeSimulationParameters.setSimulationTargets(fakeSimulationTargets);
         fakeSimulationParameters.setDuration(fakeDuration);
         fakeSimulationParameters.setIterations(1);
         fakeSimulationParameters.setLimitAmmo(false);
@@ -435,14 +437,12 @@ public class SimulationTest {
     }
 
     private DamageMetrics getFakeDamageMetrics() {
-        DamageMetrics finalDamageMetrics = new DamageMetrics.DamageMetricsBuilder()
+        return new DamageMetrics.DamageMetricsBuilder()
                 .withDamageToHealth()
                 .withDamageToShields()
                 .withStatusDamageToHealth()
                 .withStatusDamageToShields()
                 .build();
-
-        return finalDamageMetrics;
     }
 
 }

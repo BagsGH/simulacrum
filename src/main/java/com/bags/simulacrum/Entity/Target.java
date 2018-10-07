@@ -52,13 +52,13 @@ public class Target {
         Target copy = new Target();
         copy.setName(this.name);
 
-        List<String> deepCopiedAbilities = new ArrayList<>(this.abilities);
+        List<String> deepCopiedAbilities = this.abilities != null ? new ArrayList<>(this.abilities) : new ArrayList<>();
         copy.setAbilities(deepCopiedAbilities);
 
-        List<Health> deepCopiedHealths = this.healths.stream().map(Health::copy).collect(Collectors.toList());
+        List<Health> deepCopiedHealths = this.healths != null ? this.healths.stream().map(Health::copy).collect(Collectors.toList()) : new ArrayList<>();
         copy.setHealths(deepCopiedHealths);
 
-        List<DamageType> deepCopiedProcImmunities = new ArrayList<>(this.procImmunities);
+        List<DamageType> deepCopiedProcImmunities = this.procImmunities != null ? new ArrayList<>(this.procImmunities) : new ArrayList<>();
         copy.setProcImmunities(deepCopiedProcImmunities);
 
         copy.setBaseLevel(this.baseLevel);
@@ -66,15 +66,17 @@ public class Target {
         copy.setFaction(this.faction);
         copy.setTargetType(this.targetType);
 
-        List<String> deepCopiedWeapons = new ArrayList<>(this.weapons);
+        List<String> deepCopiedWeapons = this.weapons != null ? new ArrayList<>(this.weapons) : new ArrayList<>();
         copy.setWeapons(deepCopiedWeapons);
 
-        List<BodyModifier> deepCopiedBodyModifiers = this.bodyModifiers.stream().map(BodyModifier::copy).collect(Collectors.toList()); //TODO: test if the returned list can be removed from
+        List<BodyModifier> deepCopiedBodyModifiers = this.bodyModifiers != null ? this.bodyModifiers.stream().map(BodyModifier::copy).collect(Collectors.toList()) : new ArrayList<>(); //TODO: test if the returned list can be removed from
         copy.setBodyModifiers(deepCopiedBodyModifiers);
 
-        copy.setHeadBodyModifier(this.headBodyModifier.copy());
+        if (this.headBodyModifier != null) {
+            copy.setHeadBodyModifier(this.headBodyModifier.copy());
+        }
 
-        List<Status> deepCopiedStatuses = this.statuses.stream().map(Status::copy).collect(Collectors.toList());
+        List<Status> deepCopiedStatuses = this.statuses != null ? this.statuses.stream().map(Status::copy).collect(Collectors.toList()) : new ArrayList<>();
         copy.setStatuses(deepCopiedStatuses);
 
         return copy;
