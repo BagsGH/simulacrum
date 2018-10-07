@@ -31,16 +31,7 @@ public class SimulationHelper {
         this.statusProcHelper = statusProcHelper;
     }
 
-    //TODO: Test
-    public List<DamageMetrics> handleApplyingStatuses(List<Status> procsApplying, HitProperties statusTickHitProperties, Target target) { //TODO: bleed apply directly ohealth
-        List<DamageMetrics> listOfDamageMetrics = new ArrayList<>();
-        for (Status status : procsApplying) {
-            DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(status.apply(target), statusTickHitProperties, target);
-            listOfDamageMetrics.add(damageMetricsFromStatusTick);
-        }
-        return listOfDamageMetrics;
-    }
-
+    //TODO: test
     public FiredWeaponSummary handleApplyingStatuses(List<Target> simulationTargets) { //TODO: bleed apply directly ohealth
         HitProperties statusTickHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         FiredWeaponSummary appliedStatusSummary = new FiredWeaponSummary();
@@ -182,19 +173,6 @@ public class SimulationHelper {
 
     private boolean isDelayedDamageSource(DamageSource damageSource) {
         return damageSource.getDamageSourceType().equals(DamageSourceType.DELAYED) || damageSource.getDamageSourceType().equals(DamageSourceType.DELAYED_AOE);
-    }
-
-    private void updateRunningTotalDamageToHealth(Target target, DamageMetrics finalDamageMetrics, Map<DamageType, Double> damageToHealth) {
-
-        for (DamageType damageType : damageToHealth.keySet()) {
-            finalDamageMetrics.addDamageToHealth(damageType, damageToHealth.get(damageType));
-        }
-    }
-
-    private void updateRunningTotalDamageToShields(DamageMetrics finalDamageMetrics, Map<DamageType, Double> damageToShields) {
-        for (DamageType damageType : damageToShields.keySet()) {
-            finalDamageMetrics.addDamageToShields(damageType, damageToShields.get(damageType));
-        }
     }
 
     private Status getStatusProcAndApply(Target target, DamageSource damageSource, DamageMetrics damageMetrics, DamageMetrics finalDamageMetrics) {

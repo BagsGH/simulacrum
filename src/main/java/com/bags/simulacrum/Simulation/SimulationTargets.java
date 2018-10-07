@@ -23,4 +23,8 @@ public class SimulationTargets {
         this.primaryTarget = primary;
         this.secondaryTargets = secondaryTargets != null ? secondaryTargets : new ArrayList<>();
     }
+
+    public SimulationTargets copy() {
+        return new SimulationTargets(this.primaryTarget, this.secondaryTargets);
+    }
 }

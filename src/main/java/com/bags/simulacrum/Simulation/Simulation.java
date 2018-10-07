@@ -45,8 +45,6 @@ public class Simulation {
         WeaponStateMetrics finalWeaponStateMetrics = new WeaponStateMetrics();
         FiredWeaponSummary finalFiredWeaponSummary = new FiredWeaponSummary().getEmptySummary();
 
-        HitProperties statusTickHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
-
         weapon.initializeFiringState();
         Target primaryTarget = simulationParameters.getSimulationTargets().getPrimaryTarget(); //TODO: pass in list to the calls below, and if the DamageSource is AOE, hit all, else... first?
         primaryTarget.setTargetName("primary");
