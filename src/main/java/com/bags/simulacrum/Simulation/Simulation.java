@@ -43,7 +43,7 @@ public class Simulation {
         int timeTicks = (int) (simulationDuration / deltaTime);
 
         WeaponStateMetrics finalWeaponStateMetrics = new WeaponStateMetrics();
-        FiredWeaponSummary finalFiredWeaponSummary = new FiredWeaponSummary().getEmptySummary();
+        FiredWeaponSummary finalFiredWeaponSummary = new FiredWeaponSummary();
 
         weapon.initializeFiringState();
         Target primaryTarget = simulationParameters.getSimulationTargets().getPrimaryTarget(); //TODO: pass in list to the calls below, and if the DamageSource is AOE, hit all, else... first?
@@ -62,8 +62,7 @@ public class Simulation {
 
             progressStatus(simulationParameters.getSimulationTargets(), deltaTime);
             FiredWeaponSummary statusApplicationSummary = simulationHelper.handleApplyingStatuses(simulationParameters.getSimulationTargets().getAllTargets());
-            finalFiredWeaponSummary.addStatusDamageToHealth(statusApplicationSummary.getDamageMetrics().getStatusDamageToHealth());
-            finalFiredWeaponSummary.addStatusDamageToShields(statusApplicationSummary.getDamageMetrics().getStatusDamageToShields());
+            finalFiredWeaponSummary.addDamageMetrics(statusApplicationSummary.getDamageMetricsMap());
             primaryTarget.getStatuses().removeIf(Status::finished);
 
             FiringState firingState = weapon.firingStateProgressTime(deltaTime);

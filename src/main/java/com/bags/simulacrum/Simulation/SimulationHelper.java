@@ -40,8 +40,8 @@ public class SimulationHelper {
             List<Status> procsApplying = individualTarget.getStatuses().stream().filter(Status::checkProgress).collect(Collectors.toList());
             for (Status individualStatus : procsApplying) {
                 DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(individualStatus.apply(individualTarget), statusTickHitProperties, individualTarget);
-                appliedStatusSummary.addStatusDamageToHealth(damageMetricsFromStatusTick.getDamageToHealth());
-                appliedStatusSummary.addStatusDamageToShields(damageMetricsFromStatusTick.getDamageToShields());
+                appliedStatusSummary.addStatusDamageToHealth(targetName, damageMetricsFromStatusTick.getDamageToHealth());
+                appliedStatusSummary.addStatusDamageToShields(targetName, damageMetricsFromStatusTick.getDamageToShields());
             }
         }
 

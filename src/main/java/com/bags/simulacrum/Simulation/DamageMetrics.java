@@ -21,6 +21,13 @@ public class DamageMetrics {
         this.damageToHealth = damageToHealth;
     }
 
+    public DamageMetrics() {
+        this.damageToHealth = initialDamageMap();
+        this.damageToShields = initialDamageMap();
+        this.statusDamageToHealth = initialDamageMap();
+        this.statusDamageToShields = initialDamageMap();
+    }
+
     public void addDamageToShields(DamageType damageType, double value) {
         double currentValueForType = damageToShields.get(damageType);
         damageToShields.put(damageType, currentValueForType + value);

@@ -26,6 +26,7 @@ public class FiredWeaponSummary {
         this.damageMetricsMap = new HashMap<>();
         this.statusesAppliedMap = new HashMap<>();
         this.hitPropertiesListMap = new HashMap<>();
+        this.delayedDamageSources = new ArrayList<>();
     }
 
     public FiredWeaponSummary(List<HitProperties> hitPropertiesList, DamageMetrics damageMetrics, List<Status> statusesApplied, List<DelayedDamageSource> delayedDamageSources) {
@@ -121,20 +122,36 @@ public class FiredWeaponSummary {
     }
 
     public void addDamageToShields(String targetName, Map<DamageType, Double> damageToShields) {
-        DamageMetrics damageMetricsForTarget = this.damageMetricsMap.get(targetName);
-        for (DamageType damageType : damageToShields.keySet()) {
-            double addendValue = damageToShields.get(damageType);
-            double currentValue = damageMetricsForTarget.getDamageToShields().get(damageType);
-            damageMetricsForTarget.getDamageToShields().put(damageType, currentValue + addendValue);
+        if (this.damageMetricsMap.containsKey(targetName)) {
+            DamageMetrics damageMetricsForTarget = this.damageMetricsMap.get(targetName);
+            for (DamageType damageType : damageToShields.keySet()) {
+                double addendValue = damageToShields.get(damageType);
+                double currentValue = damageMetricsForTarget.getDamageToShields().get(damageType);
+                damageMetricsForTarget.getDamageToShields().put(damageType, currentValue + addendValue);
+            }
+        } else {
+            DamageMetrics damageMetrics = new DamageMetrics();
+            for (DamageType damageType : damageToShields.keySet()) {
+                damageMetrics.getDamageToShields().put(damageType, damageToShields.get(damageType));
+            }
+            this.damageMetricsMap.put(targetName, damageMetrics);
         }
     }
 
     public void addDamageToHealth(String targetName, Map<DamageType, Double> damageToHealth) {
-        DamageMetrics damageMetricsForTarget = this.damageMetricsMap.get(targetName);
-        for (DamageType damageType : damageToHealth.keySet()) {
-            double addendValue = damageToHealth.get(damageType);
-            double currentValue = damageMetricsForTarget.getDamageToHealth().get(damageType);
-            damageMetricsForTarget.getDamageToHealth().put(damageType, currentValue + addendValue);
+        if (this.damageMetricsMap.containsKey(targetName)) {
+            DamageMetrics damageMetricsForTarget = this.damageMetricsMap.get(targetName);
+            for (DamageType damageType : damageToHealth.keySet()) {
+                double addendValue = damageToHealth.get(damageType);
+                double currentValue = damageMetricsForTarget.getDamageToHealth().get(damageType);
+                damageMetricsForTarget.getDamageToHealth().put(damageType, currentValue + addendValue);
+            }
+        } else {
+            DamageMetrics damageMetrics = new DamageMetrics();
+            for (DamageType damageType : damageToHealth.keySet()) {
+                damageMetrics.getDamageToHealth().put(damageType, damageToHealth.get(damageType));
+            }
+            this.damageMetricsMap.put(targetName, damageMetrics);
         }
     }
 
@@ -155,20 +172,36 @@ public class FiredWeaponSummary {
     }
 
     public void addStatusDamageToHealth(String targetName, Map<DamageType, Double> statusDamageToHealth) {
-        DamageMetrics damageMetricsForTarget = this.damageMetricsMap.get(targetName);
-        for (DamageType damageType : statusDamageToHealth.keySet()) {
-            double addendValue = statusDamageToHealth.get(damageType);
-            double currentValue = damageMetricsForTarget.getStatusDamageToHealth().get(damageType);
-            damageMetricsForTarget.getStatusDamageToHealth().put(damageType, currentValue + addendValue);
+        if (this.damageMetricsMap.containsKey(targetName)) {
+            DamageMetrics damageMetricsForTarget = this.damageMetricsMap.get(targetName);
+            for (DamageType damageType : statusDamageToHealth.keySet()) {
+                double addendValue = statusDamageToHealth.get(damageType);
+                double currentValue = damageMetricsForTarget.getStatusDamageToHealth().get(damageType);
+                damageMetricsForTarget.getStatusDamageToHealth().put(damageType, currentValue + addendValue);
+            }
+        } else {
+            DamageMetrics damageMetrics = new DamageMetrics();
+            for (DamageType damageType : statusDamageToHealth.keySet()) {
+                damageMetrics.getStatusDamageToHealth().put(damageType, statusDamageToHealth.get(damageType));
+            }
+            this.damageMetricsMap.put(targetName, damageMetrics);
         }
     }
 
     public void addStatusDamageToShields(String targetName, Map<DamageType, Double> statusDamageToShields) {
-        DamageMetrics damageMetricsForTarget = this.damageMetricsMap.get(targetName);
-        for (DamageType damageType : statusDamageToShields.keySet()) {
-            double addendValue = statusDamageToShields.get(damageType);
-            double currentValue = damageMetricsForTarget.getStatusDamageToShields().get(damageType);
-            damageMetricsForTarget.getStatusDamageToShields().put(damageType, currentValue + addendValue);
+        if (this.damageMetricsMap.containsKey(targetName)) {
+            DamageMetrics damageMetricsForTarget = this.damageMetricsMap.get(targetName);
+            for (DamageType damageType : statusDamageToShields.keySet()) {
+                double addendValue = statusDamageToShields.get(damageType);
+                double currentValue = damageMetricsForTarget.getStatusDamageToShields().get(damageType);
+                damageMetricsForTarget.getStatusDamageToShields().put(damageType, currentValue + addendValue);
+            }
+        } else {
+            DamageMetrics damageMetrics = new DamageMetrics();
+            for (DamageType damageType : statusDamageToShields.keySet()) {
+                damageMetrics.getStatusDamageToShields().put(damageType, statusDamageToShields.get(damageType));
+            }
+            this.damageMetricsMap.put(targetName, damageMetrics);
         }
     }
 
