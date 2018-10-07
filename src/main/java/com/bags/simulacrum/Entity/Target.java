@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 public class Target {
 
     private String name;
+    private String targetName;
     private List<String> abilities;
     private List<Health> healths;
     private List<DamageType> procImmunities; //TODO: check if immune to proc b4 apoply
@@ -51,6 +52,7 @@ public class Target {
     public Target copy() {
         Target copy = new Target();
         copy.setName(this.name);
+        copy.setTargetType(this.targetType);
 
         List<String> deepCopiedAbilities = this.abilities != null ? new ArrayList<>(this.abilities) : new ArrayList<>();
         copy.setAbilities(deepCopiedAbilities);
