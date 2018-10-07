@@ -60,7 +60,7 @@ public class SimulationHelper {
         return new FiredWeaponSummary(hitPropertiesList, finalDamageMetricsFromDelayedDamageSources, statusProcsApplied, new ArrayList<>());
     }
 
-    public FiredWeaponSummary handleFireWeapon(Weapon weapon, Target target, double headshotChance) { //tODO: secondary targets for aoe...?
+    public FiredWeaponSummary handleFireWeapon(Weapon weapon, SimulationTargets simulationTargets, double headshotChance) { //tODO: secondary targets for aoe...?
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         List<Status> statusProcsApplied = new ArrayList<>();
         DamageMetrics finalDamageMetrics = new DamageMetrics.DamageMetricsBuilder()
@@ -77,7 +77,7 @@ public class SimulationHelper {
         double bodyshotRNG = randomNumberGenerator.getRandomPercentage(); //TODO: maybe if the accuracy is bad, calculate this independently for multishot?
 
         int multishots = getMultishotLevel(weapon.getMultishot(), multishotRNG);
-        double headshotModifier = calculateHeadshotModifier(target, headshotChance, headshotRNG);
+        double headshotModifier = calculateHeadshotModifier(target, headshotChance, headshotRNG); //TODO: can only headshot primary?
         double bodyModifier = calculateBodyModifier(target, headshotChance, headshotRNG, bodyshotRNG);
 
         for (int i = 0; i < multishots; i++) {
@@ -88,7 +88,6 @@ public class SimulationHelper {
             HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier);
 
             for (DamageSource damageSource : weapon.getDamageSources()) {
-                //TODO: for now, each damage source will get a status proc. Not sure how to handle Opticor, but for now this is how it works.
                 if (!isDelayedDamageSource(damageSource)) {
                     DamageMetrics damageMetrics = targetDamageHelper.applyDamageSourceDamageToTarget(damageSource, hitProperties, target);
                     updateRunningTotalDamageToHealth(finalDamageMetrics, damageMetrics.getDamageToHealth());

@@ -49,22 +49,26 @@ public class Simulation {
 
         weapon.initializeFiringState();
         Target primaryTarget = simulationParameters.getSimulationTargets().getPrimaryTarget(); //TODO: pass in list to the calls below, and if the DamageSource is AOE, hit all, else... first?
+        primaryTarget.setTargetName("primary");
         Target targetCopy = primaryTarget.copy();//TODO: handle for multiple targets
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         for (int i = 0; i < timeTicks; i++) {
             if (delayedDamageSources.size() > 0) {
                 delayedDamageSources.forEach(ds -> ds.progressTime(deltaTime));
                 FiredWeaponSummary summaryFromHandlingDelayedDamageSources = simulationHelper.handleDelayedDamageSources(delayedDamageSources, primaryTarget, weapon.getStatusChance());
-                finalFiredWeaponSummary.addHitPropertiesList(summaryFromHandlingDelayedDamageSources.getHitPropertiesList());
-                finalFiredWeaponSummary.addStatusesApplied(summaryFromHandlingDelayedDamageSources.getStatusesApplied());
-                finalFiredWeaponSummary.addDamageMetrics(summaryFromHandlingDelayedDamageSources.getDamageMetrics());
+                finalFiredWeaponSummary.addHitPropertiesList(summaryFromHandlingDelayedDamageSources.getHitPropertiesListMap());
+                finalFiredWeaponSummary.addStatusesApplied(summaryFromHandlingDelayedDamageSources.getStatusesAppliedMap());
+                finalFiredWeaponSummary.addDamageMetrics(summaryFromHandlingDelayedDamageSources.getDamageMetricsMap());
+//                finalFiredWeaponSummary.addHitPropertiesList(summaryFromHandlingDelayedDamageSources.getHitPropertiesList());
+//                finalFiredWeaponSummary.addStatusesApplied(summaryFromHandlingDelayedDamageSources.getStatusesApplied());
+//                finalFiredWeaponSummary.addDamageMetrics(summaryFromHandlingDelayedDamageSources.getDamageMetrics());
                 delayedDamageSources.removeIf(DelayedDamageSource::delayOver);
             }
 
             List<Status> procsApplying = getProcsApplyingToTarget(primaryTarget, deltaTime);
             List<DamageMetrics> damageMetricsFromAppliedStatuses = simulationHelper.handleApplyingStatuses(procsApplying, statusTickHitProperties, primaryTarget);
             for (DamageMetrics individualDamageMetrics : damageMetricsFromAppliedStatuses) {
-                finalFiredWeaponSummary.addStatusDamageToHealth(individualDamageMetrics.getDamageToHealth());
+                finalFiredWeaponSummary.addStatusDamageToHealth(individualDamageMetrics.getDamageToHealth()); //TODO: mapify
                 finalFiredWeaponSummary.addStatusDamageToShields(individualDamageMetrics.getDamageToShields());
             }
             primaryTarget.getStatuses().removeIf(Status::finished);
@@ -72,10 +76,12 @@ public class Simulation {
             FiringState firingState = weapon.firingStateProgressTime(deltaTime);
             if (firingState instanceof Fired) {
                 FiredWeaponSummary firedWeaponSummary = simulationHelper.handleFireWeapon(weapon, primaryTarget, simulationParameters.getHeadshotChance());
-                finalFiredWeaponSummary.addHitPropertiesList(firedWeaponSummary.getHitPropertiesList());
-                finalFiredWeaponSummary.addStatusesApplied(firedWeaponSummary.getStatusesApplied());
-                finalFiredWeaponSummary.addDamageMetrics(firedWeaponSummary.getDamageMetrics());
-
+                finalFiredWeaponSummary.addHitPropertiesList(firedWeaponSummary.getHitPropertiesListMap());
+                finalFiredWeaponSummary.addStatusesApplied(firedWeaponSummary.getStatusesAppliedMap());
+                finalFiredWeaponSummary.addDamageMetrics(firedWeaponSummary.getDamageMetricsMap());
+//                finalFiredWeaponSummary.addHitPropertiesList(firedWeaponSummary.getHitPropertiesList());
+//                finalFiredWeaponSummary.addStatusesApplied(firedWeaponSummary.getStatusesApplied());
+//                finalFiredWeaponSummary.addDamageMetrics(firedWeaponSummary.getDamageMetrics());
                 delayedDamageSources.addAll(firedWeaponSummary.getDelayedDamageSources());
             }
             finalWeaponStateMetrics.add(firingState.getClass(), deltaTime);
