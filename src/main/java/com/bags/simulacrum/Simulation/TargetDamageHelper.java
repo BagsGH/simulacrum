@@ -23,10 +23,7 @@ public class TargetDamageHelper {
     }
 
     public DamageMetrics applyDamageSourceDamageToTarget(DamageSource damageSource, HitProperties hitProperties, Target target) {
-        DamageMetrics damageMetrics = new DamageMetrics.DamageMetricsBuilder()
-                .withDamageToHealth()
-                .withDamageToShields()
-                .build();
+        DamageMetrics damageMetrics = new DamageMetrics();
 
         List<Health> targetHealthClasses = target.getHealths();
         Health targetHealth = findBaseHealth(targetHealthClasses);

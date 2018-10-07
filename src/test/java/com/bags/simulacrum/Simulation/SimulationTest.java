@@ -55,9 +55,15 @@ public class SimulationTest {
     private List<Target> fakeTargetAsList;
     private String fakeTargetName;
 
+    private Fired fakeFired;
+    private Charging fakeCharging;
+
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
+
+        fakeFired = new Fired(null, null);
+        fakeCharging = new Charging(null);
 
         setupDefaultConstantValues();
         setupDefaultConfigMocks();
@@ -69,7 +75,7 @@ public class SimulationTest {
     }
 
     @Test
-    public void itNeverCAllsSimulationHelperForDelayedDamageSourceHandlingWithoutDelayedDamageSources() {
+    public void itNeverCallsSimulationHelperForDelayedDamageSourceHandlingWithoutDelayedDamageSources() {
         subject.runSimulation(fakeSimulationParameters);
 
         verify(mockSimulationHelper, never()).handleDelayedDamageSources(any(), anyDouble());
@@ -145,7 +151,7 @@ public class SimulationTest {
     }
 
 //    @Test
-//    public void itHandlesDelayedDamageSourcesWithShortDelayOnTheNextDeltaTime() {
+//    public void itHandlesDelayedDamageSourcesWithShortDelayOnTheNextDeltaTime() { //TODO: cannot figure out why this didnt work
 //        fakeSimulationParameters.setDuration(0.02);
 //        Fired fakeFired = new Fired(null, null);
 //        Charging fakeCharging = new Charging(null);
@@ -175,11 +181,10 @@ public class SimulationTest {
         ignite.setTickProgress(2);
         fakeSimulationParameters.setDuration(0.01);
         fakeTarget.setStatuses(Collections.singletonList(ignite));
-        HitProperties expectedHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
 
         SimulationSummary summary = subject.runSimulation(fakeSimulationParameters);
 
-        verify(mockSimulationHelper).handleApplyingStatuses(eq(fakeTargetAsList)); //simulationHelper.handleApplyingStatuses(simulationParameters.getSimulationTargets().getAllTargets());
+        verify(mockSimulationHelper).handleApplyingStatuses(eq(fakeTargetAsList));
         assertEquals(0, fakeTarget.getStatuses().size());
     }
 
@@ -195,19 +200,16 @@ public class SimulationTest {
         ignite2.setNumberOfDamageTicks(2);
         fakeSimulationParameters.setDuration(0.01);
         fakeTarget.setStatuses(Arrays.asList(ignite, ignite2));
-        HitProperties expectedHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
 
         SimulationSummary summary = subject.runSimulation(fakeSimulationParameters);
 
-        verify(mockSimulationHelper).handleApplyingStatuses(eq(fakeTargetAsList)); //simulationHelper.handleApplyingStatuses(simulationParameters.getSimulationTargets().getAllTargets());
+        verify(mockSimulationHelper).handleApplyingStatuses(eq(fakeTargetAsList));
         assertEquals(0, fakeTarget.getStatuses().size());
     }
 
     @Test
     public void itReturnsSimulationSummaryWithInformationAboutTimeSpentInEachWeaponState() {
         fakeSimulationParameters.setDuration(0.10);
-        Fired fakeFired = new Fired(null, null);
-        Charging fakeCharging = new Charging(null);
         when(fakeWeapon.firingStateProgressTime(anyDouble()))
                 .thenReturn(fakeCharging)
                 .thenReturn(fakeFired)
@@ -229,7 +231,6 @@ public class SimulationTest {
     @Test
     public void itReturnsSimulationSummaryWithListOfDeadTargets() {
         fakeSimulationParameters.setDuration(fakeDeltaTime);
-        Fired fakeFired = new Fired(null, null);
         when(fakeWeapon.firingStateProgressTime(anyDouble()))
                 .thenReturn(fakeFired);
 
@@ -237,7 +238,7 @@ public class SimulationTest {
         doAnswer(invocation -> {
             fakeTarget.getHealth().setHealthValue(0.0);
             return fakeFiredWeaponSummary;
-        }).when(mockSimulationHelper).handleFireWeapon(eq(fakeWeapon), eq(fakeSimulationTargets), eq(fakeHeadshotChance)); //simulationHelper.handleFireWeapon(weapon, simulationParameters.getSimulationTargets(), simulationParameters.getHeadshotChance());
+        }).when(mockSimulationHelper).handleFireWeapon(eq(fakeWeapon), eq(fakeSimulationTargets), eq(fakeHeadshotChance));
 
         SimulationSummary summary = subject.runSimulation(fakeSimulationParameters);
 
@@ -248,8 +249,6 @@ public class SimulationTest {
     @Test
     public void itAddsDamageAppliedByADelayedDamageSourceToTheRunningTotal() {
         fakeSimulationParameters.setDuration(fakeDeltaTime + fakeDeltaTime);
-        Fired fakeFired = new Fired(null, null);
-        Charging fakeCharging = new Charging(null);
         when(fakeWeapon.firingStateProgressTime(anyDouble()))
                 .thenReturn(fakeFired)
                 .thenReturn(fakeCharging);
@@ -261,16 +260,16 @@ public class SimulationTest {
         fakeFiredWeaponSummary.setDelayedDamageSources(Collections.singletonList(fakeDelayedDamageSource));
         fakeDelayedDamageSource.setTarget(fakeTarget);
 
-        when(mockSimulationHelper.handleFireWeapon(eq(fakeWeapon), eq(fakeSimulationTargets), eq(fakeHeadshotChance))).thenReturn(fakeFiredWeaponSummary);  //simulationHelper.handleFireWeapon(weapon, simulationParameters.getSimulationTargets(), simulationParameters.getHeadshotChance());
+        when(mockSimulationHelper.handleFireWeapon(eq(fakeWeapon), eq(fakeSimulationTargets), eq(fakeHeadshotChance))).thenReturn(fakeFiredWeaponSummary);
 
-        DamageMetrics fakeDamageMetrics = new DamageMetrics.DamageMetricsBuilder().withDamageToHealth().withDamageToShields().withStatusDamageToHealth().withStatusDamageToShields().build();
+        DamageMetrics fakeDamageMetrics = new DamageMetrics();
         fakeDamageMetrics.addDamageToHealth(HEAT, 25.0);
 
         FiredWeaponSummary fakeDelayedDamageFiredSummary = new FiredWeaponSummary();
         fakeDelayedDamageFiredSummary.addDamageToHealth(fakeTargetName, fakeDamageMetrics.getDamageToHealth());
         fakeDelayedDamageFiredSummary.addHitProperties(fakeTargetName, fakeHitProperties);
 
-        when(mockSimulationHelper.handleDelayedDamageSources(eq(Collections.singletonList(fakeDelayedDamageSource)), anyDouble())).thenReturn(fakeDelayedDamageFiredSummary); //handleDelayedDamageSources(List<DelayedDamageSource> delayedDamageSources, double statusChance) {
+        when(mockSimulationHelper.handleDelayedDamageSources(eq(Collections.singletonList(fakeDelayedDamageSource)), anyDouble())).thenReturn(fakeDelayedDamageFiredSummary);
 
         SimulationSummary summary = subject.runSimulation(fakeSimulationParameters);
 
@@ -281,8 +280,6 @@ public class SimulationTest {
     @Test
     public void itAddsDamageAppliedByStatusesToRunningTotal() {
         fakeSimulationParameters.setDuration(fakeDeltaTime + fakeDeltaTime);
-        Fired fakeFired = new Fired(null, null);
-        Charging fakeCharging = new Charging(null);
         when(fakeWeapon.firingStateProgressTime(anyDouble()))
                 .thenReturn(fakeFired)
                 .thenReturn(fakeCharging);
@@ -301,11 +298,11 @@ public class SimulationTest {
             return fakeFiredWeaponSummary;
         }).when(mockSimulationHelper).handleFireWeapon(fakeWeapon, fakeSimulationTargets, fakeHeadshotChance);
 
-        DamageMetrics fakeDamageMetrics = new DamageMetrics.DamageMetricsBuilder().withDamageToHealth().withDamageToShields().withStatusDamageToHealth().withStatusDamageToShields().build();
+        DamageMetrics fakeDamageMetrics = new DamageMetrics();
         fakeDamageMetrics.addDamageToHealth(HEAT, 25.0);
         FiredWeaponSummary fakeStatusSummary = new FiredWeaponSummary();
         fakeStatusSummary.addStatusDamageToHealth(fakeTargetName, fakeDamageMetrics.getDamageToHealth());
-        when(mockSimulationHelper.handleApplyingStatuses(fakeTargetAsList)).thenReturn(fakeStatusSummary).thenReturn(new FiredWeaponSummary()); //simulationHelper.handleApplyingStatuses(simulationParameters.getSimulationTargets().getAllTargets());
+        when(mockSimulationHelper.handleApplyingStatuses(fakeTargetAsList)).thenReturn(fakeStatusSummary).thenReturn(new FiredWeaponSummary());
 
         SimulationSummary summary = subject.runSimulation(fakeSimulationParameters);
 
@@ -317,19 +314,18 @@ public class SimulationTest {
     @Test
     public void itAddsDamagedAppliedByWeaponFiredToRunningTotal() {
         fakeSimulationParameters.setDuration(fakeDeltaTime);
-        Fired fakeFired = new Fired(null, null);
         when(fakeWeapon.firingStateProgressTime(anyDouble()))
                 .thenReturn(fakeFired);
 
         FiredWeaponSummary fakeFiredWeaponSummary = new FiredWeaponSummary();
         HitProperties fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         fakeFiredWeaponSummary.setDelayedDamageSources(new ArrayList<>());
-        DamageMetrics fakeDamageMetrics = new DamageMetrics.DamageMetricsBuilder().withDamageToHealth().withDamageToShields().withStatusDamageToHealth().withStatusDamageToShields().build();
+        DamageMetrics fakeDamageMetrics = new DamageMetrics();
         fakeDamageMetrics.addDamageToHealth(HEAT, 25.0);
         fakeFiredWeaponSummary.addDamageToHealth(fakeTargetName, fakeDamageMetrics.getDamageToHealth());
         fakeFiredWeaponSummary.addHitProperties(fakeTargetName, fakeHitProperties);
 
-        when(mockSimulationHelper.handleFireWeapon(fakeWeapon, fakeSimulationTargets, fakeHeadshotChance)).thenReturn(fakeFiredWeaponSummary); //simulationHelper.handleFireWeapon(weapon, simulationParameters.getSimulationTargets(), simulationParameters.getHeadshotChance());
+        when(mockSimulationHelper.handleFireWeapon(fakeWeapon, fakeSimulationTargets, fakeHeadshotChance)).thenReturn(fakeFiredWeaponSummary);
 
         SimulationSummary summary = subject.runSimulation(fakeSimulationParameters);
 
@@ -340,12 +336,9 @@ public class SimulationTest {
     @Test
     public void itAddsAllDamageReturnedByHelperCalls() {
         fakeSimulationParameters.setDuration(fakeDeltaTime + fakeDeltaTime);
-        Fired fakeFired = new Fired(null, null);
-        Charging fakeCharging = new Charging(null);
         when(fakeWeapon.firingStateProgressTime(anyDouble()))
                 .thenReturn(fakeFired)
                 .thenReturn(fakeCharging);
-
         /*
          * Setup the mock return for the first handleFireWeapon call.
          */
@@ -447,14 +440,4 @@ public class SimulationTest {
     private void setupDefaultConfigMocks() {
         when(mockConfig.getDeltaTime()).thenReturn(fakeDeltaTime);
     }
-
-    private DamageMetrics getFakeDamageMetrics() {
-        return new DamageMetrics.DamageMetricsBuilder()
-                .withDamageToHealth()
-                .withDamageToShields()
-                .withStatusDamageToHealth()
-                .withStatusDamageToShields()
-                .build();
-    }
-
 }

@@ -43,10 +43,6 @@ public class FiredWeaponSummary {
         this.hitPropertiesListMap = new HashMap<>();
     }
 
-    public FiredWeaponSummary getEmptySummary() {
-        return new FiredWeaponSummary(new ArrayList<>(), new DamageMetrics.DamageMetricsBuilder().withDamageToShields().withDamageToHealth().withStatusDamageToHealth().withStatusDamageToShields().build(), new ArrayList<>(), new ArrayList<>());
-    }
-
     public void addHitPropertiesList(List<HitProperties> hitPropertiesList) {
         this.hitPropertiesList.addAll(hitPropertiesList);
     }

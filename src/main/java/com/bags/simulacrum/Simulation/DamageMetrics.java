@@ -15,12 +15,6 @@ public class DamageMetrics {
     private Map<DamageType, Double> statusDamageToShields;
     private Map<DamageType, Double> statusDamageToHealth;
 
-
-    public DamageMetrics(Map<DamageType, Double> damageToHealth, Map<DamageType, Double> damageToShields) {
-        this.damageToShields = damageToShields;
-        this.damageToHealth = damageToHealth;
-    }
-
     public DamageMetrics() {
         this.damageToHealth = initialDamageMap();
         this.damageToShields = initialDamageMap();
@@ -54,57 +48,6 @@ public class DamageMetrics {
             damageMap.put(dt, 0.0);
         }
         return damageMap;
-    }
-
-    private DamageMetrics(DamageMetricsBuilder builder) {
-        if (builder.withDamageToHealth) {
-            this.damageToHealth = initialDamageMap();
-        }
-        if (builder.withDamageToShields) {
-            this.damageToShields = initialDamageMap();
-        }
-        if (builder.withStatusDamageToHealth) {
-            this.statusDamageToHealth = initialDamageMap();
-        }
-        if (builder.withStatusDamageToShields) {
-            this.statusDamageToShields = initialDamageMap();
-        }
-    }
-
-    public static class DamageMetricsBuilder {
-
-
-        private boolean withDamageToHealth;
-        private boolean withDamageToShields;
-        private boolean withStatusDamageToHealth;
-        private boolean withStatusDamageToShields;
-
-        public DamageMetricsBuilder() {
-        }
-
-        public DamageMetricsBuilder withDamageToHealth() {
-            this.withDamageToHealth = true;
-            return this;
-        }
-
-        public DamageMetricsBuilder withDamageToShields() {
-            this.withDamageToShields = true;
-            return this;
-        }
-
-        public DamageMetricsBuilder withStatusDamageToHealth() {
-            this.withStatusDamageToHealth = true;
-            return this;
-        }
-
-        public DamageMetricsBuilder withStatusDamageToShields() {
-            this.withStatusDamageToShields = true;
-            return this;
-        }
-
-        public DamageMetrics build() {
-            return new DamageMetrics(this);
-        }
     }
 
 }

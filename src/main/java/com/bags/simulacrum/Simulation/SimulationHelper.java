@@ -50,7 +50,7 @@ public class SimulationHelper {
 
     //TODO: TESt
     public FiredWeaponSummary handleDelayedDamageSources(List<DelayedDamageSource> delayedDamageSources, double statusChance) {
-        DamageMetrics finalDamageMetricsFromDelayedDamageSources = new DamageMetrics.DamageMetricsBuilder().withDamageToHealth().withDamageToShields().withStatusDamageToHealth().withStatusDamageToShields().build();
+        DamageMetrics finalDamageMetricsFromDelayedDamageSources = new DamageMetrics();
 
         FiredWeaponSummary delayedDamageSourceSummary = new FiredWeaponSummary();
 
@@ -73,12 +73,7 @@ public class SimulationHelper {
 
     public FiredWeaponSummary handleFireWeapon(Weapon weapon, SimulationTargets simulationTargets, double headshotChance) {
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
-        DamageMetrics finalDamageMetrics = new DamageMetrics.DamageMetricsBuilder()
-                .withDamageToHealth()
-                .withDamageToShields()
-                .withStatusDamageToHealth()
-                .withStatusDamageToShields()
-                .build();
+        DamageMetrics finalDamageMetrics = new DamageMetrics();
 
         FiredWeaponSummary firedWeaponSummary = new FiredWeaponSummary(delayedDamageSources);
 

@@ -75,14 +75,23 @@ public class Simulation {
             }
             finalWeaponStateMetrics.add(firingState.getClass(), deltaTime);
 
-            if (primaryTarget.isDead()) {
-                simulationSummary.addKilledTarget(primaryTarget);
+            if (simulationParameters.getSimulationTargets().getPrimaryTarget().isDead()) {
+                simulationSummary.addKilledTarget(simulationParameters.getSimulationTargets().getPrimaryTarget());
                 targetList.removeIf(Target::isDead);
                 if (simulationParameters.isReplaceDeadTargets()) {
-                    targetList.add(new Target());
+                    targetList.add(new Target()); //TODO: fix this to work with getSimulationTargets
                     targetList.add(targetCopy.copy());
                 }
             }
+//           //TODO: handle death of secondary targets
+//            if (primaryTarget.isDead()) {
+//                simulationSummary.addKilledTarget(primaryTarget);
+//                targetList.removeIf(Target::isDead);
+//                if (simulationParameters.isReplaceDeadTargets()) {
+//                    targetList.add(new Target());
+//                    targetList.add(targetCopy.copy());
+//                }
+//            }
         }
         simulationSummary.setWeaponStateMetrics(finalWeaponStateMetrics);
         simulationSummary.setFiredWeaponSummary(finalFiredWeaponSummary);
