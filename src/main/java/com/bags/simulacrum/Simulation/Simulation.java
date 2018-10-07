@@ -55,33 +55,25 @@ public class Simulation {
         for (int i = 0; i < timeTicks; i++) {
             if (delayedDamageSources.size() > 0) {
                 delayedDamageSources.forEach(ds -> ds.progressTime(deltaTime));
-                FiredWeaponSummary summaryFromHandlingDelayedDamageSources = simulationHelper.handleDelayedDamageSources(delayedDamageSources, primaryTarget, weapon.getStatusChance());
+                FiredWeaponSummary summaryFromHandlingDelayedDamageSources = simulationHelper.handleDelayedDamageSources(delayedDamageSources, weapon.getStatusChance());
                 finalFiredWeaponSummary.addHitPropertiesList(summaryFromHandlingDelayedDamageSources.getHitPropertiesListMap());
                 finalFiredWeaponSummary.addStatusesApplied(summaryFromHandlingDelayedDamageSources.getStatusesAppliedMap());
                 finalFiredWeaponSummary.addDamageMetrics(summaryFromHandlingDelayedDamageSources.getDamageMetricsMap());
-//                finalFiredWeaponSummary.addHitPropertiesList(summaryFromHandlingDelayedDamageSources.getHitPropertiesList());
-//                finalFiredWeaponSummary.addStatusesApplied(summaryFromHandlingDelayedDamageSources.getStatusesApplied());
-//                finalFiredWeaponSummary.addDamageMetrics(summaryFromHandlingDelayedDamageSources.getDamageMetrics());
                 delayedDamageSources.removeIf(DelayedDamageSource::delayOver);
             }
 
-            List<Status> procsApplying = getProcsApplyingToTarget(primaryTarget, deltaTime);
-            List<DamageMetrics> damageMetricsFromAppliedStatuses = simulationHelper.handleApplyingStatuses(procsApplying, statusTickHitProperties, primaryTarget);
-            for (DamageMetrics individualDamageMetrics : damageMetricsFromAppliedStatuses) {
-                finalFiredWeaponSummary.addStatusDamageToHealth(individualDamageMetrics.getDamageToHealth()); //TODO: mapify
-                finalFiredWeaponSummary.addStatusDamageToShields(individualDamageMetrics.getDamageToShields());
-            }
+            progressStatus(simulationParameters.getSimulationTargets(), deltaTime);
+            FiredWeaponSummary statusApplicationSummary = simulationHelper.handleApplyingStatuses(simulationParameters.getSimulationTargets().getAllTargets());
+            finalFiredWeaponSummary.addStatusDamageToHealth(statusApplicationSummary.getDamageMetrics().getStatusDamageToHealth());
+            finalFiredWeaponSummary.addStatusDamageToShields(statusApplicationSummary.getDamageMetrics().getStatusDamageToShields());
             primaryTarget.getStatuses().removeIf(Status::finished);
 
             FiringState firingState = weapon.firingStateProgressTime(deltaTime);
             if (firingState instanceof Fired) {
-                FiredWeaponSummary firedWeaponSummary = simulationHelper.handleFireWeapon(weapon, primaryTarget, simulationParameters.getHeadshotChance());
+                FiredWeaponSummary firedWeaponSummary = simulationHelper.handleFireWeapon(weapon, simulationParameters.getSimulationTargets(), simulationParameters.getHeadshotChance());
                 finalFiredWeaponSummary.addHitPropertiesList(firedWeaponSummary.getHitPropertiesListMap());
                 finalFiredWeaponSummary.addStatusesApplied(firedWeaponSummary.getStatusesAppliedMap());
                 finalFiredWeaponSummary.addDamageMetrics(firedWeaponSummary.getDamageMetricsMap());
-//                finalFiredWeaponSummary.addHitPropertiesList(firedWeaponSummary.getHitPropertiesList());
-//                finalFiredWeaponSummary.addStatusesApplied(firedWeaponSummary.getStatusesApplied());
-//                finalFiredWeaponSummary.addDamageMetrics(firedWeaponSummary.getDamageMetrics());
                 delayedDamageSources.addAll(firedWeaponSummary.getDelayedDamageSources());
             }
             finalWeaponStateMetrics.add(firingState.getClass(), deltaTime);
@@ -99,6 +91,13 @@ public class Simulation {
         simulationSummary.setFiredWeaponSummary(finalFiredWeaponSummary);
 
         return simulationSummary;
+    }
+
+    private void progressStatus(SimulationTargets simulationTargets, double deltaTime) {
+        for (Target individualTarget : simulationTargets.getAllTargets()) {
+            List<Status> statuses = individualTarget.getStatuses();
+            statuses.forEach(status -> status.progressTime(deltaTime));
+        }
     }
 
     private List<Status> getProcsApplyingToTarget(Target target, double deltaTime) {

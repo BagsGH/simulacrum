@@ -23,7 +23,9 @@ public class FiredWeaponSummary {
     private List<Status> statusesApplied;
 
     public FiredWeaponSummary() {
-
+        this.damageMetricsMap = new HashMap<>();
+        this.statusesAppliedMap = new HashMap<>();
+        this.hitPropertiesListMap = new HashMap<>();
     }
 
     public FiredWeaponSummary(List<HitProperties> hitPropertiesList, DamageMetrics damageMetrics, List<Status> statusesApplied, List<DelayedDamageSource> delayedDamageSources) {
