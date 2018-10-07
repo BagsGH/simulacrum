@@ -1,9 +1,14 @@
 package com.bags.simulacrum.Damage;
 
+import com.bags.simulacrum.Simulation.HitProperties;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import java.util.Collections;
+
+import static com.bags.simulacrum.Damage.DamageType.HEAT;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotSame;
 
 public class DelayedDamageSourceTest {
 
@@ -15,18 +20,16 @@ public class DelayedDamageSourceTest {
     }
 
     @Test
-    public void itCanHaveTestCoverage_1() {
-        assertNull(subject.getDamageSource());
-        assertEquals(0.0, subject.getDelay(), 0.0);
-    }
+    public void itCanCopy() {
 
-    @Test
-    public void itCanHaveTestCoverage_2() {
-        subject.setDamageSource(new DamageSource());
-        subject.setDelay(1.0);
+        subject.setDamageSource(new DamageSource(DamageSourceType.HIT, Collections.singletonList(new Damage(HEAT, 25))));
+        subject.setHitProperties(new HitProperties(1, 1, 1, 1));
+        subject.setDelay(subject.getDelay() + 1234.0);
+        subject.setProgress(subject.getProgress() + 123.0);
 
-        assertNotNull(subject.getDamageSource());
-        assertEquals(1.0, subject.getDelay(), 0.0);
+        DelayedDamageSource copy = subject.copy();
+        assertEquals(subject, copy);
+        assertNotSame(subject, copy);
     }
 
 }

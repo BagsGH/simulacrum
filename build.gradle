@@ -43,4 +43,5 @@ dependencies {
     testCompile('org.springframework.restdocs:spring-restdocs-mockmvc')
     testCompile('org.springframework.security:spring-security-test')
     testCompile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.21.0'
 }

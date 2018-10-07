@@ -19,7 +19,9 @@ public class DelayedDamageSource {
     }
 
     public DelayedDamageSource copy() {
-        return new DelayedDamageSource(this.damageSource.copy(), this.hitProperties.copy(), this.delay);
+        DelayedDamageSource copy = new DelayedDamageSource(this.damageSource.copy(), this.hitProperties.copy(), this.delay);
+        copy.setProgress(this.progress);
+        return copy;
     }
 
     public void progressTime(double deltaTime) {

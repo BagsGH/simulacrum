@@ -49,7 +49,7 @@ public class Simulation {
 
         weapon.initializeFiringState();
         Target primaryTarget = simulationParameters.getSimulationTargets().getPrimaryTarget(); //TODO: pass in list to the calls below, and if the DamageSource is AOE, hit all, else... first?
-        Target targetCopy = primaryTarget.copy(); //TODO: commented out because its not 100% implemented //TODO: handle for multiple targets
+        Target targetCopy = primaryTarget.copy();//TODO: handle for multiple targets
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         for (int i = 0; i < timeTicks; i++) {
             if (delayedDamageSources.size() > 0) {
@@ -85,7 +85,7 @@ public class Simulation {
                 targetList.removeIf(Target::isDead);
                 if (simulationParameters.isReplaceDeadTargets()) {
                     targetList.add(new Target());
-                    targetList.add(targetCopy.copy()); //TODO: copy target implementation
+                    targetList.add(targetCopy.copy());
                 }
             }
         }
