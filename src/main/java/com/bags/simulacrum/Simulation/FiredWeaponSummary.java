@@ -6,6 +6,7 @@ import com.bags.simulacrum.Status.Status;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +31,13 @@ public class FiredWeaponSummary {
         this.damageMetrics = damageMetrics;
         this.delayedDamageSources = delayedDamageSources;
         this.statusesApplied = statusesApplied;
+    }
+
+    public FiredWeaponSummary(List<DelayedDamageSource> delayedDamageSources) {
+        this.delayedDamageSources = delayedDamageSources;
+        this.damageMetricsMap = new HashMap<>();
+        this.statusesAppliedMap = new HashMap<>();
+        this.hitPropertiesListMap = new HashMap<>();
     }
 
     public FiredWeaponSummary getEmptySummary() {
@@ -60,6 +68,26 @@ public class FiredWeaponSummary {
                 this.statusesAppliedMap.put(targetName, newAppliedStatuses);
             }
         });
+    }
+
+    public void addHitProperties(String targetName, HitProperties hitProperties) {
+        if (this.hitPropertiesListMap.containsKey(targetName)) {
+            this.hitPropertiesListMap.get(targetName).add(hitProperties);
+        } else {
+            List<HitProperties> list = new ArrayList<>();
+            list.add(hitProperties);
+            this.hitPropertiesListMap.put(targetName, list);
+        }
+    }
+
+    public void addStatusApplied(String targetName, Status statusApplied) {
+        if (this.statusesAppliedMap.containsKey(targetName)) {
+            this.statusesAppliedMap.get(targetName).add(statusApplied);
+        } else {
+            List<Status> list = new ArrayList<>();
+            list.add(statusApplied);
+            this.statusesAppliedMap.put(targetName, list);
+        }
     }
 
     public void addStatusesApplied(List<Status> statusesApplied) {

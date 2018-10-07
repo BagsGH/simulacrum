@@ -62,7 +62,6 @@ public class SimulationHelper {
 
     public FiredWeaponSummary handleFireWeapon(Weapon weapon, SimulationTargets simulationTargets, double headshotChance) { //tODO: secondary targets for aoe...?
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
-        List<Status> statusProcsApplied = new ArrayList<>();
         DamageMetrics finalDamageMetrics = new DamageMetrics.DamageMetricsBuilder()
                 .withDamageToHealth()
                 .withDamageToShields()
@@ -70,39 +69,56 @@ public class SimulationHelper {
                 .withStatusDamageToShields()
                 .build();
 
-        List<HitProperties> hitPropertiesList = new ArrayList<>();
+        FiredWeaponSummary firedWeaponSummary = new FiredWeaponSummary(delayedDamageSources);
 
         double multishotRNG = randomNumberGenerator.getRandomPercentage();
-        double headshotRNG = randomNumberGenerator.getRandomPercentage(); //TODO: maybe if the accuracy is bad, calculate this independently for multishot?
-        double bodyshotRNG = randomNumberGenerator.getRandomPercentage(); //TODO: maybe if the accuracy is bad, calculate this independently for multishot?
+        int shots = getMultishotLevel(weapon.getMultishot(), multishotRNG);
 
-        int multishots = getMultishotLevel(weapon.getMultishot(), multishotRNG);
-        double headshotModifier = calculateHeadshotModifier(target, headshotChance, headshotRNG); //TODO: can only headshot primary?
-        double bodyModifier = calculateBodyModifier(target, headshotChance, headshotRNG, bodyshotRNG);
-
-        for (int i = 0; i < multishots; i++) {
+        for (int i = 0; i < shots; i++) {
             double criticalHitRNG = randomNumberGenerator.getRandomPercentage();
             double statusProcRNG = randomNumberGenerator.getRandomPercentage();
+
             int critLevel = getCritLevel(weapon.getCriticalChance(), criticalHitRNG);
             double weaponCriticalDamageMultiplier = critLevel > 0 ? weapon.getCriticalDamage() : 0.0;
-            HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier);
 
             for (DamageSource damageSource : weapon.getDamageSources()) {
-                if (!isDelayedDamageSource(damageSource)) {
-                    DamageMetrics damageMetrics = targetDamageHelper.applyDamageSourceDamageToTarget(damageSource, hitProperties, target);
-                    updateRunningTotalDamageToHealth(finalDamageMetrics, damageMetrics.getDamageToHealth());
-                    updateRunningTotalDamageToShields(finalDamageMetrics, damageMetrics.getDamageToShields());
-                    if (statusProcRNG < weapon.getStatusChance()) {
-                        statusProcsApplied.add(getStatusProcAndApply(target, damageSource, damageMetrics, finalDamageMetrics));
+                List<Target> effectiveTargetList = getTargetList(simulationTargets, damageSource);
+                for (Target individualTarget : effectiveTargetList) {
+                    String targetName = individualTarget.getTargetName();
+
+                    double headshotRNG = randomNumberGenerator.getRandomPercentage();
+                    double bodyshotRNG = randomNumberGenerator.getRandomPercentage();
+                    double headshotModifier = calculateHeadshotModifier(individualTarget, headshotChance, headshotRNG);
+                    double bodyModifier = calculateBodyModifier(individualTarget, headshotChance, headshotRNG, bodyshotRNG);
+
+                    HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier); //TODO: roll sattus into this...
+
+                    if (!isDelayedDamageSource(damageSource)) {
+                        DamageMetrics damageMetrics = targetDamageHelper.applyDamageSourceDamageToTarget(damageSource, hitProperties, individualTarget);
+                        firedWeaponSummary.addDamageToHealth(targetName, damageMetrics.getDamageToHealth());
+                        firedWeaponSummary.addDamageToShields(targetName, damageMetrics.getDamageToShields());
+                        if (statusProcRNG < weapon.getStatusChance()) {
+                            firedWeaponSummary.addStatusApplied(targetName, getStatusProcAndApply(individualTarget, damageSource, damageMetrics, finalDamageMetrics));
+                        }
+                    } else {
+                        delayedDamageSources.add(new DelayedDamageSource(individualTarget, damageSource.copy(), hitProperties, damageSource.getDelay()));
                     }
-                } else {
-                    delayedDamageSources.add(new DelayedDamageSource(damageSource.copy(), hitProperties, damageSource.getDelay()));
+                    firedWeaponSummary.addHitProperties(targetName, hitProperties);
                 }
             }
-            hitPropertiesList.add(hitProperties);
         }
 
-        return new FiredWeaponSummary(hitPropertiesList, finalDamageMetrics, statusProcsApplied, delayedDamageSources);
+        return firedWeaponSummary;
+    }
+
+    private List<Target> getTargetList(SimulationTargets simulationTargets, DamageSource damageSource) {
+        List<Target> effectiveTargetList = new ArrayList<>();
+        if (damageSource.getDamageSourceType().equals(DamageSourceType.HIT_AOE) || damageSource.getDamageSourceType().equals(DamageSourceType.DELAYED_AOE)) {
+            effectiveTargetList.addAll(simulationTargets.getAllTargets());
+        } else {
+            effectiveTargetList.add(simulationTargets.getPrimaryTarget());
+        }
+        return effectiveTargetList;
     }
 
     private int getMultishotLevel(double weaponMultishotChance, double multishotRNG) {
@@ -148,7 +164,8 @@ public class SimulationHelper {
         return damageSource.getDamageSourceType().equals(DamageSourceType.DELAYED) || damageSource.getDamageSourceType().equals(DamageSourceType.DELAYED_AOE);
     }
 
-    private void updateRunningTotalDamageToHealth(DamageMetrics finalDamageMetrics, Map<DamageType, Double> damageToHealth) {
+    private void updateRunningTotalDamageToHealth(Target target, DamageMetrics finalDamageMetrics, Map<DamageType, Double> damageToHealth) {
+
         for (DamageType damageType : damageToHealth.keySet()) {
             finalDamageMetrics.addDamageToHealth(damageType, damageToHealth.get(damageType));
         }
