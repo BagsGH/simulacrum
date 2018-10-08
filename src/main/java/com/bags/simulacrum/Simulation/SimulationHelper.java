@@ -73,7 +73,6 @@ public class SimulationHelper {
 
     public FiredWeaponSummary handleFireWeapon(Weapon weapon, SimulationTargets simulationTargets, double headshotChance) {
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
-        DamageMetrics finalDamageMetrics = new DamageMetrics();
 
         FiredWeaponSummary firedWeaponSummary = new FiredWeaponSummary(delayedDamageSources);
 
@@ -104,7 +103,10 @@ public class SimulationHelper {
                         firedWeaponSummary.addDamageToHealth(targetName, damageMetrics.getDamageToHealth());
                         firedWeaponSummary.addDamageToShields(targetName, damageMetrics.getDamageToShields());
                         if (statusProcRNG < weapon.getStatusChance()) {
-                            firedWeaponSummary.addStatusApplied(targetName, getStatusProcAndApply(individualTarget, damageSource, damageMetrics, finalDamageMetrics));
+                            DamageMetrics statusDamageMetrics = new DamageMetrics();
+                            firedWeaponSummary.addStatusApplied(targetName, getStatusProcAndApply(individualTarget, damageSource, damageMetrics, statusDamageMetrics));
+                            firedWeaponSummary.addStatusDamageToHealth(targetName, statusDamageMetrics.getStatusDamageToHealth());
+                            firedWeaponSummary.addStatusDamageToShields(targetName, statusDamageMetrics.getStatusDamageToShields());
                         }
                     } else {
                         delayedDamageSources.add(new DelayedDamageSource(individualTarget, damageSource.copy(), hitProperties, damageSource.getDelay()));
