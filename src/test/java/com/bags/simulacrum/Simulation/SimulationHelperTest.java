@@ -19,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
@@ -44,9 +45,6 @@ public class SimulationHelperTest {
 
     @Mock
     private StatusProcHelper mockStatusProcHelper;
-
-    private Map<DamageType, Double> fakeDamageToHealth;
-    private Map<DamageType, Double> fakeDamageToShields;
 
     private Weapon fakeWeapon;
 
@@ -117,9 +115,7 @@ public class SimulationHelperTest {
 
     @Test
     public void itCallsRandomMoreThanFiveTimesWithMultishotWithTwoDamageSources() {
-        DamageSource anotherFakeDamageSource = new DamageSource();
-        anotherFakeDamageSource.setDamages(Collections.singletonList(new Damage(HEAT, 25)));
-        anotherFakeDamageSource.setDamageSourceType(DamageSourceType.PROJECTILE);
+        DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, new ArrayList<>(Collections.singletonList(new Damage(HEAT, 25))));
         fakeWeapon.setDamageSources(Arrays.asList(fakeDamageSource, anotherFakeDamageSource));
         fakeWeapon.setMultishot(3.0);
         subject.handleFireWeapon(fakeWeapon, fakeSimulationTargets, 0.0);
@@ -160,9 +156,7 @@ public class SimulationHelperTest {
 
     @Test
     public void itCallsTargetDamageHelperTwiceWithoutMultishotWithTwoDamageSources() {
-        DamageSource anotherFakeDamageSource = new DamageSource();
-        anotherFakeDamageSource.setDamages(Collections.singletonList(new Damage(HEAT, 25)));
-        anotherFakeDamageSource.setDamageSourceType(DamageSourceType.PROJECTILE);
+        DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, new ArrayList<>(Collections.singletonList(new Damage(HEAT, 25))));
         fakeWeapon.setDamageSources(Arrays.asList(fakeDamageSource, anotherFakeDamageSource));
         subject.handleFireWeapon(fakeWeapon, fakeSimulationTargets, 0.0);
 
@@ -171,9 +165,7 @@ public class SimulationHelperTest {
 
     @Test
     public void itCallsTargetDamageHelperSixTimesWithMultishotWithTwoDamageSources() {
-        DamageSource anotherFakeDamageSource = new DamageSource();
-        anotherFakeDamageSource.setDamages(Collections.singletonList(new Damage(HEAT, 25)));
-        anotherFakeDamageSource.setDamageSourceType(DamageSourceType.PROJECTILE);
+        DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, new ArrayList<>(Collections.singletonList(new Damage(HEAT, 25))));
         fakeWeapon.setDamageSources(Arrays.asList(fakeDamageSource, anotherFakeDamageSource));
         fakeWeapon.setMultishot(2.51);
         subject.handleFireWeapon(fakeWeapon, fakeSimulationTargets, 0.0);
@@ -307,32 +299,28 @@ public class SimulationHelperTest {
     public void itReturnsADamageSummary() {
         FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeSimulationTargets, 0.0);
 
-        assertEquals(fakeDamageToHealth, firedWeaponSummary.getDamageMetricsMap().get(fakeTargetName).getDamageToHealth());
-        assertEquals(fakeDamageToShields, firedWeaponSummary.getDamageMetricsMap().get(fakeTargetName).getDamageToShields());
+        assertEquals(DamageMetrics.initialDamageMap(), firedWeaponSummary.getDamageMetricsMap().get(fakeTargetName).getDamageToHealth());
+        assertEquals(DamageMetrics.initialDamageMap(), firedWeaponSummary.getDamageMetricsMap().get(fakeTargetName).getDamageToShields());
     }
 
     @Test
     public void itReturnsADamageSummaryWithValuesReturnedByHelpers_Health() {
-        fakeDamageToHealth.put(HEAT, 50.0);
+        fakeDamageMetrics.addDamageToHealth(HEAT, 50.0);
 
         FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeSimulationTargets, 0.0);
 
-        assertEquals(fakeDamageToHealth, firedWeaponSummary.getDamageMetricsMap().get(fakeTargetName).getDamageToHealth());
-        assertEquals(fakeDamageToShields, firedWeaponSummary.getDamageMetricsMap().get(fakeTargetName).getDamageToShields());
+        assertEquals(fakeDamageMetrics.getDamageToHealth(), firedWeaponSummary.getDamageMetricsMap().get(fakeTargetName).getDamageToHealth());
+        assertEquals(DamageMetrics.initialDamageMap(), firedWeaponSummary.getDamageMetricsMap().get(fakeTargetName).getDamageToShields());
 
         assertEquals(50.0, firedWeaponSummary.getDamageMetricsMap().get(fakeTargetName).getDamageToHealth().get(HEAT), 0.0);
     }
 
     @Test
     public void itSumsDamageSummariesFromMultipleDamageSources_Health() {
-        fakeDamageToHealth.put(HEAT, 50.0);
-        Map<DamageType, Double> anotherFakeDamageToHealth = DamageMetrics.initialDamageMap();
-        Map<DamageType, Double> anotherFakeDamageToShields = DamageMetrics.initialDamageMap();
-        anotherFakeDamageToHealth.put(HEAT, 75.0);
+        fakeDamageMetrics.addDamageToHealth(HEAT, 50.0);
 
         DamageMetrics anotherFakeDamageMetrics = new DamageMetrics();
-        anotherFakeDamageMetrics.setDamageToHealth(anotherFakeDamageToHealth);
-        anotherFakeDamageMetrics.setDamageToShields(anotherFakeDamageToShields);
+        anotherFakeDamageMetrics.addDamageToHealth(HEAT, 75.0);
 
         when(mockTargetDamageHelper.applyDamageSourceDamageToTarget(any(), any(), any())).thenReturn(fakeDamageMetrics).thenReturn(anotherFakeDamageMetrics);
 
@@ -346,25 +334,23 @@ public class SimulationHelperTest {
 
     @Test
     public void itReturnsADamageSummaryWithValuesReturnedByHelpers_Shields() {
-        fakeDamageToShields.put(HEAT, 50.0);
+        fakeDamageMetrics.addDamageToShields(HEAT, 50.0);
 
         FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeSimulationTargets, 0.0);
 
-        assertEquals(fakeDamageToHealth, firedWeaponSummary.getDamageMetricsMap().get(fakeTargetName).getDamageToHealth());
-        assertEquals(fakeDamageToShields, firedWeaponSummary.getDamageMetricsMap().get(fakeTargetName).getDamageToShields());
+        assertEquals(DamageMetrics.initialDamageMap(), firedWeaponSummary.getDamageMetricsMap().get(fakeTargetName).getDamageToHealth());
+        assertEquals(fakeDamageMetrics.getDamageToShields(), firedWeaponSummary.getDamageMetricsMap().get(fakeTargetName).getDamageToShields());
 
         assertEquals(50.0, firedWeaponSummary.getDamageMetricsMap().get(fakeTargetName).getDamageToShields().get(HEAT), 0.0);
     }
 
     @Test
     public void itSumsDamageSummariesFromMultipleDamageSources_Shields() {
-        fakeDamageToShields.put(HEAT, 50.0);
-        Map<DamageType, Double> anotherFakeDamageToHealth = DamageMetrics.initialDamageMap();
+        fakeDamageMetrics.addDamageToShields(HEAT, 50.0);
         Map<DamageType, Double> anotherFakeDamageToShields = DamageMetrics.initialDamageMap();
         anotherFakeDamageToShields.put(HEAT, 75.0);
 
         DamageMetrics anotherFakeDamageMetrics = new DamageMetrics();
-        anotherFakeDamageMetrics.setDamageToHealth(anotherFakeDamageToHealth);
         anotherFakeDamageMetrics.setDamageToShields(anotherFakeDamageToShields);
 
         when(mockTargetDamageHelper.applyDamageSourceDamageToTarget(any(), any(), any())).thenReturn(fakeDamageMetrics).thenReturn(anotherFakeDamageMetrics);
@@ -509,11 +495,7 @@ public class SimulationHelperTest {
         DamageSource fakeIgniteDamageTickDamageSource = mock(DamageSource.class);
         when(fakeIgnite.apply(fakeTarget)).thenReturn(fakeIgniteDamageTickDamageSource);
 
-        Map<DamageType, Double> damageToShields = DamageMetrics.initialDamageMap();
-        Map<DamageType, Double> damageToHealth = DamageMetrics.initialDamageMap();
         DamageMetrics fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget = new DamageMetrics();
-        fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget.setDamageToHealth(damageToHealth);
-        fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget.setDamageToShields(damageToShields);
         fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget.addDamageToShields(HEAT, 22.0);
         when(mockTargetDamageHelper.applyDamageSourceDamageToTarget(eq(fakeIgniteDamageTickDamageSource), hitPropertiesCaptor.capture(), eq(fakeTarget))).thenReturn(fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget);
 
@@ -540,11 +522,7 @@ public class SimulationHelperTest {
         DamageSource fakeCorrosionTickDamageSource = mock(DamageSource.class);
         when(fakeCorrosion.apply(fakeTarget)).thenReturn(fakeCorrosionTickDamageSource);
 
-        Map<DamageType, Double> damageToShields = DamageMetrics.initialDamageMap();
-        Map<DamageType, Double> damageToHealth = DamageMetrics.initialDamageMap();
         DamageMetrics fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget = new DamageMetrics();
-        fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget.setDamageToHealth(damageToHealth);
-        fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget.setDamageToShields(damageToShields);
         fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget.addDamageToShields(CORROSIVE, 0.0);
         when(mockTargetDamageHelper.applyDamageSourceDamageToTarget(eq(fakeCorrosionTickDamageSource), hitPropertiesCaptor.capture(), eq(fakeTarget))).thenReturn(fakeDamageMetricsReturnedFromApplyingDamageTickDamageSourceToTarget);
 
@@ -577,11 +555,7 @@ public class SimulationHelperTest {
     }
 
     private void setupDefaultFakeDamageSummary() {
-        fakeDamageToHealth = DamageMetrics.initialDamageMap();
-        fakeDamageToShields = DamageMetrics.initialDamageMap();
         fakeDamageMetrics = new DamageMetrics();
-        fakeDamageMetrics.setDamageToHealth(fakeDamageToHealth);
-        fakeDamageMetrics.setDamageToShields(fakeDamageToShields);
     }
 
     private void setupDefaultFakeTarget() {
