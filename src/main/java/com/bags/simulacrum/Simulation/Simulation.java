@@ -60,10 +60,12 @@ public class Simulation {
                 delayedDamageSources.removeIf(DelayedDamageSource::delayOver);
             }
 
+            //if ((int) simulationParameters.getSimulationTargets().getAllTargets().stream().filter(t -> t.getStatuses().size() > 0).count() > 0) {
             progressStatus(simulationParameters.getSimulationTargets(), deltaTime);
             FiredWeaponSummary statusApplicationSummary = simulationHelper.handleApplyingStatuses(simulationParameters.getSimulationTargets().getAllTargets());
             finalFiredWeaponSummary.addDamageMetrics(statusApplicationSummary.getDamageMetricsMap());
-            primaryTarget.getStatuses().removeIf(Status::finished);
+            simulationParameters.getSimulationTargets().getAllTargets().forEach(target -> target.getStatuses().removeIf(Status::finished));
+            //}
 
             FiringState firingState = weapon.firingStateProgressTime(deltaTime);
             if (firingState instanceof Fired) {
