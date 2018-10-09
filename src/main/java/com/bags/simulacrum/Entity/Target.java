@@ -96,6 +96,10 @@ public class Target {
         return this.healths.stream().filter(h -> HealthClass.isArmor(h.getHealthClass())).findFirst().orElse(null);
     }
 
+    public Health getShields() {
+        return this.healths.stream().filter(h -> HealthClass.isShield(h.getHealthClass())).findFirst().orElse(null);
+    }
+
     public Health getHealth() {
         return this.healths.stream().filter(h -> (!HealthClass.isArmor(h.getHealthClass()) && !HealthClass.isShield(h.getHealthClass()))).findFirst().orElse(null);
     }

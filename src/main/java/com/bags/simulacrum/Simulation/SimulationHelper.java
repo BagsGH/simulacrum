@@ -1,11 +1,13 @@
 package com.bags.simulacrum.Simulation;
 
+import com.bags.simulacrum.Armor.Health;
 import com.bags.simulacrum.Damage.DamageSource;
 import com.bags.simulacrum.Damage.DamageSourceType;
 import com.bags.simulacrum.Damage.DamageType;
 import com.bags.simulacrum.Damage.DelayedDamageSource;
 import com.bags.simulacrum.Entity.BodyModifier;
 import com.bags.simulacrum.Entity.Target;
+import com.bags.simulacrum.Status.Bleed;
 import com.bags.simulacrum.Status.Status;
 import com.bags.simulacrum.Status.StatusProcHelper;
 import com.bags.simulacrum.Weapon.Weapon;
@@ -32,16 +34,24 @@ public class SimulationHelper {
     }
 
     //TODO: test
-    public FiredWeaponSummary handleApplyingStatuses(List<Target> simulationTargets) { //TODO: bleed apply directly ohealth
+    public FiredWeaponSummary handleApplyingStatuses(List<Target> simulationTargets) {
         HitProperties statusTickHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         FiredWeaponSummary appliedStatusSummary = new FiredWeaponSummary();
         for (Target individualTarget : simulationTargets) {
             String targetName = individualTarget.getTargetName();
             List<Status> procsApplying = individualTarget.getStatuses().stream().filter(Status::checkProgress).collect(Collectors.toList());
             for (Status individualStatus : procsApplying) {
+                Health originalTargetShields = individualTarget.getShields();
+                if (individualStatus instanceof Bleed) { //TODO: Cleaner way? applysourceDamage takes care of it?
+                    originalTargetShields = originalTargetShields.copy();
+                    individualTarget.getShields().setHealthValue(0.0);
+                }
                 DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(individualStatus.apply(individualTarget), statusTickHitProperties, individualTarget);
                 appliedStatusSummary.addStatusDamageToHealth(targetName, damageMetricsFromStatusTick.getDamageToHealth());
                 appliedStatusSummary.addStatusDamageToShields(targetName, damageMetricsFromStatusTick.getDamageToShields());
+                if (individualStatus instanceof Bleed) {
+                    individualTarget.getShields().setHealthValue(originalTargetShields.getHealthValue());
+                }
             }
         }
 
@@ -59,11 +69,11 @@ public class SimulationHelper {
                 Target target = delayedDamageSource.getTarget();
                 String targetName = target.getTargetName();
                 HitProperties delayedDamageSourceHitProperties = delayedDamageSource.getHitProperties();
-                DamageMetrics damageMetricsFromDelayedDamage = targetDamageHelper.applyDamageSourceDamageToTarget(delayedDamageSource.getDamageSource(), delayedDamageSourceHitProperties, target); //TODO: delayed damage source keeps track of which target to apply to?
+                DamageMetrics damageMetricsFromDelayedDamage = targetDamageHelper.applyDamageSourceDamageToTarget(delayedDamageSource.getDamageSource(), delayedDamageSourceHitProperties, target);
                 delayedDamageSourceSummary.addDamageToHealth(targetName, damageMetricsFromDelayedDamage.getDamageToHealth());
                 delayedDamageSourceSummary.addDamageToShields(targetName, damageMetricsFromDelayedDamage.getDamageToShields());
                 if (randomNumberGenerator.getRandomPercentage() < statusChance) {
-                    delayedDamageSourceSummary.addStatusApplied(targetName, getStatusProcAndApply(target, delayedDamageSource.getDamageSource(), damageMetricsFromDelayedDamage, finalDamageMetricsFromDelayedDamageSources));
+                    delayedDamageSourceSummary.addStatusApplied(targetName, getStatusProcAndApply(target, delayedDamageSource.getDamageSource(), damageMetricsFromDelayedDamage, finalDamageMetricsFromDelayedDamageSources)); //TODO: test that this tracks damage correctly
                 }
                 delayedDamageSourceSummary.addHitProperties(targetName, delayedDamageSourceHitProperties);
             }
@@ -96,7 +106,7 @@ public class SimulationHelper {
                     double headshotModifier = calculateHeadshotModifier(individualTarget, headshotChance, headshotRNG);
                     double bodyModifier = calculateBodyModifier(individualTarget, headshotChance, headshotRNG, bodyshotRNG);
 
-                    HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier); //TODO: roll sattus into this...
+                    HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier); //TODO: roll status into this...
 
                     if (!isDelayedDamageSource(damageSource)) {
                         DamageMetrics damageMetrics = targetDamageHelper.applyDamageSourceDamageToTarget(damageSource, hitProperties, individualTarget);
@@ -179,7 +189,7 @@ public class SimulationHelper {
         HitProperties statusTickHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         DamageSource damageSourceForDamageTick = status.apply(target);
         DamageMetrics damageMetricsFromDamageTick = targetDamageHelper.applyDamageSourceDamageToTarget(damageSourceForDamageTick, statusTickHitProperties, target);
-        updateRunningTotalStatusDamageToHealth(finalDamageMetrics, damageMetricsFromDamageTick.getDamageToHealth()); //TODO: if i make it only do one status proc per hit, doesnt need this method any more
+        updateRunningTotalStatusDamageToHealth(finalDamageMetrics, damageMetricsFromDamageTick.getDamageToHealth());
         updateRunningTotalStatusDamageToShields(finalDamageMetrics, damageMetricsFromDamageTick.getDamageToShields());
 
         return status;

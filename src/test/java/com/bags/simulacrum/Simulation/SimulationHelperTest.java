@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.Map;
 
 import static com.bags.simulacrum.Armor.HealthClass.*;
+import static com.bags.simulacrum.Damage.DamageSourceType.DELAYED_AOE;
 import static com.bags.simulacrum.Damage.DamageType.*;
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -33,6 +34,8 @@ import static org.mockito.Mockito.*;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class SimulationHelperTest {
+
+    //TODO: testing multiple targets
 
     @InjectMocks
     private SimulationHelper subject;
@@ -55,7 +58,6 @@ public class SimulationHelperTest {
     private Weapon fakeWeapon;
 
     private DamageSource fakeDamageSource;
-    private Damage fakeDamage;
 
     private Target fakeTarget;
     private Health fakeHealth;
@@ -179,7 +181,6 @@ public class SimulationHelperTest {
         verify(mockTargetDamageHelper, times(6)).applyDamageSourceDamageToTarget(any(), any(), any());
     }
 
-    //TODO: check below
     @Test
     public void itCallsTargetDamageHelperWithCorrectValues_Headshot() {
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.14);
@@ -265,9 +266,9 @@ public class SimulationHelperTest {
     public void itCallsTargetDamageHelperWithCorrectValues_Critical_Bodyshot() {
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.45);
         fakeWeapon.setCriticalChance(0.46);
-        subject.handleFireWeapon(fakeWeapon, fakeSimulationTargets, 0.30);
-
         ArgumentCaptor<HitProperties> hitPropertiesCaptor = ArgumentCaptor.forClass(HitProperties.class);
+
+        subject.handleFireWeapon(fakeWeapon, fakeSimulationTargets, 0.30);
 
         verify(mockTargetDamageHelper).applyDamageSourceDamageToTarget(any(), hitPropertiesCaptor.capture(), any());
         HitProperties actualHitProperties = hitPropertiesCaptor.getValue();
@@ -279,17 +280,18 @@ public class SimulationHelperTest {
 
     @Test
     public void itReturnsADelayedDamageSource() {
-        fakeDamageSource.setDamageSourceType(DamageSourceType.DELAYED_AOE);
+        fakeDamageSource.setDamageSourceType(DELAYED_AOE);
 
         FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeSimulationTargets, 0.0);
 
         assertEquals(1, firedWeaponSummary.getDelayedDamageSources().size());
         assertEquals(fakeDamageSource, firedWeaponSummary.getDelayedDamageSources().get(0).getDamageSource());
+        assertEquals(DELAYED_AOE, firedWeaponSummary.getDelayedDamageSources().get(0).getDamageSource().getDamageSourceType());
     }
 
     @Test
     public void itReturnsDelayedDamageSources() {
-        fakeDamageSource.setDamageSourceType(DamageSourceType.DELAYED_AOE);
+        fakeDamageSource.setDamageSourceType(DELAYED_AOE);
         DamageSource anotherFakeDamageSource = new DamageSource(DamageSourceType.DELAYED, Collections.singletonList(new Damage(IMPACT, 50.0)));
         fakeWeapon.setDamageSources(Arrays.asList(fakeDamageSource, anotherFakeDamageSource));
 
@@ -299,7 +301,6 @@ public class SimulationHelperTest {
         assertEquals(fakeDamageSource, firedWeaponSummary.getDelayedDamageSources().get(0).getDamageSource());
         assertEquals(anotherFakeDamageSource, firedWeaponSummary.getDelayedDamageSources().get(1).getDamageSource()); //TODO: don't assume order?
     }
-    //TODO: Check above
 
     @Test
     public void itReturnsADamageSummary() {
@@ -513,7 +514,7 @@ public class SimulationHelperTest {
         assertEquals(expectedHitProperties, actualHitProperties);
     }
 
-    @Test //todo: verify sound logic
+    @Test
     public void ifTheReturnedStatusProcHasNoDamageItDoesNotDealDamageToTheTarget() {
         ArgumentCaptor<HitProperties> hitPropertiesCaptor = ArgumentCaptor.forClass(HitProperties.class);
         Corrosion fakeCorrosion = mock(Corrosion.class);
@@ -540,7 +541,7 @@ public class SimulationHelperTest {
         assertEquals(expectedHitProperties, actualHitProperties);
     }
 
-    @Test //TODO: check if this is still valid
+    @Test
     public void eachShotOfMultishotCalculatesStatusChanceIndependently() {
         when(mockRandomNumberGenerator.getRandomPercentage()).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.50).thenReturn(0.04);
         when(mockStatusProcHelper.constructStatusProc(any(), any(), any())).thenReturn(new Corrosion());
@@ -571,7 +572,7 @@ public class SimulationHelperTest {
     }
 
     private void setupDefaultFakeTarget() {
-        fakeTargetName = "badabing";
+        fakeTargetName = "banana";
         fakeHealth = new Health(INFESTED_FLESH, 250.0);
         fakeShields = new Health(SHIELD, 250.0);
         fakeArmor = new Health(ALLOY, 300.0);
@@ -590,8 +591,7 @@ public class SimulationHelperTest {
         fakeWeapon.setCriticalChance(0.25);
         fakeWeapon.setCriticalDamage(2.0);
         fakeWeapon.setStatusChance(0.05);
-        fakeDamage = new Damage(HEAT, 25.0);
-        fakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(fakeDamage));
+        fakeDamageSource = new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(HEAT, 25.0)));
         fakeWeapon.setDamageSources(Collections.singletonList(fakeDamageSource));
     }
 
