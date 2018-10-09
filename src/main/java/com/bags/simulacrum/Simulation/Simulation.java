@@ -54,8 +54,8 @@ public class Simulation {
             if (delayedDamageSources.size() > 0) {
                 delayedDamageSources.forEach(ds -> ds.progressTime(deltaTime));
                 FiredWeaponSummary summaryFromHandlingDelayedDamageSources = simulationHelper.handleDelayedDamageSources(delayedDamageSources, weapon.getStatusChance());
-                finalFiredWeaponSummary.addHitPropertiesList(summaryFromHandlingDelayedDamageSources.getHitPropertiesListMap());
-                finalFiredWeaponSummary.addStatusesApplied(summaryFromHandlingDelayedDamageSources.getStatusesAppliedMap());
+                finalFiredWeaponSummary.addHitPropertiesMap(summaryFromHandlingDelayedDamageSources.getHitPropertiesListMap());
+                finalFiredWeaponSummary.addStatusesAppliedMap(summaryFromHandlingDelayedDamageSources.getStatusesAppliedMap());
                 finalFiredWeaponSummary.addDamageMetrics(summaryFromHandlingDelayedDamageSources.getDamageMetricsMap());
                 delayedDamageSources.removeIf(DelayedDamageSource::delayOver);
             }
@@ -68,8 +68,8 @@ public class Simulation {
             FiringState firingState = weapon.firingStateProgressTime(deltaTime);
             if (firingState instanceof Fired) {
                 FiredWeaponSummary firedWeaponSummary = simulationHelper.handleFireWeapon(weapon, simulationParameters.getSimulationTargets(), simulationParameters.getHeadshotChance());
-                finalFiredWeaponSummary.addHitPropertiesList(firedWeaponSummary.getHitPropertiesListMap());
-                finalFiredWeaponSummary.addStatusesApplied(firedWeaponSummary.getStatusesAppliedMap());
+                finalFiredWeaponSummary.addHitPropertiesMap(firedWeaponSummary.getHitPropertiesListMap());
+                finalFiredWeaponSummary.addStatusesAppliedMap(firedWeaponSummary.getStatusesAppliedMap());
                 finalFiredWeaponSummary.addDamageMetrics(firedWeaponSummary.getDamageMetricsMap());
                 delayedDamageSources.addAll(firedWeaponSummary.getDelayedDamageSources());
             }

@@ -291,7 +291,7 @@ public class SimulationTest {
         fakeIgnite.setDuration(0.01);
         fakeIgnite.setNumberOfDamageTicks(2);
         fakeIgnite.setupTimers();
-        fakeFiredWeaponSummary.addStatusesApplied(fakeTargetName, new ArrayList<>(Collections.singletonList(fakeIgnite)));
+        fakeFiredWeaponSummary.addStatusApplied(fakeTargetName, fakeIgnite);
         doAnswer(invocation -> {
             fakeTarget.setStatuses(Collections.singletonList(fakeIgnite));
             fakeIgnite.setTickProgress(fakeIgnite.getTickProgress() + 1);
@@ -351,7 +351,7 @@ public class SimulationTest {
         fakeIgnite.setDuration(0.01);
         fakeIgnite.setNumberOfDamageTicks(2);
         fakeIgnite.setupTimers();
-        fakeFiredWeaponSummary.addStatusesApplied(fakeTargetName, new ArrayList<>(Collections.singletonList(fakeIgnite)));
+        fakeFiredWeaponSummary.addStatusApplied(fakeTargetName, fakeIgnite);
         //Hit properties to be used for the hit and the delay.
         HitProperties fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
         fakeFiredWeaponSummary.addHitProperties(fakeTargetName, fakeHitProperties);
