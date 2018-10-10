@@ -5,6 +5,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class SimulationTargets {
@@ -25,6 +26,6 @@ public class SimulationTargets {
     }
 
     public SimulationTargets copy() {
-        return new SimulationTargets(this.primaryTarget, this.secondaryTargets);
+        return new SimulationTargets(this.primaryTarget.copy(), this.secondaryTargets.stream().map(Target::copy).collect(Collectors.toList()));
     }
 }

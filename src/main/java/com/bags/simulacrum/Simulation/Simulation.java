@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class Simulation {
@@ -35,7 +36,7 @@ public class Simulation {
 
     public SimulationSummary runSimulation(SimulationParameters simulationParameters) {
         Weapon weapon = simulationParameters.getModdedWeapon();
-        List<Target> targetList = simulationParameters.getSimulationTargets().getAllTargets();
+        SimulationTargets targets = simulationParameters.getSimulationTargets(); //TODO: dont use target list, maybe a local Targets obj
         SimulationSummary simulationSummary = new SimulationSummary();
 
         double deltaTime = config.getDeltaTime();
@@ -46,9 +47,12 @@ public class Simulation {
         FiredWeaponSummary finalFiredWeaponSummary = new FiredWeaponSummary();
 
         weapon.initializeFiringState();
-        Target primaryTarget = simulationParameters.getSimulationTargets().getPrimaryTarget(); //TODO: pass in list to the calls below, and if the DamageSource is AOE, hit all, else... first?
-        primaryTarget.setTargetName("primary");
-        Target targetCopy = primaryTarget.copy();//TODO: handle for multiple targets
+
+        //TODO: pass in list to the calls below, and if the DamageSource is AOE, hit all, else... first?
+        Target targetCopy = simulationParameters.getSimulationTargets().getPrimaryTarget().copy();//TODO: handle for multiple targets
+        List<Target> copiedSecondaryTargets = simulationParameters.getSimulationTargets().getSecondaryTargets().stream().map(Target::copy).collect(Collectors.toList());
+        SimulationTargets cloningVat = new SimulationTargets(targetCopy, copiedSecondaryTargets);
+
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         for (int i = 0; i < timeTicks; i++) {
             if (delayedDamageSources.size() > 0) {
@@ -60,7 +64,7 @@ public class Simulation {
                 delayedDamageSources.removeIf(DelayedDamageSource::delayOver);
             }
 
-            //if ((int) simulationParameters.getSimulationTargets().getAllTargets().stream().filter(t -> t.getStatuses().size() > 0).count() > 0) {
+            //if ((int) simulationParameters.getSimulationTargets().getAllTargets().stream().anyMatch(t -> t.getStatuses().size() > 0)) {
             progressStatus(simulationParameters.getSimulationTargets(), deltaTime);
             FiredWeaponSummary statusApplicationSummary = simulationHelper.handleApplyingStatuses(simulationParameters.getSimulationTargets().getAllTargets());
             finalFiredWeaponSummary.addDamageMetrics(statusApplicationSummary.getDamageMetricsMap());
@@ -77,12 +81,11 @@ public class Simulation {
             }
             finalWeaponStateMetrics.add(firingState.getClass(), deltaTime);
 
-            if (simulationParameters.getSimulationTargets().getPrimaryTarget().isDead()) {
+            if (targets.getAllTargets().stream().anyMatch(Target::isDead)) {
                 simulationSummary.addKilledTarget(simulationParameters.getSimulationTargets().getPrimaryTarget());
                 targetList.removeIf(Target::isDead);
                 if (simulationParameters.isReplaceDeadTargets()) {
-                    targetList.add(new Target()); //TODO: fix this to work with getSimulationTargets
-                    targetList.add(targetCopy.copy());
+                    targetList.add(cloningVat.getPrimaryTarget().copy()); //TODO: fix this to work with getSimulationTargets
                 }
             }
 //           //TODO: handle death of secondary targets
