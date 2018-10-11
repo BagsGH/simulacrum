@@ -25,7 +25,7 @@ public class SimulationTargets {
         this.secondaryTargets = secondaryTargets != null ? secondaryTargets : new ArrayList<>();
     }
 
-    public SimulationTargets copy() {
+    public SimulationTargets copy() { //TODO: would this ever have a use?
         return new SimulationTargets(this.primaryTarget.copy(), this.secondaryTargets.stream().map(Target::copy).collect(Collectors.toList()));
     }
 }

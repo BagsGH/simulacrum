@@ -22,9 +22,12 @@ import java.util.stream.Collectors;
 @Component
 public class SimulationHelper {
 
+    private static final HitProperties STATUS_TICK_HIT_PROPERTIES = new HitProperties(0, 0.0, 0.0, 0.0);
+
     private final TargetDamageHelper targetDamageHelper;
     private final RandomNumberGenerator randomNumberGenerator;
     private final StatusProcHelper statusProcHelper;
+
 
     @Autowired
     public SimulationHelper(TargetDamageHelper targetDamageHelper, RandomNumberGenerator randomNumberGenerator, StatusProcHelper statusProcHelper) {
@@ -35,7 +38,7 @@ public class SimulationHelper {
 
     //TODO: test
     public FiredWeaponSummary handleApplyingStatuses(List<Target> simulationTargets) {
-        HitProperties statusTickHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
+
         FiredWeaponSummary appliedStatusSummary = new FiredWeaponSummary();
         for (Target individualTarget : simulationTargets) {
             String targetName = individualTarget.getTargetName();
@@ -46,7 +49,7 @@ public class SimulationHelper {
                     originalTargetShields = originalTargetShields.copy();
                     individualTarget.getShields().setHealthValue(0.0);
                 }
-                DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(individualStatus.apply(individualTarget), statusTickHitProperties, individualTarget);
+                DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(individualStatus.apply(individualTarget), STATUS_TICK_HIT_PROPERTIES, individualTarget);
                 appliedStatusSummary.addStatusDamageToHealth(targetName, damageMetricsFromStatusTick.getDamageToHealth());
                 appliedStatusSummary.addStatusDamageToShields(targetName, damageMetricsFromStatusTick.getDamageToShields());
                 if (individualStatus instanceof Bleed && !individualTarget.isDead()) { //TODO: no reason to re-add shields to a dead target?
@@ -54,7 +57,6 @@ public class SimulationHelper {
                 }
             }
         }
-
         return appliedStatusSummary;
     }
 
@@ -125,7 +127,6 @@ public class SimulationHelper {
                 }
             }
         }
-
         return firedWeaponSummary;
     }
 
