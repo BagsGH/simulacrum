@@ -49,7 +49,7 @@ public class SimulationHelper {
                 DamageMetrics damageMetricsFromStatusTick = targetDamageHelper.applyDamageSourceDamageToTarget(individualStatus.apply(individualTarget), statusTickHitProperties, individualTarget);
                 appliedStatusSummary.addStatusDamageToHealth(targetName, damageMetricsFromStatusTick.getDamageToHealth());
                 appliedStatusSummary.addStatusDamageToShields(targetName, damageMetricsFromStatusTick.getDamageToShields());
-                if (individualStatus instanceof Bleed) {
+                if (individualStatus instanceof Bleed && !individualTarget.isDead()) { //TODO: no reason to re-add shields to a dead target?
                     individualTarget.getShields().setHealthValue(originalTargetShields.getHealthValue());
                 }
             }
