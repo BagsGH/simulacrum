@@ -1,10 +1,10 @@
 package com.bags.simulacrum.Simulation;
 
+import com.bags.simulacrum.Damage.DamageType;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class DamageMetricsTest {
@@ -17,18 +17,44 @@ public class DamageMetricsTest {
     }
 
     @Test
-    public void itCanHaveTestCoverage_1() {
-        assertNotNull(subject.getDamageToHealth());
+    public void itInitializesMemberVariables() {
         assertNotNull(subject.getDamageToShields());
+        assertNotNull(subject.getDamageToHealth());
+        assertNotNull(subject.getStatusDamageToHealth());
+        assertNotNull(subject.getStatusDamageToShields());
     }
 
     @Test
-    public void itCanHaveTestCoverage_2() {
-        subject.setDamageToHealth(new HashMap<>());
-        subject.setDamageToShields(new HashMap<>());
+    public void itCanAddDamageToHealth() {
+        subject.addDamageToHealth(DamageType.BLAST, 25.0);
 
-        assertNotNull(subject.getDamageToHealth());
-        assertNotNull(subject.getDamageToShields());
+        assertEquals(25.0, subject.getDamageToHealth().get(DamageType.BLAST), 0.0);
+    }
+
+    @Test
+    public void itCanAddDamageToShields() {
+        subject.addDamageToShields(DamageType.BLAST, 25.0);
+
+        assertEquals(25.0, subject.getDamageToShields().get(DamageType.BLAST), 0.0);
+    }
+
+    @Test
+    public void itCanAddStatusDamageToHealth() {
+        subject.addStatusDamageToHealth(DamageType.BLAST, 25.0);
+
+        assertEquals(25.0, subject.getStatusDamageToHealth().get(DamageType.BLAST), 0.0);
+    }
+
+    @Test
+    public void itCanAddStatusDamageToShields() {
+        subject.addStatusDamageToShields(DamageType.BLAST, 25.0);
+
+        assertEquals(25.0, subject.getStatusDamageToShields().get(DamageType.BLAST), 0.0);
+    }
+
+    @Test
+    public void itCanInitializeEmptyMaps() {
+        assertNotNull(DamageMetrics.initialDamageMap());
     }
 
 }
