@@ -32,7 +32,6 @@ public class TargetDamageHelper {
 
         for (Damage damage : damageSource.getDamages()) {
             DamageType damageType = damage.getDamageType();
-            //TODO: Find way for BLEED to ignore shields
             double damageDealt = damageCalculator.calculateDamage(targetHealth, targetShield, targetArmor, damage, hitProperties);
 
             if (targetHasNoShields(targetShield)) {

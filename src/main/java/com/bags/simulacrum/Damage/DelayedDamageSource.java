@@ -13,13 +13,6 @@ public class DelayedDamageSource {
     private HitProperties hitProperties;
     private Target target;
 
-    public DelayedDamageSource(DamageSource damageSource, HitProperties hitProperties, double delay) {
-        this.damageSource = damageSource;
-        this.delay = delay;
-        this.progress = 0.0;
-        this.hitProperties = hitProperties;
-    }
-
     public DelayedDamageSource(Target target, DamageSource damageSource, HitProperties hitProperties, double delay) {
         this.damageSource = damageSource;
         this.delay = delay;
@@ -29,9 +22,8 @@ public class DelayedDamageSource {
     }
 
     public DelayedDamageSource copy() {
-        DelayedDamageSource copy = new DelayedDamageSource(this.damageSource.copy(), this.hitProperties.copy(), this.delay);
+        DelayedDamageSource copy = new DelayedDamageSource(this.target, this.damageSource.copy(), this.hitProperties.copy(), this.delay);
         copy.setProgress(this.progress);
-        copy.setTarget(target);
         return copy;
     }
 

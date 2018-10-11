@@ -1,13 +1,13 @@
 package com.bags.simulacrum.Simulation;
 
 import com.bags.simulacrum.Entity.Target;
-import lombok.Getter;
+import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
+@Data
 public class SimulationTargets {
 
     private Target primaryTarget;

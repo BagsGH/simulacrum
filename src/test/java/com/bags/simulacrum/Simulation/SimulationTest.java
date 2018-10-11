@@ -256,9 +256,8 @@ public class SimulationTest {
         FiredWeaponSummary fakeFiredWeaponSummary = new FiredWeaponSummary();
         DamageSource fakeDamageSource = new DamageSource(DamageSourceType.DELAYED, Collections.singletonList(new Damage(HEAT, 25)), 0.01, 0.0);
         HitProperties fakeHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
-        DelayedDamageSource fakeDelayedDamageSource = new DelayedDamageSource(fakeDamageSource, fakeHitProperties, fakeDamageSource.getDelay());
+        DelayedDamageSource fakeDelayedDamageSource = new DelayedDamageSource(fakeTarget, fakeDamageSource, fakeHitProperties, fakeDamageSource.getDelay());
         fakeFiredWeaponSummary.setDelayedDamageSources(Collections.singletonList(fakeDelayedDamageSource));
-        fakeDelayedDamageSource.setTarget(fakeTarget);
 
         when(mockSimulationHelper.handleFireWeapon(eq(fakeWeapon), eq(fakeSimulationTargets), eq(fakeHeadshotChance))).thenReturn(fakeFiredWeaponSummary);
 
@@ -358,7 +357,7 @@ public class SimulationTest {
 
         //DelayedDamageSource and its DamageSource to be returned by the call to handleFireWeapon.
         DamageSource fakeDamageSourceForDelayedDamage = new DamageSource(DamageSourceType.DELAYED, Collections.singletonList(new Damage(HEAT, 25)), 0.01, 0.0);
-        DelayedDamageSource fakeDelayedDamageSource = new DelayedDamageSource(fakeDamageSourceForDelayedDamage, fakeHitProperties, fakeDamageSourceForDelayedDamage.getDelay());
+        DelayedDamageSource fakeDelayedDamageSource = new DelayedDamageSource(fakeTarget, fakeDamageSourceForDelayedDamage, fakeHitProperties, fakeDamageSourceForDelayedDamage.getDelay());
         fakeFiredWeaponSummary.setDelayedDamageSources(Collections.singletonList(fakeDelayedDamageSource));
 
         //The DamageMetrics to be returned for the original call to handleFireWeapon. This says the call did 25 HEAT damage to healths.
