@@ -52,7 +52,7 @@ public class Target {
     public Target copy() {
         Target copy = new Target();
         copy.setName(this.name);
-        copy.setTargetType(this.targetType);
+        copy.setTargetName(this.targetName);
 
         List<String> deepCopiedAbilities = this.abilities != null ? new ArrayList<>(this.abilities) : new ArrayList<>();
         copy.setAbilities(deepCopiedAbilities);
@@ -94,6 +94,10 @@ public class Target {
 
     public Health getArmor() {
         return this.healths.stream().filter(h -> HealthClass.isArmor(h.getHealthClass())).findFirst().orElse(null);
+    }
+
+    public Health getShields() {
+        return this.healths.stream().filter(h -> HealthClass.isShield(h.getHealthClass())).findFirst().orElse(null);
     }
 
     public Health getHealth() {

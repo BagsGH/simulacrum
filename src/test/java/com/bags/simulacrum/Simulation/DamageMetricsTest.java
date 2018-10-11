@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import java.util.HashMap;
 
-import static junit.framework.TestCase.assertNull;
 import static org.junit.Assert.assertNotNull;
 
 public class DamageMetricsTest {
@@ -14,13 +13,13 @@ public class DamageMetricsTest {
 
     @Before
     public void setup() {
-        subject = new DamageMetrics(null, null);
+        subject = new DamageMetrics();
     }
 
     @Test
     public void itCanHaveTestCoverage_1() {
-        assertNull(subject.getDamageToHealth());
-        assertNull(subject.getDamageToShields());
+        assertNotNull(subject.getDamageToHealth());
+        assertNotNull(subject.getDamageToShields());
     }
 
     @Test

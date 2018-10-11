@@ -1,5 +1,6 @@
 package com.bags.simulacrum.Damage;
 
+import com.bags.simulacrum.Entity.Target;
 import com.bags.simulacrum.Simulation.HitProperties;
 import lombok.Data;
 
@@ -10,16 +11,18 @@ public class DelayedDamageSource {
     private double delay;
     private double progress;
     private HitProperties hitProperties;
+    private Target target;
 
-    public DelayedDamageSource(DamageSource damageSource, HitProperties hitProperties, double delay) {
+    public DelayedDamageSource(Target target, DamageSource damageSource, HitProperties hitProperties, double delay) {
         this.damageSource = damageSource;
         this.delay = delay;
         this.progress = 0.0;
         this.hitProperties = hitProperties;
+        this.target = target;
     }
 
     public DelayedDamageSource copy() {
-        DelayedDamageSource copy = new DelayedDamageSource(this.damageSource.copy(), this.hitProperties.copy(), this.delay);
+        DelayedDamageSource copy = new DelayedDamageSource(this.target, this.damageSource.copy(), this.hitProperties.copy(), this.delay);
         copy.setProgress(this.progress);
         return copy;
     }

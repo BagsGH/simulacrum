@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class Simulation {
@@ -35,59 +36,49 @@ public class Simulation {
 
     public SimulationSummary runSimulation(SimulationParameters simulationParameters) {
         Weapon weapon = simulationParameters.getModdedWeapon();
-        List<Target> targetList = simulationParameters.getSimulationTargets().getAllTargets();
-        SimulationSummary simulationSummary = new SimulationSummary();
+        SimulationTargets targets = simulationParameters.getSimulationTargets();
+        double headshotChance = simulationParameters.getHeadshotChance();
+        boolean replaceDeadTargets = simulationParameters.isReplaceDeadTargets();
+        double simulationDuration = simulationParameters.getDuration(); //60s //.01s == 6000
 
         double deltaTime = config.getDeltaTime();
-        double simulationDuration = simulationParameters.getDuration(); //60s //.01s == 6000
         int timeTicks = (int) (simulationDuration / deltaTime);
 
+        SimulationSummary simulationSummary = new SimulationSummary();
         WeaponStateMetrics finalWeaponStateMetrics = new WeaponStateMetrics();
-        FiredWeaponSummary finalFiredWeaponSummary = new FiredWeaponSummary().getEmptySummary();
-
-        HitProperties statusTickHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
+        FiredWeaponSummary finalFiredWeaponSummary = new FiredWeaponSummary();
 
         weapon.initializeFiringState();
-        Target primaryTarget = simulationParameters.getSimulationTargets().getPrimaryTarget(); //TODO: pass in list to the calls below, and if the DamageSource is AOE, hit all, else... first?
-        Target targetCopy = primaryTarget.copy();//TODO: handle for multiple targets
+
+        SimulationTargets cloningVat = new SimulationTargets(targets.getPrimaryTarget().copy(), targets.getSecondaryTargets().stream().map(Target::copy).collect(Collectors.toList()));
+
         List<DelayedDamageSource> delayedDamageSources = new ArrayList<>();
         for (int i = 0; i < timeTicks; i++) {
             if (delayedDamageSources.size() > 0) {
                 delayedDamageSources.forEach(ds -> ds.progressTime(deltaTime));
-                FiredWeaponSummary summaryFromHandlingDelayedDamageSources = simulationHelper.handleDelayedDamageSources(delayedDamageSources, primaryTarget, weapon.getStatusChance());
-                finalFiredWeaponSummary.addHitPropertiesList(summaryFromHandlingDelayedDamageSources.getHitPropertiesList());
-                finalFiredWeaponSummary.addStatusesApplied(summaryFromHandlingDelayedDamageSources.getStatusesApplied());
-                finalFiredWeaponSummary.addDamageMetrics(summaryFromHandlingDelayedDamageSources.getDamageMetrics());
+                FiredWeaponSummary summaryFromHandlingDelayedDamageSources = simulationHelper.handleDelayedDamageSources(delayedDamageSources, weapon.getStatusChance());
+                finalFiredWeaponSummary.addHitPropertiesMap(summaryFromHandlingDelayedDamageSources.getHitPropertiesListMap());
+                finalFiredWeaponSummary.addStatusesAppliedMap(summaryFromHandlingDelayedDamageSources.getStatusesAppliedMap());
+                finalFiredWeaponSummary.addDamageMetrics(summaryFromHandlingDelayedDamageSources.getDamageMetricsMap());
                 delayedDamageSources.removeIf(DelayedDamageSource::delayOver);
             }
 
-            List<Status> procsApplying = getProcsApplyingToTarget(primaryTarget, deltaTime);
-            List<DamageMetrics> damageMetricsFromAppliedStatuses = simulationHelper.handleApplyingStatuses(procsApplying, statusTickHitProperties, primaryTarget);
-            for (DamageMetrics individualDamageMetrics : damageMetricsFromAppliedStatuses) {
-                finalFiredWeaponSummary.addStatusDamageToHealth(individualDamageMetrics.getDamageToHealth());
-                finalFiredWeaponSummary.addStatusDamageToShields(individualDamageMetrics.getDamageToShields());
-            }
-            primaryTarget.getStatuses().removeIf(Status::finished);
+            progressStatus(targets, deltaTime);
+            FiredWeaponSummary statusApplicationSummary = simulationHelper.handleApplyingStatuses(targets.getAllTargets());
+            finalFiredWeaponSummary.addDamageMetrics(statusApplicationSummary.getDamageMetricsMap());
+            targets.getAllTargets().forEach(target -> target.getStatuses().removeIf(Status::finished));
 
             FiringState firingState = weapon.firingStateProgressTime(deltaTime);
             if (firingState instanceof Fired) {
-                FiredWeaponSummary firedWeaponSummary = simulationHelper.handleFireWeapon(weapon, primaryTarget, simulationParameters.getHeadshotChance());
-                finalFiredWeaponSummary.addHitPropertiesList(firedWeaponSummary.getHitPropertiesList());
-                finalFiredWeaponSummary.addStatusesApplied(firedWeaponSummary.getStatusesApplied());
-                finalFiredWeaponSummary.addDamageMetrics(firedWeaponSummary.getDamageMetrics());
-
+                FiredWeaponSummary firedWeaponSummary = simulationHelper.handleFireWeapon(weapon, targets, headshotChance);
+                finalFiredWeaponSummary.addHitPropertiesMap(firedWeaponSummary.getHitPropertiesListMap());
+                finalFiredWeaponSummary.addStatusesAppliedMap(firedWeaponSummary.getStatusesAppliedMap());
+                finalFiredWeaponSummary.addDamageMetrics(firedWeaponSummary.getDamageMetricsMap());
                 delayedDamageSources.addAll(firedWeaponSummary.getDelayedDamageSources());
             }
             finalWeaponStateMetrics.add(firingState.getClass(), deltaTime);
 
-            if (primaryTarget.isDead()) {
-                simulationSummary.addKilledTarget(primaryTarget);
-                targetList.removeIf(Target::isDead);
-                if (simulationParameters.isReplaceDeadTargets()) {
-                    targetList.add(new Target());
-                    targetList.add(targetCopy.copy());
-                }
-            }
+            handleDeadTargets(targets, cloningVat, simulationSummary, replaceDeadTargets);
         }
         simulationSummary.setWeaponStateMetrics(finalWeaponStateMetrics);
         simulationSummary.setFiredWeaponSummary(finalFiredWeaponSummary);
@@ -95,14 +86,37 @@ public class Simulation {
         return simulationSummary;
     }
 
-    private List<Status> getProcsApplyingToTarget(Target target, double deltaTime) {
-        List<Status> procsApplying = new ArrayList<>();
-        target.getStatuses().forEach(status -> {
-            status.progressTime(deltaTime);
-            if (status.checkProgress()) {
-                procsApplying.add(status);
+    private void progressStatus(SimulationTargets simulationTargets, double deltaTime) {
+        for (Target individualTarget : simulationTargets.getAllTargets()) {
+            List<Status> statuses = individualTarget.getStatuses();
+            statuses.forEach(status -> status.progressTime(deltaTime));
+        }
+    }
+
+    private void handleDeadTargets(SimulationTargets targets, SimulationTargets cloningVat, SimulationSummary simulationSummary, boolean replaceDeadTargets) {
+        if (targets.getAllTargets().stream().anyMatch(Target::isDead)) {
+            if (targets.getPrimaryTarget().isDead()) {
+                simulationSummary.addKilledTarget(targets.getPrimaryTarget());
+                if (replaceDeadTargets) {
+                    targets.setPrimaryTarget(cloningVat.getPrimaryTarget().copy());
+                }
             }
-        });
-        return procsApplying;
+            List<Target> secondaryTargets = targets.getSecondaryTargets();
+            List<Target> newSecondaryTargetList = new ArrayList<>();
+            int index = 0;
+            for (Target target : secondaryTargets) {
+                if (target.isDead()) {
+                    simulationSummary.addKilledTarget(target);
+                    if (replaceDeadTargets) {
+                        newSecondaryTargetList.add(cloningVat.getSecondaryTargets().get(index).copy()); //TODO: the whole get index thing probably doesnt work
+                    }
+                } else {
+                    newSecondaryTargetList.add(target);
+                }
+                index++;
+            }
+            targets.setSecondaryTargets(newSecondaryTargetList);
+
+        }
     }
 }
