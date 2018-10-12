@@ -474,25 +474,15 @@ public class WeaponModifierTest {
         vileAcceleration.setDamageIncrease(-0.15);
         vileAcceleration.setFireRateIncrease(0.90);
 
-        Mod hellfire = new Mod(new Damage(HEAT, 0.0, 0.90));
-        Mod cryoRounds = new Mod(new Damage(COLD, 0.0, 0.90));
-        Mod serration = new Mod();
-        serration.setDamageIncrease(1.65);
+        Mod hellFire = new Mod.ModBuilder(null).withDamage(new Damage(HEAT, 0.0, 0.90)).build();
+        Mod cryoRounds = new Mod.ModBuilder(null).withDamage(new Damage(COLD, 0.0, 0.90)).build();
+        Mod serration = new Mod.ModBuilder(null).withDamageIncrease(1.65).build();
+        Mod heavyCaliber = new Mod.ModBuilder(null).withDamageIncrease(1.65).withAccuracyIncrease(-0.55).build();
+        Mod vitalSense = new Mod.ModBuilder(null).withCriticalDamageIncrease(1.20).build();
+        Mod pointStrike = new Mod.ModBuilder(null).withCriticalChanceIncrease(1.50).build();
+        Mod splitChamber = new Mod.ModBuilder(null).withMultishotIncrease(0.90).build();
 
-        Mod heavyCaliber = new Mod();
-        heavyCaliber.setDamageIncrease(1.65);
-        heavyCaliber.setAccuracyIncrease(-0.55);
-
-        Mod vitalSense = new Mod();
-        vitalSense.setCriticalDamageIncrease(1.20);
-
-        Mod pointStrike = new Mod();
-        pointStrike.setCriticalChanceIncrease(1.50);
-
-        Mod splitChamber = new Mod();
-        splitChamber.setMultishotIncrease(0.90);
-
-        List<Mod> fakeModList = Arrays.asList(vileAcceleration, hellfire, heavyCaliber, splitChamber, serration, cryoRounds, vitalSense, pointStrike);
+        List<Mod> fakeModList = Arrays.asList(vileAcceleration, hellFire, heavyCaliber, splitChamber, serration, cryoRounds, vitalSense, pointStrike);
         fakeWeapon.setMods(fakeModList);
 
         DamageSource fakeReturnedDamageSource1 = new DamageSource(DamageSourceType.PROJECTILE, Arrays.asList(new Damage(IMPACT, 207.5), new Damage(BLAST, 373.5)));

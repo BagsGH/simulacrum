@@ -6,11 +6,7 @@ import lombok.Data;
 @Data
 public class Mod {
 
-    private String name;
-    private int level;
-    private int drain;
-    private String rarity;
-    private Polarity polarity;
+    private ModInformation modInformation;
     private double rangeLimitIncrease;
     private double fireRateIncrease;
     private double accuracyIncrease;
@@ -24,14 +20,6 @@ public class Mod {
     private double damageIncrease;
     private Damage damage;
     private double multishotIncrease;
-    private int index;
-
-    public enum Polarity { //TODO: own class
-        DASH,
-        D,
-        V,
-        EQUALS
-    }
 
     public Mod() {
     }
@@ -41,7 +29,7 @@ public class Mod {
     }
 
     public Mod copy() {
-        return new ModBuilder(this.name, this.index, this.level, this.drain, this.rarity, this.polarity)
+        return new ModBuilder(this.modInformation)
                 .withRangeLimitIncrease(this.rangeLimitIncrease)
                 .withFireRateIncrease(this.fireRateIncrease)
                 .withAccuracyIncrease(this.accuracyIncrease)
@@ -54,16 +42,12 @@ public class Mod {
                 .withHeadshotMultiplierIncrease(this.headshotMultiplierIncrease)
                 .withDamageIncrease(this.damageIncrease)
                 .withMultishotIncrease(this.multishotIncrease)
-                .withDamage(this.damage.copy())
+                .withDamage(this.damage)
                 .build();
     }
 
     private Mod(ModBuilder builder) {
-        this.name = builder.name;
-        this.level = builder.level;
-        this.drain = builder.drain;
-        this.rarity = builder.rarity;
-        this.polarity = builder.polarity;
+        this.modInformation = builder.modInformation != null ? builder.modInformation.copy() : null;
         this.rangeLimitIncrease = builder.rangeLimitIncrease;
         this.fireRateIncrease = builder.fireRateIncrease;
         this.accuracyIncrease = builder.accuracyIncrease;
@@ -75,17 +59,13 @@ public class Mod {
         this.statusChanceIncrease = builder.statusChanceIncrease;
         this.headshotMultiplierIncrease = builder.headshotMultiplierIncrease;
         this.damageIncrease = builder.damageIncrease;
-        this.damage = builder.damage.copy();
+        this.damage = builder.damage != null ? builder.damage.copy() : null;
         this.multishotIncrease = builder.multishotIncrease;
-        this.index = builder.index;
     }
 
     public static class ModBuilder {
-        private String name;
-        private int level;
-        private int drain;
-        private String rarity;
-        private Polarity polarity;
+
+        private ModInformation modInformation;
         private double rangeLimitIncrease;
         private double fireRateIncrease;
         private double accuracyIncrease;
@@ -99,24 +79,9 @@ public class Mod {
         private double damageIncrease;
         private double multishotIncrease;
         private Damage damage;
-        private int index;
 
-
-        public ModBuilder(String name, int level, int drain, String rarity, Polarity polarity) {
-            this.name = name;
-            this.level = level;
-            this.drain = drain;
-            this.rarity = rarity;
-            this.polarity = polarity;
-        }
-
-        public ModBuilder(String name, int index, int level, int drain, String rarity, Polarity polarity) {
-            this.name = name;
-            this.index = index;
-            this.level = level;
-            this.drain = drain;
-            this.rarity = rarity;
-            this.polarity = polarity;
+        public ModBuilder(ModInformation modInformation) {
+            this.modInformation = modInformation;
         }
 
         public ModBuilder withRangeLimitIncrease(double rangeLimitIncrease) {
