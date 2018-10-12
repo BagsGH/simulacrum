@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
-
 @Data
 public class DamageSource {
 
@@ -40,15 +38,13 @@ public class DamageSource {
 
     public DamageSource copy() {
         DamageSource copiedDamageSource = this.copyWithoutDamages();
-        List<Damage> damagesList = this.damages.stream().map(Damage::copy).collect(Collectors.toList());
+        List<Damage> damagesList = this.damages != null ? new ArrayList<>(this.damages.stream().map(Damage::copy).collect(Collectors.toList())) : null;
         copiedDamageSource.setDamages(damagesList);
 
-        List<Damage> modifiedInnateDamageList = emptyIfNull(this.modifiedInnateDamages).stream().map(Damage::copy).collect(Collectors.toList()); //TODO: empty if null will cause an issie if something is removed from it!!
-        copiedDamageSource.setModifiedInnateDamages((modifiedInnateDamageList.isEmpty() ? null : modifiedInnateDamageList)); //TODO: shouldnt need this weird thing, but it made a test fail.
-
-        List<Damage> addedElementalDamageList = emptyIfNull(this.addedElementalDamages).stream().map(Damage::copy).collect(Collectors.toList());
-        copiedDamageSource.setAddedElementalDamages((addedElementalDamageList.isEmpty() ? null : addedElementalDamageList));
-
+        List<Damage> modifiedInnateDamageList = this.modifiedInnateDamages != null ? new ArrayList<>(this.modifiedInnateDamages.stream().map(Damage::copy).collect(Collectors.toList())) : null;
+        List<Damage> addedElementalDamageList = this.addedElementalDamages != null ? new ArrayList<>(this.addedElementalDamages.stream().map(Damage::copy).collect(Collectors.toList())) : null;
+        copiedDamageSource.setModifiedInnateDamages(modifiedInnateDamageList);
+        copiedDamageSource.setAddedElementalDamages(addedElementalDamageList);
 
         return copiedDamageSource;
     }

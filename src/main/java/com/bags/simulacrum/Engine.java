@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.bags.simulacrum.Damage.DamageType.HEAT;
+import static com.bags.simulacrum.Damage.DamageType.TOXIN;
+
 
 @Component
 public class Engine {
@@ -61,38 +64,16 @@ public class Engine {
 //        System.out.println(lenz);
 //        System.out.println(plasmor);
 
-        Mod heavyCalibre = new Mod();
-        heavyCalibre.setDamageIncrease(1.65);
-        heavyCalibre.setAccuracyIncrease(-0.55);
+        Mod hellFire = new Mod.ModBuilder(null).withDamage(new Damage(HEAT, 0.0, 0.90)).build();
+        Mod maligForce = new Mod.ModBuilder(null).withDamage(new Damage(TOXIN, 0.0, 0.60)).withStatusChanceIncrease(0.60).build();
+        Mod serration = new Mod.ModBuilder(null).withDamageIncrease(1.65).build();
+        Mod heavyCaliber = new Mod.ModBuilder(null).withDamageIncrease(1.65).withAccuracyIncrease(-0.55).build();
+        Mod vileAccel = new Mod.ModBuilder(null).withFireRateIncrease(0.90).withDamageIncrease(-0.15).build();
+        Mod vitalSense = new Mod.ModBuilder(null).withCriticalDamageIncrease(1.20).build();
+        Mod pointStrike = new Mod.ModBuilder(null).withCriticalChanceIncrease(1.50).build();
+        Mod splitChamber = new Mod.ModBuilder(null).withMultishotIncrease(0.90).build();
 
-        Mod serration = new Mod();
-        serration.setDamageIncrease(1.65);
-
-        Mod splitChamber = new Mod();
-        splitChamber.setMultishotIncrease(0.90);
-
-        Mod maligForce = new Mod();
-        maligForce.setStatusChanceIncrease(0.60);
-        Damage toxin = new Damage(DamageType.TOXIN);
-        toxin.setModAddedDamageRatio(0.60);
-        maligForce.setDamage(toxin);
-
-        Mod vileAccel = new Mod();
-        vileAccel.setFireRateIncrease(0.90);
-        vileAccel.setDamageIncrease(-0.15);
-
-        Mod hellFire = new Mod();
-        Damage heat = new Damage(DamageType.HEAT);
-        heat.setModAddedDamageRatio(0.90);
-        hellFire.setDamage(heat);
-
-        Mod vs = new Mod();
-        vs.setCriticalChanceIncrease(1.50);
-
-        Mod ps = new Mod();
-        ps.setCriticalDamageIncrease(1.20);
-
-        ignisWraith.setMods(Arrays.asList(heavyCalibre, serration, splitChamber, maligForce, vileAccel, hellFire, vs, ps));
+        ignisWraith.setMods(Arrays.asList(heavyCaliber, serration, splitChamber, maligForce, vileAccel, hellFire, vitalSense, pointStrike));
         //ignisWraith.setMods(Arrays.asList(heavyCalibre, serration));
 
         Mod heatdmg = new Mod();
@@ -121,7 +102,7 @@ public class Engine {
         Mod frigid = new Mod();
         frigid.setDamage(new Damage(DamageType.COLD, 0.0, 0.30));
         Mod toxicBarrage = new Mod();
-        toxicBarrage.setDamage(new Damage(DamageType.TOXIN, 0.0, 0.15));
+        toxicBarrage.setDamage(new Damage(TOXIN, 0.0, 0.15));
 
 
 //        plasmor.setMods(Arrays.asList(frigid, charged, blaze, toxicBarrage));
