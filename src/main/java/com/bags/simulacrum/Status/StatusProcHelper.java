@@ -63,7 +63,7 @@ public class StatusProcHelper {
         }
     }
 
-    private DamageType getStatusProcType(Map<DamageType, Double> statusPROCChanceMap, double statusTypeRNG) { //TODO: Really dont need two of these loops..
+    private DamageType getStatusProcType(Map<DamageType, Double> statusPROCChanceMap, double statusTypeRNG) {
         double minOfChanceRangeForStatusType = 0.0;
         double maxOfChanceRangeForStatusType = 0.0;
         for (DamageType damageType : statusPROCChanceMap.keySet()) {

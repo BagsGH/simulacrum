@@ -17,7 +17,7 @@ public class Target {
     private String targetName;
     private List<String> abilities;
     private List<Health> healths;
-    private List<DamageType> procImmunities; //TODO: check if immune to proc b4 apoply
+    private List<DamageType> procImmunities;
     private int baseLevel;
     private int level;
     private Faction faction;

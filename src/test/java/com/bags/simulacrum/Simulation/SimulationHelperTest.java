@@ -299,7 +299,7 @@ public class SimulationHelperTest {
 
         assertEquals(2, firedWeaponSummary.getDelayedDamageSources().size());
         assertEquals(fakeDamageSource, firedWeaponSummary.getDelayedDamageSources().get(0).getDamageSource());
-        assertEquals(anotherFakeDamageSource, firedWeaponSummary.getDelayedDamageSources().get(1).getDamageSource()); //TODO: don't assume order?
+        assertEquals(anotherFakeDamageSource, firedWeaponSummary.getDelayedDamageSources().get(1).getDamageSource());
     }
 
     @Test
@@ -338,7 +338,7 @@ public class SimulationHelperTest {
     }
 
     @Test
-    public void itReturnsADamageSummaryWithValuesReturnedByHelpers_Shields() { //TODO: never used?
+    public void itReturnsADamageSummaryWithValuesReturnedByHelpers_Shields() {
         fakeDamageToShields.put(HEAT, 50.0);
 
         FiredWeaponSummary firedWeaponSummary = subject.handleFireWeapon(fakeWeapon, fakeSimulationTargets, 0.0);

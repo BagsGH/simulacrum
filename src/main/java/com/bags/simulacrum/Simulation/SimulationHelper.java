@@ -108,7 +108,7 @@ public class SimulationHelper {
                     double headshotModifier = calculateHeadshotModifier(individualTarget, headshotChance, headshotRNG);
                     double bodyModifier = calculateBodyModifier(individualTarget, headshotChance, headshotRNG, bodyshotRNG);
 
-                    HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier); //TODO: roll status into this...
+                    HitProperties hitProperties = new HitProperties(critLevel, weaponCriticalDamageMultiplier, headshotModifier, bodyModifier); //TODO: roll status into this if status chance can ever change on a weapon
 
                     if (!isDelayedDamageSource(damageSource)) {
                         DamageMetrics damageMetrics = targetDamageHelper.applyDamageSourceDamageToTarget(damageSource, hitProperties, individualTarget);
@@ -185,14 +185,15 @@ public class SimulationHelper {
 
     private Status getStatusProcAndApply(Target target, DamageSource damageSource, DamageMetrics damageMetrics, DamageMetrics finalDamageMetrics) {
         Status status = statusProcHelper.constructStatusProc(damageSource, damageMetrics.getDamageToHealth(), damageMetrics.getDamageToShields());
-        target.addStatus(status);
-
-        HitProperties statusTickHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
-        DamageSource damageSourceForDamageTick = status.apply(target);
-        DamageMetrics damageMetricsFromDamageTick = targetDamageHelper.applyDamageSourceDamageToTarget(damageSourceForDamageTick, statusTickHitProperties, target);
-        updateRunningTotalStatusDamageToHealth(finalDamageMetrics, damageMetricsFromDamageTick.getDamageToHealth());
-        updateRunningTotalStatusDamageToShields(finalDamageMetrics, damageMetricsFromDamageTick.getDamageToShields());
-
+        boolean targetVulnerableToStatusProc = !(target.getProcImmunities() != null ? target.getProcImmunities() : new ArrayList<>()).contains(status.getDamageType()); //TODO: check with bleed being TRUE Damage and not SLASH
+        if (targetVulnerableToStatusProc) { //TODO: TESt
+            target.addStatus(status);
+            HitProperties statusTickHitProperties = new HitProperties(0, 0.0, 0.0, 0.0);
+            DamageSource damageSourceForDamageTick = status.apply(target);
+            DamageMetrics damageMetricsFromDamageTick = targetDamageHelper.applyDamageSourceDamageToTarget(damageSourceForDamageTick, statusTickHitProperties, target);
+            updateRunningTotalStatusDamageToHealth(finalDamageMetrics, damageMetricsFromDamageTick.getDamageToHealth());
+            updateRunningTotalStatusDamageToShields(finalDamageMetrics, damageMetricsFromDamageTick.getDamageToShields());
+        }
         return status;
     }
 
