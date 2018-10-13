@@ -420,7 +420,7 @@ public class SimulationTest {
     private void setupDefaultTarget() {
         fakeTarget = new Target();
         fakeTargetName = "bagooder";
-        fakeTarget.setTargetName(fakeTargetName);
+        fakeTarget.setTargetId(fakeTargetName);
         fakeTarget.setHealths(Arrays.asList(new Health(FLESH, 200), new Health(SHIELD, 200), new Health(ALLOY, 200)));
         fakeTarget.setStatuses(new ArrayList<>());
     }

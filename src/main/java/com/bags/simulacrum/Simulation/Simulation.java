@@ -99,24 +99,23 @@ public class Simulation {
                 simulationSummary.addKilledTarget(targets.getPrimaryTarget());
                 if (replaceDeadTargets) {
                     targets.setPrimaryTarget(cloningVat.getPrimaryTarget().copy());
+                } else {
+                    targets.setPrimaryTarget(null);
                 }
             }
             List<Target> secondaryTargets = targets.getSecondaryTargets();
             List<Target> newSecondaryTargetList = new ArrayList<>();
-            int index = 0;
-            for (Target target : secondaryTargets) {
-                if (target.isDead()) {
-                    simulationSummary.addKilledTarget(target);
+            for (Target secondaryTarget : secondaryTargets) {
+                if (secondaryTarget.isDead()) {
+                    simulationSummary.addKilledTarget(secondaryTarget);
                     if (replaceDeadTargets) {
-                        newSecondaryTargetList.add(cloningVat.getSecondaryTargets().get(index).copy()); //TODO: the whole get index thing probably doesnt work
+                        cloningVat.getSecondaryTargetById(secondaryTarget.getTargetId()).ifPresent(target -> newSecondaryTargetList.add(target.copy()));
                     }
                 } else {
-                    newSecondaryTargetList.add(target);
+                    newSecondaryTargetList.add(secondaryTarget);
                 }
-                index++;
             }
             targets.setSecondaryTargets(newSecondaryTargetList);
-
         }
     }
 }

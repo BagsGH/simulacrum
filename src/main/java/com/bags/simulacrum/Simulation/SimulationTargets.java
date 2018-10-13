@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Data
@@ -13,6 +14,11 @@ public class SimulationTargets {
     private Target primaryTarget;
     private List<Target> secondaryTargets;
 
+    public SimulationTargets(Target primary, List<Target> secondaryTargets) {
+        this.primaryTarget = primary;
+        this.secondaryTargets = secondaryTargets != null ? secondaryTargets : new ArrayList<>();
+    }
+
     public List<Target> getAllTargets() {
         List<Target> allTargets = new ArrayList<>();
         allTargets.add(primaryTarget);
@@ -20,9 +26,8 @@ public class SimulationTargets {
         return allTargets;
     }
 
-    public SimulationTargets(Target primary, List<Target> secondaryTargets) {
-        this.primaryTarget = primary;
-        this.secondaryTargets = secondaryTargets != null ? secondaryTargets : new ArrayList<>();
+    public Optional<Target> getSecondaryTargetById(String id) {
+        return this.secondaryTargets.stream().filter(target -> target.getTargetId().equals(id)).findFirst();
     }
 
     public SimulationTargets copy() {

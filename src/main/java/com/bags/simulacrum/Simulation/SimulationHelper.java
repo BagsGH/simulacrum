@@ -41,7 +41,7 @@ public class SimulationHelper {
 
         FiredWeaponSummary appliedStatusSummary = new FiredWeaponSummary();
         for (Target individualTarget : simulationTargets) {
-            String targetName = individualTarget.getTargetName();
+            String targetName = individualTarget.getTargetId();
             List<Status> procsApplying = individualTarget.getStatuses().stream().filter(Status::checkProgress).collect(Collectors.toList());
             for (Status individualStatus : procsApplying) {
                 Health originalTargetShields = individualTarget.getShields();
@@ -69,7 +69,7 @@ public class SimulationHelper {
         for (DelayedDamageSource delayedDamageSource : delayedDamageSources) {
             if (delayedDamageSource.delayOver()) {
                 Target target = delayedDamageSource.getTarget();
-                String targetName = target.getTargetName();
+                String targetName = target.getTargetId();
                 HitProperties delayedDamageSourceHitProperties = delayedDamageSource.getHitProperties();
                 DamageMetrics damageMetricsFromDelayedDamage = targetDamageHelper.applyDamageSourceDamageToTarget(delayedDamageSource.getDamageSource(), delayedDamageSourceHitProperties, target);
                 delayedDamageSourceSummary.addDamageToHealth(targetName, damageMetricsFromDelayedDamage.getDamageToHealth());
@@ -101,7 +101,7 @@ public class SimulationHelper {
             for (DamageSource damageSource : weapon.getDamageSources()) {
                 List<Target> effectiveTargetList = getTargetList(simulationTargets, damageSource);
                 for (Target individualTarget : effectiveTargetList) {
-                    String targetName = individualTarget.getTargetName();
+                    String targetName = individualTarget.getTargetId();
 
                     double headshotRNG = randomNumberGenerator.getRandomPercentage();
                     double bodyshotRNG = randomNumberGenerator.getRandomPercentage();

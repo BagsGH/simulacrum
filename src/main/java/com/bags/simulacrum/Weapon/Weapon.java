@@ -20,11 +20,11 @@ public class Weapon {
     private double criticalChance;
     private double criticalDamage;
     private double statusChance;
-    private double headshotMultiplier; //TODO: unused, but will be used
+    private double headshotMultiplier; //TODO: unused, but will be used -- ie snipertronvandal
     private double accuracyMultiplier; //TODO: how to use
     private double rangeLimit;
 
-    private FireStateProperties fireStateProperties; //TODO: get rid of the below passthrough implementation? But I do like the idea that if you want to change something on the weapon, you tell the weapon to change it...
+    private FireStateProperties fireStateProperties;
 
     public void setFireRate(double newFireRate) {
         this.fireStateProperties.setFireRate(newFireRate);

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class Target {
 
     private String name;
-    private String targetName;
+    private String targetId;
     private List<String> abilities;
     private List<Health> healths;
     private List<DamageType> procImmunities;
@@ -24,8 +24,7 @@ public class Target {
     private TargetType targetType;
     private List<String> weapons;
     /*
-        How headshot vs body shot works... if there's no headshot, 100% chance is split across the other body modifiers.
-        TODO: Decide if I want to work heads body part into the list. Could remove it at run time when needed. Dunno.
+     * How headshot vs body shot works... if there's no headshot, 100% chance is split across the other body modifiers.
      */
     private List<BodyModifier> bodyModifiers;
     private BodyModifier headBodyModifier;
@@ -52,7 +51,7 @@ public class Target {
     public Target copy() {
         Target copy = new Target();
         copy.setName(this.name);
-        copy.setTargetName(this.targetName);
+        copy.setTargetId(this.targetId);
 
         List<String> deepCopiedAbilities = this.abilities != null ? new ArrayList<>(this.abilities) : new ArrayList<>();
         copy.setAbilities(deepCopiedAbilities);

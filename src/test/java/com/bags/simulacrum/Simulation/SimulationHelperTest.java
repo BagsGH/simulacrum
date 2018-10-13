@@ -577,7 +577,7 @@ public class SimulationHelperTest {
         fakeShields = new Health(SHIELD, 250.0);
         fakeArmor = new Health(ALLOY, 300.0);
         fakeTarget = new Target();
-        fakeTarget.setTargetName(fakeTargetName);
+        fakeTarget.setTargetId(fakeTargetName);
         fakeTarget.setHealths(Arrays.asList(fakeHealth, fakeShields, fakeArmor));
         fakeBodyModifier = new BodyModifier(BodyPart.GUN, -0.50, 0.50);
         fakeHeadshotBodyModifier = new BodyModifier(BodyPart.HEAD, 1.0);

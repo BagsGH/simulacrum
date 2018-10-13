@@ -31,7 +31,7 @@ public class DelayedDamageSourceTest {
         assertEquals(0.0, subject.getProgress(), 0.0);
 
         Target fakeTarget = new Target();
-        fakeTarget.setTargetName("banana");
+        fakeTarget.setTargetId("banana");
         subject.setTarget(fakeTarget);
         subject.setDamageSource(new DamageSource(DamageSourceType.PROJECTILE, Collections.singletonList(new Damage(BLAST, 25))));
         subject.setHitProperties(new HitProperties(4, 3.0, 2.0, 1.0));
